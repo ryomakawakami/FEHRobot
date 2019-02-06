@@ -1,2 +1,2 @@
    text	   data	    bss	    dec	    hex	filename
-  32280	   3420	   5552	  41252	   a124	../gyroDemo.elf
+  38756	   3420	   5552	  47728	   ba70	../gyroDemo.elf
