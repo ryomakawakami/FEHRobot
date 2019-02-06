@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+  34872	   3420	   5552	  43844	   ab44	../proteusPID.elf
