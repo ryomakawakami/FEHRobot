@@ -7,10 +7,6 @@
 // Gravity in px / s^2
 #define A_G 1000
 
-// Coefficients of friction
-#define MU_S 1
-#define MU_K 0.0001
-
 // Screen size
 #define X_MIN 1
 #define X_MAX 319
@@ -27,13 +23,14 @@ double degToRad(double deg) {
 
 class Ball {
 public:
-    Ball(double x, double y);
+    Ball(double s, double k, double x, double y);
     double getX();
     double getY();
     void setX(double x);
     void setY(double y);
     void updateAccel(double x, double y);
 private:
+    double mu_s, mu_k;
     double r_x, r_y;
     double v_x, v_y;
     double a_x, a_y;
@@ -41,7 +38,9 @@ private:
     void update();
 };
 
-Ball::Ball(double x, double y) {
+Ball::Ball(double s, double k, double x, double y) {
+    mu_s = s;
+    mu_k = k;
     r_x = x;
     r_y = y;
     v_x = 0;
@@ -83,31 +82,38 @@ void Ball::updateAccel(double x, double y) {
 void Ball::update() {
     float deltaTime = TimeNow() - lastTime;
 
+    /* FRICTION STILL BREAKS EVERYTHING (IT'S PROBABLY JUST ABOUT TUNING MU THOUGH)
+    // Terrible approximation of friction (N is always mg despite being tilted)
+    // TODO: Figure out the actual normal force
+
+    // Static friction
+    if (v_x * v_x + v_y * v_y == 0) {
+        if (fabs(a_x * a_x + a_y * a_y) < (mu_s * A_G)) {
+            a_x = 0;
+            a_y = 0;
+        }
+    }
+
+    // Kinetic friction
+    else {
+        double theta = atan(v_y / v_x);      // Safe in theory since v_x != 0
+        double friction = mu_k * A_G;
+        if (v_x * v_x + v_y * v_y > 0) {
+            a_x -= friction * cos(theta);
+            a_y -= friction * sin(theta);
+        }
+        else {
+            a_x += friction * cos(theta);
+            a_y += friction * sin(theta);
+        }
+    }
+    */
+
     r_x += v_x * deltaTime;
     r_y += v_y * deltaTime;
 
     v_x += a_x * deltaTime;
     v_y += a_y * deltaTime;
-
-    /* FRICTION BREAKS EVERYTHING
-    // Friction loss in velocity = sqrt(2 * mu * g * d * cos theta)
-    // Doesn't consider the angle of the Proteus but it should
-    double frictionX = sqrt(2 * MU_K * A_G * v_x * deltaTime);
-    double frictionY = sqrt(2 * MU_K * A_G * v_y * deltaTime);
-
-    if (fabs(v_x) < frictionX)
-        v_x = 0;
-    else if (v_x > 0)
-        v_x -= frictionX;
-    else
-        v_x += frictionX;
-
-    if (fabs(v_y) < frictionY)
-        v_y = 0;
-    else if (v_y > 0)
-        v_y -= frictionY;
-    else
-        v_y += frictionY;*/
 }
 
 int main(void) {
@@ -116,7 +122,7 @@ int main(void) {
 
     float x, y;
 
-    Ball ball((X_MAX - X_MIN) / 2, (Y_MAX - Y_MIN) / 2);
+    Ball ball(0.1, 0.1, (X_MAX - X_MIN) / 2, (Y_MAX - Y_MIN) / 2);
 
     while(true) {
         ball.updateAccel(A_G * sin(degToRad(Accel.X())), -A_G * sin(degToRad(Accel.Y())));
