@@ -17,7 +17,7 @@ class PID {
     public:
         PID(double p, double i, double d, double f);
         void setConstants(double p, double i, double d, double f);
-        double calculate(double target, float sensorValue, double range = 10000);
+        double calculate(double target, double sensorValue, double range = 10000);
     private:
         double lastTime;
         double kP, kI, kD, kF;
@@ -57,13 +57,13 @@ void PID::setConstants(double p, double i, double d, double f) {
 // PID function calculate
 // Calculates control loop output
 // Integral range default is a large value
-double PID::calculate(double target, float sensorValue, double range) {
+double PID::calculate(double target, double sensorValue, double range) {
     // Declare variables
     double deltaTime, error, derivative, output;
 
     // Find change in time and store current
     double currentTime = TimeNow();
-    deltaTime = (currentTime - lastTime);
+    deltaTime = currentTime - lastTime;
     lastTime = currentTime;
 
     // Calculate error (P)

@@ -1,19 +1,15 @@
 Archive member included because of file (symbol)
 
-C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
-                              ..\main.o (atan)
-C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
-                              ..\main.o (cos)
 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
                               ..\main.o (sin)
 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
-                              C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o) (__ieee754_rem_pio2)
+                              C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o) (__ieee754_rem_pio2)
 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
-                              C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o) (__kernel_cos)
+                              C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o) (__kernel_cos)
 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
                               C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o) (__kernel_rem_pio2)
 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
-                              C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o) (__kernel_sin)
+                              C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o) (__kernel_sin)
 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
                               C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o) (floor)
 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
@@ -65,7 +61,7 @@ c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_a
 c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_muldivdf3.o)
                               ..\main.o (__aeabi_dmul)
 c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_cmpdf2.o)
-                              ..\main.o (__aeabi_dcmpeq)
+                              C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o) (__aeabi_dcmpeq)
 c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_fixdfsi.o)
                               ..\main.o (__aeabi_d2iz)
 c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_fixunsdfsi.o)
@@ -710,12 +706,6 @@ Discarded input sections
                 0x00000000       0x30 Libraries\FEHSD.o
  .text._ZN5FEHSD10InitializeEv
                 0x00000000      0x118 Libraries\FEHSD.o
- .text          0x00000000        0x0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
- .data          0x00000000        0x0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
- .bss           0x00000000        0x0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
- .text          0x00000000        0x0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
- .data          0x00000000        0x0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
- .bss           0x00000000        0x0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
  .text          0x00000000        0x0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
  .data          0x00000000        0x0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
  .bss           0x00000000        0x0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
@@ -2328,8 +2318,8 @@ LOAD Libraries\FEHBattery.o
 LOAD Drivers\FEHXBee.o
 LOAD Libraries\FEHRPS.o
 LOAD Libraries\FEHSD.o
-                0x00014b80                __pformatter = __pformatter_
-                [0x00014f78]                __sformatter = __sformatter
+                0x00014538                __pformatter = __pformatter_
+                [0x00014930]                __sformatter = __sformatter
 LOAD C:\fehqt\Proteus/EWL/lib/armv7e-m\libstdc++.a
 LOAD C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a
 START GROUP
@@ -2357,7 +2347,7 @@ END GROUP
  *(.cfmconfig)
                 0x0000c400                . = ALIGN (0x4)
 
-.text           0x0000c410     0x9c3c
+.text           0x0000c410     0x95b4
                 0x0000c410                . = ALIGN (0x4)
  *(.text)
  .text          0x0000c410      0x370 c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_addsubdf3.o)
@@ -2448,463 +2438,453 @@ END GROUP
  .text._ZN4Ball11updateAccelEdd
                 0x0000d430       0x44 ..\main.o
                 0x0000d430                Ball::updateAccel(double, double)
- *fill*         0x0000d474        0x4 00
  .text._ZN4Ball6updateEv
-                0x0000d478      0x378 ..\main.o
-                0x0000d478                Ball::update()
- .text.main     0x0000d7f0      0x270 ..\main.o
-                0x0000d7f0                main
+                0x0000d474      0x114 ..\main.o
+                0x0000d474                Ball::update()
+ .text.main     0x0000d588      0x270 ..\main.o
+                0x0000d588                main
  .text.zero_fill_bss
-                0x0000da60       0x34 Startup\__arm_start.o
+                0x0000d7f8       0x34 Startup\__arm_start.o
  .text.__thumb_startup
-                0x0000da94       0x34 Startup\__arm_start.o
-                0x0000da94                __thumb_startup
+                0x0000d82c       0x34 Startup\__arm_start.o
+                0x0000d82c                __thumb_startup
  .text.InitFEHProteus
-                0x0000dac8      0x15c Startup\__arm_start.o
-                0x0000dac8                InitFEHProteus
+                0x0000d860      0x15c Startup\__arm_start.o
+                0x0000d860                InitFEHProteus
  .text.pll_init_bl
-                0x0000dc24      0x130 Startup\__arm_start.o
+                0x0000d9bc      0x130 Startup\__arm_start.o
  .text.InitPowerButton
-                0x0000dd54       0x90 Startup\__arm_start.o
-                0x0000dd54                InitPowerButton
+                0x0000daec       0x90 Startup\__arm_start.o
+                0x0000daec                InitPowerButton
  .text._ExitProcess
-                0x0000dde4        0xc Startup\__arm_end.o
-                0x0000dde4                _ExitProcess
+                0x0000db7c        0xc Startup\__arm_end.o
+                0x0000db7c                _ExitProcess
  .text.Default_Handler
-                0x0000ddf0        0xc Startup\kinetis_sysinit.o
-                0x0000ddf0                BusFault_Handler()
-                0x0000ddf0                HardFault_Handler()
-                0x0000ddf0                SysTick_Handler()
-                0x0000ddf0                PendSV_Handler()
-                0x0000ddf0                DebugMonitor_Handler()
-                0x0000ddf0                MemManage_Handler()
-                0x0000ddf0                NMI_Handler()
-                0x0000ddf0                SVC_Handler()
-                0x0000ddf0                Default_Handler
-                0x0000ddf0                UsageFault_Handler()
+                0x0000db88        0xc Startup\kinetis_sysinit.o
+                0x0000db88                BusFault_Handler()
+                0x0000db88                HardFault_Handler()
+                0x0000db88                SysTick_Handler()
+                0x0000db88                PendSV_Handler()
+                0x0000db88                DebugMonitor_Handler()
+                0x0000db88                MemManage_Handler()
+                0x0000db88                NMI_Handler()
+                0x0000db88                SVC_Handler()
+                0x0000db88                Default_Handler
+                0x0000db88                UsageFault_Handler()
  .text.__init_hardware
-                0x0000ddfc       0x44 Startup\kinetis_sysinit.o
-                0x0000ddfc                __init_hardware
+                0x0000db94       0x44 Startup\kinetis_sysinit.o
+                0x0000db94                __init_hardware
  .text._Z8PortDISRv
-                0x0000de40       0x64 Startup\kinetis_sysinit.o
-                0x0000de40                PortDISR()
+                0x0000dbd8       0x64 Startup\kinetis_sysinit.o
+                0x0000dbd8                PortDISR()
  .text._Z21IIC_StartTransmissionhh
-                0x0000dea4       0x98 Drivers\i2c.o
-                0x0000dea4                IIC_StartTransmission(unsigned char, unsigned char)
+                0x0000dc3c       0x98 Drivers\i2c.o
+                0x0000dc3c                IIC_StartTransmission(unsigned char, unsigned char)
  .text._Z5Pausev
-                0x0000df3c       0x34 Drivers\i2c.o
-                0x0000df3c                Pause()
+                0x0000dcd4       0x34 Drivers\i2c.o
+                0x0000dcd4                Pause()
  .text._Z22u8MMA8451QReadRegisterh
-                0x0000df70      0x1f8 Drivers\i2c.o
-                0x0000df70                u8MMA8451QReadRegister(unsigned char)
+                0x0000dd08      0x1f8 Drivers\i2c.o
+                0x0000dd08                u8MMA8451QReadRegister(unsigned char)
  .text._Z21MMA8451QWriteRegisterhh
-                0x0000e168      0x12c Drivers\i2c.o
-                0x0000e168                MMA8451QWriteRegister(unsigned char, unsigned char)
+                0x0000df00      0x12c Drivers\i2c.o
+                0x0000df00                MMA8451QWriteRegister(unsigned char, unsigned char)
  .text._Z12SPI_SendCharh
-                0x0000e294       0x1c Drivers\spi.o
-                0x0000e294                SPI_SendChar(unsigned char)
+                0x0000e02c       0x1c Drivers\spi.o
+                0x0000e02c                SPI_SendChar(unsigned char)
  .text._Z16SPI_WriteCommandhh
-                0x0000e2b0       0x34 Drivers\spi.o
-                0x0000e2b0                SPI_WriteCommand(unsigned char, unsigned char)
+                0x0000e048       0x34 Drivers\spi.o
+                0x0000e048                SPI_WriteCommand(unsigned char, unsigned char)
  .text._Z13SPI_CS_Assertv
-                0x0000e2e4       0x24 Drivers\spi.o
-                0x0000e2e4                SPI_CS_Assert()
+                0x0000e07c       0x24 Drivers\spi.o
+                0x0000e07c                SPI_CS_Assert()
  .text._Z15SPI_CS_Deassertv
-                0x0000e308       0x24 Drivers\spi.o
-                0x0000e308                SPI_CS_Deassert()
+                0x0000e0a0       0x24 Drivers\spi.o
+                0x0000e0a0                SPI_CS_Deassert()
  .text._Z12SPI_Transferh
-                0x0000e32c       0x88 Drivers\spi.o
-                0x0000e32c                SPI_Transfer(unsigned char)
- *fill*         0x0000e3b4        0x4 00
+                0x0000e0c4       0x88 Drivers\spi.o
+                0x0000e0c4                SPI_Transfer(unsigned char)
+ *fill*         0x0000e14c        0x4 00
  .text._Z8SPI_Initv
-                0x0000e3b8       0xe8 Drivers\spi.o
-                0x0000e3b8                SPI_Init()
+                0x0000e150       0xe8 Drivers\spi.o
+                0x0000e150                SPI_Init()
  .text._Z9uart_initPV11UART_MemMapii
-                0x0000e4a0      0x20c Drivers\uart.o
-                0x0000e4a0                uart_init(UART_MemMap volatile*, int, int)
+                0x0000e238      0x20c Drivers\uart.o
+                0x0000e238                uart_init(UART_MemMap volatile*, int, int)
  .text._Z12uart_getcharPV11UART_MemMap
-                0x0000e6ac       0x34 Drivers\uart.o
-                0x0000e6ac                uart_getchar(UART_MemMap volatile*)
+                0x0000e444       0x34 Drivers\uart.o
+                0x0000e444                uart_getchar(UART_MemMap volatile*)
  .text._ZL7mem_setPvij
-                0x0000e6e0       0x44 Drivers\ff.o
+                0x0000e478       0x44 Drivers\ff.o
  .text._ZL11move_windowP5FATFSm
-                0x0000e724       0xf0 Drivers\ff.o
+                0x0000e4bc       0xf0 Drivers\ff.o
  .text._ZL4syncP5FATFS
-                0x0000e814      0x188 Drivers\ff.o
+                0x0000e5ac      0x188 Drivers\ff.o
  .text._ZL8validateP5FATFSt
-                0x0000e99c       0x54 Drivers\ff.o
+                0x0000e734       0x54 Drivers\ff.o
  .text._Z6f_syncP3FIL
-                0x0000e9f0      0x1c0 Drivers\ff.o
-                0x0000e9f0                f_sync(FIL*)
+                0x0000e788      0x1c0 Drivers\ff.o
+                0x0000e788                f_sync(FIL*)
  .text._Z7f_closeP3FIL
-                0x0000ebb0       0x2c Drivers\ff.o
-                0x0000ebb0                f_close(FIL*)
+                0x0000e948       0x2c Drivers\ff.o
+                0x0000e948                f_close(FIL*)
  .text._ZL17SDHC_set_baudratemm
-                0x0000ebdc      0x14c Drivers\SDHC.o
+                0x0000e974      0x14c Drivers\SDHC.o
  .text._Z9SDHC_initP17esdhc_info_structPK17esdhc_init_struct
-                0x0000ed28      0x1c4 Drivers\SDHC.o
-                0x0000ed28                SDHC_init(esdhc_info_struct*, esdhc_init_struct const*)
+                0x0000eac0      0x1c4 Drivers\SDHC.o
+                0x0000eac0                SDHC_init(esdhc_info_struct*, esdhc_init_struct const*)
  .text._ZL15SDHC_is_runningv
-                0x0000eeec       0x28 Drivers\SDHC.o
+                0x0000ec84       0x28 Drivers\SDHC.o
  .text._ZL16SDHC_status_waitm
-                0x0000ef14       0x38 Drivers\SDHC.o
+                0x0000ecac       0x38 Drivers\SDHC.o
  .text._ZL17SDHC_send_commandP20esdhc_command_struct
-                0x0000ef4c      0x2a0 Drivers\SDHC.o
+                0x0000ece4      0x2a0 Drivers\SDHC.o
  .text._Z10SDHC_ioctlmPv
-                0x0000f1ec      0x978 Drivers\SDHC.o
-                0x0000f1ec                SDHC_ioctl(unsigned long, void*)
+                0x0000ef84      0x978 Drivers\SDHC.o
+                0x0000ef84                SDHC_ioctl(unsigned long, void*)
  .text._ZL14rcvr_datablockPhm
-                0x0000fb64      0x134 Drivers\SDHC.o
+                0x0000f8fc      0x134 Drivers\SDHC.o
  .text._Z9disk_readhPhmh
-                0x0000fc98      0x13c Drivers\SDHC.o
-                0x0000fc98                disk_read(unsigned char, unsigned char*, unsigned long, unsigned char)
+                0x0000fa30      0x13c Drivers\SDHC.o
+                0x0000fa30                disk_read(unsigned char, unsigned char*, unsigned long, unsigned char)
  .text._ZL14xmit_datablockPKhm
-                0x0000fdd4       0xe0 Drivers\SDHC.o
+                0x0000fb6c       0xe0 Drivers\SDHC.o
  .text._Z10disk_writehPKhmh
-                0x0000feb4      0x1cc Drivers\SDHC.o
-                0x0000feb4                disk_write(unsigned char, unsigned char const*, unsigned long, unsigned char)
+                0x0000fc4c      0x1cc Drivers\SDHC.o
+                0x0000fc4c                disk_write(unsigned char, unsigned char const*, unsigned long, unsigned char)
  .text._Z10disk_ioctlhhPv
-                0x00010080      0x128 Drivers\SDHC.o
-                0x00010080                disk_ioctl(unsigned char, unsigned char, void*)
+                0x0000fe18      0x128 Drivers\SDHC.o
+                0x0000fe18                disk_ioctl(unsigned char, unsigned char, void*)
  .text._Z11disk_statush
-                0x000101a8       0x30 Drivers\SDHC.o
-                0x000101a8                disk_status(unsigned char)
+                0x0000ff40       0x30 Drivers\SDHC.o
+                0x0000ff40                disk_status(unsigned char)
  .text._Z13time_delay_msm
-                0x000101d8       0xa4 Drivers\lptmr.o
-                0x000101d8                time_delay_ms(unsigned long)
+                0x0000ff70       0xa4 Drivers\lptmr.o
+                0x0000ff70                time_delay_ms(unsigned long)
  .text._Z41__static_initialization_and_destruction_0ii
-                0x0001027c       0x30 FEHProteus.o
+                0x00010014       0x30 FEHProteus.o
  .text._GLOBAL__sub_I_Propeller
-                0x000102ac       0x14 FEHProteus.o
+                0x00010044       0x14 FEHProteus.o
  .text._ZN12FEHPropellerC2Ev
-                0x000102c0       0x20 Drivers\FEHPropeller.o
-                0x000102c0                FEHPropeller::FEHPropeller()
-                0x000102c0                FEHPropeller::FEHPropeller()
+                0x00010058       0x20 Drivers\FEHPropeller.o
+                0x00010058                FEHPropeller::FEHPropeller()
+                0x00010058                FEHPropeller::FEHPropeller()
  .text._ZN12FEHPropeller10InitializeEv
-                0x000102e0       0x94 Drivers\FEHPropeller.o
-                0x000102e0                FEHPropeller::Initialize()
+                0x00010078       0x94 Drivers\FEHPropeller.o
+                0x00010078                FEHPropeller::Initialize()
  .text._ZL5Delaymjj
-                0x00010374       0xc4 Libraries\FEHUtility.o
+                0x0001010c       0xc4 Libraries\FEHUtility.o
  .text._Z5Sleepi
-                0x00010438       0x34 Libraries\FEHUtility.o
-                0x00010438                Sleep(int)
- *fill*         0x0001046c        0x4 00
+                0x000101d0       0x34 Libraries\FEHUtility.o
+                0x000101d0                Sleep(int)
+ *fill*         0x00010204        0x4 00
  .text._Z5Sleepd
-                0x00010470       0x58 Libraries\FEHUtility.o
-                0x00010470                Sleep(double)
+                0x00010208       0x58 Libraries\FEHUtility.o
+                0x00010208                Sleep(double)
  .text._Z7TimeNowv
-                0x000104c8       0x70 Libraries\FEHUtility.o
-                0x000104c8                TimeNow()
+                0x00010260       0x70 Libraries\FEHUtility.o
+                0x00010260                TimeNow()
  .text._Z9portB_isrv
-                0x00010538       0xd4 Libraries\FEHIO.o
-                0x00010538                portB_isr()
+                0x000102d0       0xd4 Libraries\FEHIO.o
+                0x000102d0                portB_isr()
  .text._Z9portC_isrv
-                0x0001060c       0xd8 Libraries\FEHIO.o
-                0x0001060c                portC_isr()
+                0x000103a4       0xd8 Libraries\FEHIO.o
+                0x000103a4                portC_isr()
  .text._Z9portA_isrv
-                0x000106e4       0xd8 Libraries\FEHIO.o
-                0x000106e4                portA_isr()
+                0x0001047c       0xd8 Libraries\FEHIO.o
+                0x0001047c                portA_isr()
  .text._Z9portE_isrv
-                0x000107bc       0xd0 Libraries\FEHIO.o
-                0x000107bc                portE_isr()
+                0x00010554       0xd0 Libraries\FEHIO.o
+                0x00010554                portE_isr()
  .text._ZN14AnalogInputPinC2EN5FEHIO8FEHIOPinE
-                0x0001088c       0x20 Libraries\FEHIO.o
-                0x0001088c                AnalogInputPin::AnalogInputPin(FEHIO::FEHIOPin)
-                0x0001088c                AnalogInputPin::AnalogInputPin(FEHIO::FEHIOPin)
+                0x00010624       0x20 Libraries\FEHIO.o
+                0x00010624                AnalogInputPin::AnalogInputPin(FEHIO::FEHIOPin)
+                0x00010624                AnalogInputPin::AnalogInputPin(FEHIO::FEHIOPin)
  .text._ZN13AnalogEncoder12EncoderValueEv
-                0x000108ac       0xe4 Libraries\FEHIO.o
-                0x000108ac                AnalogEncoder::EncoderValue()
+                0x00010644       0xe4 Libraries\FEHIO.o
+                0x00010644                AnalogEncoder::EncoderValue()
  .text._ZN14AnalogInputPin8InitADCsEv
-                0x00010990      0x120 Libraries\FEHIO.o
-                0x00010990                AnalogInputPin::InitADCs()
+                0x00010728      0x120 Libraries\FEHIO.o
+                0x00010728                AnalogInputPin::InitADCs()
  .text._Z8pit0_isrv
-                0x00010ab0       0x34 Libraries\FEHIO.o
-                0x00010ab0                pit0_isr()
+                0x00010848       0x34 Libraries\FEHIO.o
+                0x00010848                pit0_isr()
  .text._ZN13AnalogEncoder4InitEv
-                0x00010ae4       0x64 Libraries\FEHIO.o
-                0x00010ae4                AnalogEncoder::Init()
+                0x0001087c       0x64 Libraries\FEHIO.o
+                0x0001087c                AnalogEncoder::Init()
  .text._ZN13AnalogEncoder14SetCounterInitEj
-                0x00010b48       0x20 Libraries\FEHIO.o
-                0x00010b48                AnalogEncoder::SetCounterInit(unsigned int)
+                0x000108e0       0x20 Libraries\FEHIO.o
+                0x000108e0                AnalogEncoder::SetCounterInit(unsigned int)
  .text._ZN13AnalogEncoder10ProcessIntEv
-                0x00010b68       0x80 Libraries\FEHIO.o
-                0x00010b68                AnalogEncoder::ProcessInt()
+                0x00010900       0x80 Libraries\FEHIO.o
+                0x00010900                AnalogEncoder::ProcessInt()
  .text._ZN13AnalogEncoder14ProcessIntSelfEv
-                0x00010be8       0x80 Libraries\FEHIO.o
-                0x00010be8                AnalogEncoder::ProcessIntSelf()
+                0x00010980       0x80 Libraries\FEHIO.o
+                0x00010980                AnalogEncoder::ProcessIntSelf()
  .text._Z7ADC_CalPV10ADC_MemMap
-                0x00010c68      0x14c Drivers\adc16.o
-                0x00010c68                ADC_Cal(ADC_MemMap volatile*)
+                0x00010a00      0x14c Drivers\adc16.o
+                0x00010a00                ADC_Cal(ADC_MemMap volatile*)
  .text._Z14ADC_Config_AltPV10ADC_MemMapP7adc_cfg
-                0x00010db4       0x6c Drivers\adc16.o
-                0x00010db4                ADC_Config_Alt(ADC_MemMap volatile*, adc_cfg*)
+                0x00010b4c       0x6c Drivers\adc16.o
+                0x00010b4c                ADC_Config_Alt(ADC_MemMap volatile*, adc_cfg*)
  .text._ZN9FEHBuzzerC2Ev
-                0x00010e20       0x18 Libraries\FEHBuzzer.o
-                0x00010e20                FEHBuzzer::FEHBuzzer()
-                0x00010e20                FEHBuzzer::FEHBuzzer()
+                0x00010bb8       0x18 Libraries\FEHBuzzer.o
+                0x00010bb8                FEHBuzzer::FEHBuzzer()
+                0x00010bb8                FEHBuzzer::FEHBuzzer()
  .text._Z41__static_initialization_and_destruction_0ii
-                0x00010e38       0x30 Libraries\FEHBuzzer.o
+                0x00010bd0       0x30 Libraries\FEHBuzzer.o
  .text._GLOBAL__sub_I_Buzzer
-                0x00010e68       0x14 Libraries\FEHBuzzer.o
+                0x00010c00       0x14 Libraries\FEHBuzzer.o
  .text._ZN6FEHLCD11_InitializeEv
-                0x00010e7c      0x5dc Libraries\FEHLCD.o
-                0x00010e7c                FEHLCD::_Initialize()
+                0x00010c14      0x5dc Libraries\FEHLCD.o
+                0x00010c14                FEHLCD::_Initialize()
  .text._ZN6FEHLCDC2Ev
-                0x00011458       0x64 Libraries\FEHLCD.o
-                0x00011458                FEHLCD::FEHLCD()
-                0x00011458                FEHLCD::FEHLCD()
+                0x000111f0       0x64 Libraries\FEHLCD.o
+                0x000111f0                FEHLCD::FEHLCD()
+                0x000111f0                FEHLCD::FEHLCD()
  .text._ZN6FEHLCD10InitializeEv
-                0x000114bc       0x38 Libraries\FEHLCD.o
-                0x000114bc                FEHLCD::Initialize()
+                0x00011254       0x38 Libraries\FEHLCD.o
+                0x00011254                FEHLCD::Initialize()
  .text._ZN6FEHLCD10PrintImageEii
-                0x000114f4      0x100 Libraries\FEHLCD.o
-                0x000114f4                FEHLCD::PrintImage(int, int)
+                0x0001128c      0x100 Libraries\FEHLCD.o
+                0x0001128c                FEHLCD::PrintImage(int, int)
  .text._ZN6FEHLCD9PrintLogoEii
-                0x000115f4      0x100 Libraries\FEHLCD.o
-                0x000115f4                FEHLCD::PrintLogo(int, int)
+                0x0001138c      0x100 Libraries\FEHLCD.o
+                0x0001138c                FEHLCD::PrintLogo(int, int)
  .text._ZN6FEHLCD22ConvertFEHColorTo24BitENS_11FEHLCDColorE
-                0x000116f4       0x80 Libraries\FEHLCD.o
-                0x000116f4                FEHLCD::ConvertFEHColorTo24Bit(FEHLCD::FEHLCDColor)
+                0x0001148c       0x80 Libraries\FEHLCD.o
+                0x0001148c                FEHLCD::ConvertFEHColorTo24Bit(FEHLCD::FEHLCDColor)
  .text._ZN6FEHLCD24Convert24BitColorTo16BitEj
-                0x00011774       0x40 Libraries\FEHLCD.o
-                0x00011774                FEHLCD::Convert24BitColorTo16Bit(unsigned int)
+                0x0001150c       0x40 Libraries\FEHLCD.o
+                0x0001150c                FEHLCD::Convert24BitColorTo16Bit(unsigned int)
  .text._ZN6FEHLCD22ConvertRGBColorTo16BitEhhh
-                0x000117b4       0x44 Libraries\FEHLCD.o
-                0x000117b4                FEHLCD::ConvertRGBColorTo16Bit(unsigned char, unsigned char, unsigned char)
+                0x0001154c       0x44 Libraries\FEHLCD.o
+                0x0001154c                FEHLCD::ConvertRGBColorTo16Bit(unsigned char, unsigned char, unsigned char)
  .text._ZN6FEHLCD5ClearENS_11FEHLCDColorE
-                0x000117f8       0x28 Libraries\FEHLCD.o
-                0x000117f8                FEHLCD::Clear(FEHLCD::FEHLCDColor)
+                0x00011590       0x28 Libraries\FEHLCD.o
+                0x00011590                FEHLCD::Clear(FEHLCD::FEHLCDColor)
  .text._ZN6FEHLCD5ClearEj
-                0x00011820       0x2c Libraries\FEHLCD.o
-                0x00011820                FEHLCD::Clear(unsigned int)
+                0x000115b8       0x2c Libraries\FEHLCD.o
+                0x000115b8                FEHLCD::Clear(unsigned int)
  .text._ZN6FEHLCD18SetBackgroundColorENS_11FEHLCDColorE
-                0x0001184c       0x28 Libraries\FEHLCD.o
-                0x0001184c                FEHLCD::SetBackgroundColor(FEHLCD::FEHLCDColor)
+                0x000115e4       0x28 Libraries\FEHLCD.o
+                0x000115e4                FEHLCD::SetBackgroundColor(FEHLCD::FEHLCDColor)
  .text._ZN6FEHLCD18SetBackgroundColorEj
-                0x00011874       0x28 Libraries\FEHLCD.o
-                0x00011874                FEHLCD::SetBackgroundColor(unsigned int)
+                0x0001160c       0x28 Libraries\FEHLCD.o
+                0x0001160c                FEHLCD::SetBackgroundColor(unsigned int)
  .text._ZN6FEHLCD12SetFontColorENS_11FEHLCDColorE
-                0x0001189c       0x28 Libraries\FEHLCD.o
-                0x0001189c                FEHLCD::SetFontColor(FEHLCD::FEHLCDColor)
+                0x00011634       0x28 Libraries\FEHLCD.o
+                0x00011634                FEHLCD::SetFontColor(FEHLCD::FEHLCDColor)
  .text._ZN6FEHLCD12SetFontColorEj
-                0x000118c4       0x28 Libraries\FEHLCD.o
-                0x000118c4                FEHLCD::SetFontColor(unsigned int)
+                0x0001165c       0x28 Libraries\FEHLCD.o
+                0x0001165c                FEHLCD::SetFontColor(unsigned int)
  .text._ZN6FEHLCD7WriteAtEPKcii
-                0x000118ec       0x58 Libraries\FEHLCD.o
-                0x000118ec                FEHLCD::WriteAt(char const*, int, int)
+                0x00011684       0x58 Libraries\FEHLCD.o
+                0x00011684                FEHLCD::WriteAt(char const*, int, int)
  .text._ZN6FEHLCD11TS_SPI_InitEv
-                0x00011944       0xa8 Libraries\FEHLCD.o
-                0x00011944                FEHLCD::TS_SPI_Init()
+                0x000116dc       0xa8 Libraries\FEHLCD.o
+                0x000116dc                FEHLCD::TS_SPI_Init()
  .text._ZN6FEHLCD10WriteIndexEh
-                0x000119ec      0x288 Libraries\FEHLCD.o
-                0x000119ec                FEHLCD::WriteIndex(unsigned char)
+                0x00011784      0x288 Libraries\FEHLCD.o
+                0x00011784                FEHLCD::WriteIndex(unsigned char)
  .text._ZN6FEHLCD14WriteParameterEh
-                0x00011c74      0x254 Libraries\FEHLCD.o
-                0x00011c74                FEHLCD::WriteParameter(unsigned char)
+                0x00011a0c      0x254 Libraries\FEHLCD.o
+                0x00011a0c                FEHLCD::WriteParameter(unsigned char)
  .text._ZN6FEHLCD6_ClearEv
-                0x00011ec8      0x228 Libraries\FEHLCD.o
-                0x00011ec8                FEHLCD::_Clear()
+                0x00011c60      0x228 Libraries\FEHLCD.o
+                0x00011c60                FEHLCD::_Clear()
  .text._ZN6FEHLCD8NextLineEv
-                0x000120f0       0x30 Libraries\FEHLCD.o
-                0x000120f0                FEHLCD::NextLine()
+                0x00011e88       0x30 Libraries\FEHLCD.o
+                0x00011e88                FEHLCD::NextLine()
  .text._ZN6FEHLCD9CheckLineEv
-                0x00012120       0x2c Libraries\FEHLCD.o
-                0x00012120                FEHLCD::CheckLine()
+                0x00011eb8       0x2c Libraries\FEHLCD.o
+                0x00011eb8                FEHLCD::CheckLine()
  .text._ZN6FEHLCD9DrawPixelEii
-                0x0001214c       0x30 Libraries\FEHLCD.o
-                0x0001214c                FEHLCD::DrawPixel(int, int)
+                0x00011ee4       0x30 Libraries\FEHLCD.o
+                0x00011ee4                FEHLCD::DrawPixel(int, int)
  .text._ZN6FEHLCD13SetDrawRegionEiiii
-                0x0001217c      0x10c Libraries\FEHLCD.o
-                0x0001217c                FEHLCD::SetDrawRegion(int, int, int, int)
+                0x00011f14      0x10c Libraries\FEHLCD.o
+                0x00011f14                FEHLCD::SetDrawRegion(int, int, int, int)
  .text._ZN6FEHLCD11WriteCharAtEiic
-                0x00012288      0x278 Libraries\FEHLCD.o
-                0x00012288                FEHLCD::WriteCharAt(int, int, char)
+                0x00012020      0x278 Libraries\FEHLCD.o
+                0x00012020                FEHLCD::WriteCharAt(int, int, char)
  .text._ZN6FEHLCD11RepeatColorEv
-                0x00012500       0xbc Libraries\FEHLCD.o
-                0x00012500                FEHLCD::RepeatColor()
+                0x00012298       0xbc Libraries\FEHLCD.o
+                0x00012298                FEHLCD::RepeatColor()
  .text._ZN6FEHLCD10_ForePixelEv
-                0x000125bc      0x160 Libraries\FEHLCD.o
-                0x000125bc                FEHLCD::_ForePixel()
+                0x00012354      0x160 Libraries\FEHLCD.o
+                0x00012354                FEHLCD::_ForePixel()
  .text._ZN6FEHLCD10_BackPixelEv
-                0x0001271c      0x160 Libraries\FEHLCD.o
-                0x0001271c                FEHLCD::_BackPixel()
+                0x000124b4      0x160 Libraries\FEHLCD.o
+                0x000124b4                FEHLCD::_BackPixel()
  .text._ZN6FEHLCD22SetRegisterColorValuesEv
-                0x0001287c      0x4c0 Libraries\FEHLCD.o
-                0x0001287c                FEHLCD::SetRegisterColorValues()
+                0x00012614      0x4c0 Libraries\FEHLCD.o
+                0x00012614                FEHLCD::SetRegisterColorValues()
  .text._Z41__static_initialization_and_destruction_0ii
-                0x00012d3c       0x30 Libraries\FEHLCD.o
+                0x00012ad4       0x30 Libraries\FEHLCD.o
  .text._GLOBAL__sub_I_image
-                0x00012d6c       0x14 Libraries\FEHLCD.o
+                0x00012b04       0x14 Libraries\FEHLCD.o
  .text._ZN8FEHAccelC2Ev
-                0x00012d80       0x8c Libraries\FEHAccel.o
-                0x00012d80                FEHAccel::FEHAccel()
-                0x00012d80                FEHAccel::FEHAccel()
- *fill*         0x00012e0c        0x4 00
+                0x00012b18       0x8c Libraries\FEHAccel.o
+                0x00012b18                FEHAccel::FEHAccel()
+                0x00012b18                FEHAccel::FEHAccel()
+ *fill*         0x00012ba4        0x4 00
  .text._ZN8FEHAccel1XEv
-                0x00012e10       0x78 Libraries\FEHAccel.o
-                0x00012e10                FEHAccel::X()
+                0x00012ba8       0x78 Libraries\FEHAccel.o
+                0x00012ba8                FEHAccel::X()
  .text._ZN8FEHAccel1YEv
-                0x00012e88       0x78 Libraries\FEHAccel.o
-                0x00012e88                FEHAccel::Y()
+                0x00012c20       0x78 Libraries\FEHAccel.o
+                0x00012c20                FEHAccel::Y()
  .text._Z41__static_initialization_and_destruction_0ii
-                0x00012f00       0x30 Libraries\FEHAccel.o
+                0x00012c98       0x30 Libraries\FEHAccel.o
  .text._GLOBAL__sub_I_Accel
-                0x00012f30       0x14 Libraries\FEHAccel.o
+                0x00012cc8       0x14 Libraries\FEHAccel.o
  .text._ZN10FEHBatteryC2EN5FEHIO8FEHIOPinE
-                0x00012f44       0x24 Libraries\FEHBattery.o
-                0x00012f44                FEHBattery::FEHBattery(FEHIO::FEHIOPin)
-                0x00012f44                FEHBattery::FEHBattery(FEHIO::FEHIOPin)
+                0x00012cdc       0x24 Libraries\FEHBattery.o
+                0x00012cdc                FEHBattery::FEHBattery(FEHIO::FEHIOPin)
+                0x00012cdc                FEHBattery::FEHBattery(FEHIO::FEHIOPin)
  .text._Z41__static_initialization_and_destruction_0ii
-                0x00012f68       0x34 Libraries\FEHBattery.o
+                0x00012d00       0x34 Libraries\FEHBattery.o
  .text._GLOBAL__sub_I_Battery
-                0x00012f9c       0x14 Libraries\FEHBattery.o
+                0x00012d34       0x14 Libraries\FEHBattery.o
  .text._ZN7FEHXBeeC2Ev
-                0x00012fb0       0x20 Drivers\FEHXBee.o
-                0x00012fb0                FEHXBee::FEHXBee()
-                0x00012fb0                FEHXBee::FEHXBee()
+                0x00012d48       0x20 Drivers\FEHXBee.o
+                0x00012d48                FEHXBee::FEHXBee()
+                0x00012d48                FEHXBee::FEHXBee()
  .text._ZN7FEHXBee17SetPacketCallBackEPFvPhhE
-                0x00012fd0       0x20 Drivers\FEHXBee.o
-                0x00012fd0                FEHXBee::SetPacketCallBack(void (*)(unsigned char*, unsigned char))
+                0x00012d68       0x20 Drivers\FEHXBee.o
+                0x00012d68                FEHXBee::SetPacketCallBack(void (*)(unsigned char*, unsigned char))
  .text._Z9UART0_ISRv
-                0x00012ff0      0x174 Drivers\FEHXBee.o
-                0x00012ff0                UART0_ISR()
+                0x00012d88      0x174 Drivers\FEHXBee.o
+                0x00012d88                UART0_ISR()
  .text._ZN6FEHRPSC2Ev
-                0x00013164       0x88 Libraries\FEHRPS.o
-                0x00013164                FEHRPS::FEHRPS()
-                0x00013164                FEHRPS::FEHRPS()
+                0x00012efc       0x88 Libraries\FEHRPS.o
+                0x00012efc                FEHRPS::FEHRPS()
+                0x00012efc                FEHRPS::FEHRPS()
  .text._Z14RPSDataProcessPhh
-                0x000131ec      0x164 Libraries\FEHRPS.o
-                0x000131ec                RPSDataProcess(unsigned char*, unsigned char)
+                0x00012f84      0x164 Libraries\FEHRPS.o
+                0x00012f84                RPSDataProcess(unsigned char*, unsigned char)
  .text._Z41__static_initialization_and_destruction_0ii
-                0x00013350       0x30 Libraries\FEHRPS.o
+                0x000130e8       0x30 Libraries\FEHRPS.o
  .text._GLOBAL__sub_I_RPS
-                0x00013380       0x14 Libraries\FEHRPS.o
+                0x00013118       0x14 Libraries\FEHRPS.o
  .text._ZN5FEHSDC2Ev
-                0x00013394       0x24 Libraries\FEHSD.o
-                0x00013394                FEHSD::FEHSD()
-                0x00013394                FEHSD::FEHSD()
+                0x0001312c       0x24 Libraries\FEHSD.o
+                0x0001312c                FEHSD::FEHSD()
+                0x0001312c                FEHSD::FEHSD()
  .text._ZN5FEHSD8CloseLogEv
-                0x000133b8       0x38 Libraries\FEHSD.o
-                0x000133b8                FEHSD::CloseLog()
+                0x00013150       0x38 Libraries\FEHSD.o
+                0x00013150                FEHSD::CloseLog()
  .text._Z41__static_initialization_and_destruction_0ii
-                0x000133f0       0x30 Libraries\FEHSD.o
+                0x00013188       0x30 Libraries\FEHSD.o
  .text._GLOBAL__sub_I_SD
-                0x00013420       0x14 Libraries\FEHSD.o
- *fill*         0x00013434        0x4 00
- .text.atan     0x00013438      0x348 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
-                0x00013438                atan
- .text.cos      0x00013780       0x94 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
-                0x00013780                cos
- .text.sin      0x00013814       0x90 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
-                0x00013814                sin
- *fill*         0x000138a4        0x4 00
+                0x000131b8       0x14 Libraries\FEHSD.o
+ .text.sin      0x000131cc       0x90 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
+                0x000131cc                sin
+ *fill*         0x0001325c        0x4 00
  .text.__ieee754_rem_pio2
-                0x000138a8      0x3f8 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
-                0x000138a8                __ieee754_rem_pio2
+                0x00013260      0x3f8 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
+                0x00013260                __ieee754_rem_pio2
  .text.__kernel_cos
-                0x00013ca0      0x1e0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
-                0x00013ca0                __kernel_cos
+                0x00013658      0x1e0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
+                0x00013658                __kernel_cos
  .text.__kernel_rem_pio2
-                0x00013e80      0x674 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
-                0x00013e80                __kernel_rem_pio2
- *fill*         0x000144f4        0x4 00
+                0x00013838      0x674 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
+                0x00013838                __kernel_rem_pio2
+ *fill*         0x00013eac        0x4 00
  .text.__kernel_sin
-                0x000144f8      0x180 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
-                0x000144f8                __kernel_sin
- .text.floor    0x00014678      0x118 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
-                0x00014678                floor
- .text.scalbn   0x00014790       0x18 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
-                0x00014790                scalbn
- .text.frexp    0x000147a8       0x70 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
-                0x000147a8                frexp
- .text.ldexp    0x00014818      0x140 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
-                0x00014818                ldexp
+                0x00013eb0      0x180 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
+                0x00013eb0                __kernel_sin
+ .text.floor    0x00014030      0x118 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
+                0x00014030                floor
+ .text.scalbn   0x00014148       0x18 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
+                0x00014148                scalbn
+ .text.frexp    0x00014160       0x70 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
+                0x00014160                frexp
+ .text.ldexp    0x000141d0      0x140 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
+                0x000141d0                ldexp
  .text.__fpclassifyd
-                0x00014958       0x3c C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
-                0x00014958                __fpclassifyd
- .text.exit     0x00014994       0x38 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
-                0x00014994                exit
- .text.memset   0x000149cc        0xc C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
-                0x000149cc                memset
- .text.strlen   0x000149d8       0x10 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
-                0x000149d8                strlen
+                0x00014310       0x3c C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
+                0x00014310                __fpclassifyd
+ .text.exit     0x0001434c       0x38 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+                0x0001434c                exit
+ .text.memset   0x00014384        0xc C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+                0x00014384                memset
+ .text.strlen   0x00014390       0x10 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+                0x00014390                strlen
  .text.long2str.isra.0
-                0x000149e8      0x196 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
- *fill*         0x00014b7e        0x2 00
+                0x000143a0      0x196 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+ *fill*         0x00014536        0x2 00
  .text.__pformatter_
-                0x00014b80      0x3f8 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
-                0x00014b80                __pformatter_
+                0x00014538      0x3f8 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+                0x00014538                __pformatter_
  .text.__sformatter
-                0x00014f78      0x74e C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
-                0x00014f78                __sformatter
- *fill*         0x000156c6        0x2 00
- .text.isalpha  0x000156c8       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
-                0x000156c8                isalpha
- .text.isspace  0x000156e4       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
-                0x000156e4                isspace
- .text.toupper  0x00015700        0xc C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
-                0x00015700                toupper
+                0x00014930      0x74e C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+                0x00014930                __sformatter
+ *fill*         0x0001507e        0x2 00
+ .text.isalpha  0x00015080       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+                0x00015080                isalpha
+ .text.isspace  0x0001509c       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+                0x0001509c                isspace
+ .text.toupper  0x000150b8        0xc C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+                0x000150b8                toupper
  .text.__strtoul
-                0x0001570c      0x1dc C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
-                0x0001570c                __strtoul
+                0x000150c4      0x1dc C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+                0x000150c4                __strtoul
  .text.__fill_mem
-                0x000158e8       0x76 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
-                0x000158e8                __fill_mem
- .text.memchr   0x0001595e       0x1a C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
-                0x0001595e                memchr
- .text.strchr   0x00015978       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
-                0x00015978                strchr
+                0x000152a0       0x76 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+                0x000152a0                __fill_mem
+ .text.memchr   0x00015316       0x1a C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+                0x00015316                memchr
+ .text.strchr   0x00015330       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+                0x00015330                strchr
  .text.__init_cpp
-                0x00015994       0x4c C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
-                0x00015994                __init_cpp
+                0x0001534c       0x4c C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+                0x0001534c                __init_cpp
  .text.__fini_cpp
-                0x000159e0       0x34 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
-                0x000159e0                __fini_cpp
+                0x00015398       0x34 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+                0x00015398                __fini_cpp
  .text.__copy_rom_section
-                0x00015a14       0x44 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
-                0x00015a14                __copy_rom_section
+                0x000153cc       0x44 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+                0x000153cc                __copy_rom_section
  .text.__copy_rom_sections_to_ram
-                0x00015a58       0x34 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
-                0x00015a58                __copy_rom_sections_to_ram
+                0x00015410       0x34 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+                0x00015410                __copy_rom_sections_to_ram
  .text.__destroy_global_chain
-                0x00015a8c       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
-                0x00015a8c                __destroy_global_chain
+                0x00015444       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x00015444                __destroy_global_chain
  .text.__init_registers
-                0x00015aa8       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
-                0x00015aa8                __init_registers
+                0x00015460       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x00015460                __init_registers
  .text.__init_user
-                0x00015ac8        0x4 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
-                0x00015ac8                __init_user
+                0x00015480        0x4 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x00015480                __init_user
  *(.rodata)
- .rodata        0x00015acc       0x78 Libraries\FEHIO.o
- .rodata        0x00015b44       0x34 Libraries\FEHLCD.o
+ .rodata        0x00015484       0x78 Libraries\FEHIO.o
+ .rodata        0x000154fc       0x34 Libraries\FEHLCD.o
  *(.rodata*)
  .rodata.K60_SDHC0_init
-                0x00015b78        0xc Drivers\SDHC.o
-                0x00015b78                K60_SDHC0_init
+                0x00015530        0xc Drivers\SDHC.o
+                0x00015530                K60_SDHC0_init
  .rodata._ZL21ESDHC_COMMAND_XFERTYP
-                0x00015b84      0x100 Drivers\SDHC.o
+                0x0001553c      0x100 Drivers\SDHC.o
  .rodata._ZL10ADCNumbers
-                0x00015c84       0x24 Libraries\FEHIO.o
+                0x0001563c       0x24 Libraries\FEHIO.o
  .rodata._ZL16AnalogPinNumbers
-                0x00015ca8       0x84 Libraries\FEHIO.o
- *fill*         0x00015d2c        0x4 00
- .rodata.atanlo
-                0x00015d30       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
- .rodata.atanhi
-                0x00015d50       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
+                0x00015660       0x84 Libraries\FEHIO.o
  .rodata.npio2_hw
-                0x00015d70       0x80 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
+                0x000156e4       0x80 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
  .rodata.two_over_pi
-                0x00015df0      0x108 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
+                0x00015764      0x108 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
  .rodata.init_jk
-                0x00015ef8       0x10 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
- .rodata.PIo2   0x00015f08       0x40 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
+                0x0001586c       0x10 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
+ *fill*         0x0001587c        0x4 00
+ .rodata.PIo2   0x00015880       0x40 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
  .rodata.str1.1
-                0x00015f48        0x1 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+                0x000158c0        0x1 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
  .rodata.__aeabi_ctype_table_C
-                0x00015f49      0x101 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
-                0x00015f49                __aeabi_ctype_table_C
+                0x000158c1      0x101 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+                0x000158c1                __aeabi_ctype_table_C
  *(.glue_7)
  .glue_7        0x00000000        0x0 linker stubs
  *(.glue_7t)
@@ -2912,66 +2892,66 @@ END GROUP
  *(.eh_frame)
  *(.init)
  *(.fini)
-                0x0001604c                . = ALIGN (0x4)
- *fill*         0x0001604a        0x2 00
-                0x0001604c                _etext = .
+                0x000159c4                . = ALIGN (0x4)
+ *fill*         0x000159c2        0x2 00
+                0x000159c4                _etext = .
 
-.vfp11_veneer   0x0001604c        0x0
+.vfp11_veneer   0x000159c4        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x0001604c        0x0
+.v4_bx          0x000159c4        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
 
-.ARM            0x0001604c        0x0
-                0x0001604c                __exidx_start = .
+.ARM            0x000159c4        0x0
+                0x000159c4                __exidx_start = .
  *(.ARM.exidx*)
-                0x0001604c                __exidx_end = .
+                0x000159c4                __exidx_end = .
 
-.ctors          0x0001604c        0x0
-                0x0001604c                __CTOR_LIST__ = .
+.ctors          0x000159c4        0x0
+                0x000159c4                __CTOR_LIST__ = .
  *crtbegin.o(.ctors)
  *(EXCLUDE_FILE(*crtend.o) .ctors)
  *(SORT(.ctors.*))
  *(.ctors)
-                0x0001604c                __CTOR_END__ = .
+                0x000159c4                __CTOR_END__ = .
 
-.dtors          0x0001604c        0x0
-                0x0001604c                __DTOR_LIST__ = .
+.dtors          0x000159c4        0x0
+                0x000159c4                __DTOR_LIST__ = .
  *crtbegin.o(.dtors)
  *(EXCLUDE_FILE(*crtend.o) .dtors)
  *(SORT(.dtors.*))
  *(.dtors)
-                0x0001604c                __DTOR_END__ = .
+                0x000159c4                __DTOR_END__ = .
 
-.preinit_array  0x0001604c        0x0
-                0x0001604c                PROVIDE (__preinit_array_start, .)
+.preinit_array  0x000159c4        0x0
+                0x000159c4                PROVIDE (__preinit_array_start, .)
  *(.preinit_array*)
-                0x0001604c                PROVIDE (__preinit_array_end, .)
+                0x000159c4                PROVIDE (__preinit_array_end, .)
 
-.init_array     0x0001604c       0x1c
-                0x0001604c                PROVIDE (__init_array_start, .)
+.init_array     0x000159c4       0x1c
+                0x000159c4                PROVIDE (__init_array_start, .)
  *(SORT(.init_array.*))
  *(.init_array*)
- .init_array    0x0001604c        0x4 FEHProteus.o
- .init_array    0x00016050        0x4 Libraries\FEHBuzzer.o
- .init_array    0x00016054        0x4 Libraries\FEHLCD.o
- .init_array    0x00016058        0x4 Libraries\FEHAccel.o
- .init_array    0x0001605c        0x4 Libraries\FEHBattery.o
- .init_array    0x00016060        0x4 Libraries\FEHRPS.o
- .init_array    0x00016064        0x4 Libraries\FEHSD.o
-                0x00016068                PROVIDE (__init_array_end, .)
+ .init_array    0x000159c4        0x4 FEHProteus.o
+ .init_array    0x000159c8        0x4 Libraries\FEHBuzzer.o
+ .init_array    0x000159cc        0x4 Libraries\FEHLCD.o
+ .init_array    0x000159d0        0x4 Libraries\FEHAccel.o
+ .init_array    0x000159d4        0x4 Libraries\FEHBattery.o
+ .init_array    0x000159d8        0x4 Libraries\FEHRPS.o
+ .init_array    0x000159dc        0x4 Libraries\FEHSD.o
+                0x000159e0                PROVIDE (__init_array_end, .)
 
-.fini_array     0x00016068        0x0
-                0x00016068                PROVIDE (__fini_array_start, .)
+.fini_array     0x000159e0        0x0
+                0x000159e0                PROVIDE (__fini_array_start, .)
  *(SORT(.fini_array.*))
  *(.fini_array*)
-                0x00016068                PROVIDE (__fini_array_end, .)
-                0x00016068                ___ROM_AT = .
+                0x000159e0                PROVIDE (__fini_array_end, .)
+                0x000159e0                ___ROM_AT = .
 
-.data           0x1fff0400      0xd1c load address 0x00016068
+.data           0x1fff0400      0xd1c load address 0x000159e0
                 0x1fff0400                . = ALIGN (0x4)
                 0x1fff0400                _sdata = .
  *(.data)
@@ -2989,9 +2969,9 @@ END GROUP
                 0x1fff111c                . = ALIGN (0x4)
                 0x1fff111c                _edata = .
                 0x00000d1c                ___data_size = (_edata - _sdata)
-                0x00016d84                ___m_data2_ROMStart = (___ROM_AT + SIZEOF (.data))
+                0x000166fc                ___m_data2_ROMStart = (___ROM_AT + SIZEOF (.data))
 
-.user_data2     0x20000000        0x0 load address 0x00016d84
+.user_data2     0x20000000        0x0 load address 0x000166fc
                 0x20000000                . = ALIGN (0x4)
                 0x20000000                ___m_data2_RAMStart = .
  *(.data2)
@@ -3000,7 +2980,7 @@ END GROUP
                 0x00000000                ___m_data2_ROMSize = (___m_data2_RAMEnd - ___m_data2_RAMStart)
                 0x20000000                . = ALIGN (0x4)
 
-.bss            0x1fff111c      0x5b0 load address 0x00016d84
+.bss            0x1fff111c      0x5b0 load address 0x000166fc
                 0x1fff111c                __START_BSS = .
                 0x1fff111c                PROVIDE (__bss_start__, __START_BSS)
  *(.bss)
@@ -3123,7 +3103,7 @@ END GROUP
                 0x1fff16cc                PROVIDE (__bss_end__, __END_BSS)
 
 ._user_heap_stack
-                0x1fff16cc     0x1000 load address 0x00017334
+                0x1fff16cc     0x1000 load address 0x00016cac
                 0x1fff16cc                . = ALIGN (0x4)
                 0x1fff16cc                PROVIDE (end, .)
                 0x1fff16cc                PROVIDE (_end, .)
@@ -3133,14 +3113,14 @@ END GROUP
                 0x1fff26cc                . = (. + __stack_size)
  *fill*         0x1fff1ecc      0x800 00
                 0x1fff26cc                . = ALIGN (0x4)
-                0x00016d84                _romp_at = ((___ROM_AT + SIZEOF (.data)) + SIZEOF (.user_data2))
+                0x000166fc                _romp_at = ((___ROM_AT + SIZEOF (.data)) + SIZEOF (.user_data2))
 
-.romp           0x20000000       0x24 load address 0x00016d84
-                0x00016d84                __S_romp = _romp_at
-                0x20000000        0x4 LONG 0x16068 ___ROM_AT
+.romp           0x20000000       0x24 load address 0x000166fc
+                0x000166fc                __S_romp = _romp_at
+                0x20000000        0x4 LONG 0x159e0 ___ROM_AT
                 0x20000004        0x4 LONG 0x1fff0400 _sdata
                 0x20000008        0x4 LONG 0xd1c ___data_size
-                0x2000000c        0x4 LONG 0x16d84 ___m_data2_ROMStart
+                0x2000000c        0x4 LONG 0x166fc ___m_data2_ROMStart
                 0x20000010        0x4 LONG 0x20000000 ___m_data2_RAMStart
                 0x20000014        0x4 LONG 0x0 ___m_data2_ROMSize
                 0x20000018        0x4 LONG 0x0
@@ -3195,123 +3175,117 @@ END GROUP
  .ARM.attributes
                 0x0000042f       0x33 Libraries\FEHSD.o
  .ARM.attributes
-                0x00000462       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
+                0x00000462       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
  .ARM.attributes
-                0x00000495       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
+                0x00000495       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
  .ARM.attributes
-                0x000004c8       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
+                0x000004c8       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
  .ARM.attributes
-                0x000004fb       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
+                0x000004fb       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
  .ARM.attributes
-                0x0000052e       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
+                0x0000052e       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
  .ARM.attributes
-                0x00000561       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
+                0x00000561       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
  .ARM.attributes
-                0x00000594       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
+                0x00000594       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
  .ARM.attributes
-                0x000005c7       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
+                0x000005c7       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
  .ARM.attributes
-                0x000005fa       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
+                0x000005fa       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
  .ARM.attributes
-                0x0000062d       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
+                0x0000062d       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
  .ARM.attributes
-                0x00000660       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
+                0x00000660       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
  .ARM.attributes
-                0x00000693       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
+                0x00000693       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
  .ARM.attributes
-                0x000006c6       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+                0x000006c6       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
  .ARM.attributes
-                0x000006f9       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+                0x000006f9       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
  .ARM.attributes
-                0x0000072c       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+                0x0000072c       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
  .ARM.attributes
-                0x0000075f       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+                0x0000075f       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
  .ARM.attributes
-                0x00000792       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+                0x00000792       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
  .ARM.attributes
-                0x000007c5       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+                0x000007c5       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
  .ARM.attributes
-                0x000007f8       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+                0x000007f8       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
  .ARM.attributes
-                0x0000082b       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+                0x0000082b       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
  .ARM.attributes
-                0x0000085e       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+                0x0000085e       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_addsubdf3.o)
  .ARM.attributes
-                0x00000891       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+                0x0000087c       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_muldivdf3.o)
  .ARM.attributes
-                0x000008c4       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_addsubdf3.o)
+                0x0000089a       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_cmpdf2.o)
  .ARM.attributes
-                0x000008e2       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_muldivdf3.o)
+                0x000008b8       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_fixdfsi.o)
  .ARM.attributes
-                0x00000900       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_cmpdf2.o)
+                0x000008d6       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_fixunsdfsi.o)
  .ARM.attributes
-                0x0000091e       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_fixdfsi.o)
+                0x000008f4       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_truncdfsf2.o)
  .ARM.attributes
-                0x0000093c       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_fixunsdfsi.o)
+                0x00000912       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_addsubsf3.o)
  .ARM.attributes
-                0x0000095a       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_truncdfsf2.o)
+                0x00000930       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_muldivsf3.o)
  .ARM.attributes
-                0x00000978       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_addsubsf3.o)
+                0x0000094e       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
  .ARM.attributes
-                0x00000996       0x1e c:/fehqt/proteus/gcc/bin/../lib/gcc/arm-none-eabi/4.6.2/armv7e-m\libgcc.a(_arm_muldivsf3.o)
+                0x00000981       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
  .ARM.attributes
-                0x000009b4       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
- .ARM.attributes
-                0x000009e7       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
- .ARM.attributes
-                0x00000a1a       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x000009b4       0x33 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
 OUTPUT(../gyroDemo.elf elf32-littlearm)
 
-.debug_info     0x00000000    0x13d21
- .debug_info    0x00000000      0xee3 ..\main.o
- .debug_info    0x00000ee3     0x12c5 Startup\__arm_start.o
- .debug_info    0x000021a8       0x58 Startup\__arm_end.o
- .debug_info    0x00002200      0x57d Startup\kinetis_sysinit.o
- .debug_info    0x0000277d      0x250 Drivers\i2c.o
- .debug_info    0x000029cd      0x6cf Drivers\spi.o
- .debug_info    0x0000309c      0x59c Drivers\uart.o
- .debug_info    0x00003638     0x1da0 Drivers\ff.o
- .debug_info    0x000053d8      0xf1d Drivers\SDHC.o
- .debug_info    0x000062f5      0x2de Drivers\lptmr.o
- .debug_info    0x000065d3      0x1a7 FEHProteus.o
- .debug_info    0x0000677a      0x722 Drivers\FEHPropeller.o
- .debug_info    0x00006e9c      0x36c Libraries\FEHUtility.o
- .debug_info    0x00007208     0x1c6a Libraries\FEHIO.o
- .debug_info    0x00008e72      0x4ab Drivers\adc16.o
- .debug_info    0x0000931d      0xa42 Libraries\FEHBuzzer.o
- .debug_info    0x00009d5f     0x2c25 Libraries\FEHLCD.o
- .debug_info    0x0000c984      0x26a Libraries\FEHAccel.o
- .debug_info    0x0000cbee      0x3a9 Libraries\FEHBattery.o
- .debug_info    0x0000cf97      0xac3 Drivers\FEHXBee.o
- .debug_info    0x0000da5a     0x1ac6 Libraries\FEHRPS.o
- .debug_info    0x0000f520     0x1242 Libraries\FEHSD.o
- .debug_info    0x00010762      0x23b C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
- .debug_info    0x0001099d      0x19d C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
- .debug_info    0x00010b3a      0x19d C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
- .debug_info    0x00010cd7      0x345 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
- .debug_info    0x0001101c      0x235 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
- .debug_info    0x00011251      0x31b C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
- .debug_info    0x0001156c      0x22a C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
- .debug_info    0x00011796      0x1b1 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
- .debug_info    0x00011947       0xfa C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
- .debug_info    0x00011a41      0x1a9 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
- .debug_info    0x00011bea      0x1ea C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
- .debug_info    0x00011dd4      0x32c C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
- .debug_info    0x00012100      0x103 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
- .debug_info    0x00012203       0xf4 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
- .debug_info    0x000122f7       0xf3 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
- .debug_info    0x000123ea      0x512 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
- .debug_info    0x000128fc      0x564 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
- .debug_info    0x00012e60      0x32a C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
- .debug_info    0x0001318a      0x1d7 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
- .debug_info    0x00013361      0x13d C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
- .debug_info    0x0001349e      0x129 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
- .debug_info    0x000135c7      0x110 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
- .debug_info    0x000136d7      0x1c0 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
- .debug_info    0x00013897      0x1b8 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
- .debug_info    0x00013a4f      0x2d2 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+.debug_info     0x00000000    0x13923
+ .debug_info    0x00000000      0xebd ..\main.o
+ .debug_info    0x00000ebd     0x12c5 Startup\__arm_start.o
+ .debug_info    0x00002182       0x58 Startup\__arm_end.o
+ .debug_info    0x000021da      0x57d Startup\kinetis_sysinit.o
+ .debug_info    0x00002757      0x250 Drivers\i2c.o
+ .debug_info    0x000029a7      0x6cf Drivers\spi.o
+ .debug_info    0x00003076      0x59c Drivers\uart.o
+ .debug_info    0x00003612     0x1da0 Drivers\ff.o
+ .debug_info    0x000053b2      0xf1d Drivers\SDHC.o
+ .debug_info    0x000062cf      0x2de Drivers\lptmr.o
+ .debug_info    0x000065ad      0x1a7 FEHProteus.o
+ .debug_info    0x00006754      0x722 Drivers\FEHPropeller.o
+ .debug_info    0x00006e76      0x36c Libraries\FEHUtility.o
+ .debug_info    0x000071e2     0x1c6a Libraries\FEHIO.o
+ .debug_info    0x00008e4c      0x4ab Drivers\adc16.o
+ .debug_info    0x000092f7      0xa42 Libraries\FEHBuzzer.o
+ .debug_info    0x00009d39     0x2c25 Libraries\FEHLCD.o
+ .debug_info    0x0000c95e      0x26a Libraries\FEHAccel.o
+ .debug_info    0x0000cbc8      0x3a9 Libraries\FEHBattery.o
+ .debug_info    0x0000cf71      0xac3 Drivers\FEHXBee.o
+ .debug_info    0x0000da34     0x1ac6 Libraries\FEHRPS.o
+ .debug_info    0x0000f4fa     0x1242 Libraries\FEHSD.o
+ .debug_info    0x0001073c      0x19d C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
+ .debug_info    0x000108d9      0x345 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
+ .debug_info    0x00010c1e      0x235 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
+ .debug_info    0x00010e53      0x31b C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
+ .debug_info    0x0001116e      0x22a C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
+ .debug_info    0x00011398      0x1b1 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
+ .debug_info    0x00011549       0xfa C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
+ .debug_info    0x00011643      0x1a9 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
+ .debug_info    0x000117ec      0x1ea C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
+ .debug_info    0x000119d6      0x32c C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
+ .debug_info    0x00011d02      0x103 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+ .debug_info    0x00011e05       0xf4 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+ .debug_info    0x00011ef9       0xf3 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+ .debug_info    0x00011fec      0x512 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+ .debug_info    0x000124fe      0x564 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+ .debug_info    0x00012a62      0x32a C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+ .debug_info    0x00012d8c      0x1d7 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+ .debug_info    0x00012f63      0x13d C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_info    0x000130a0      0x129 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+ .debug_info    0x000131c9      0x110 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+ .debug_info    0x000132d9      0x1c0 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_info    0x00013499      0x1b8 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+ .debug_info    0x00013651      0x2d2 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
 
-.debug_abbrev   0x00000000     0x4126
+.debug_abbrev   0x00000000     0x3f5c
  .debug_abbrev  0x00000000      0x2ae ..\main.o
  .debug_abbrev  0x000002ae      0x28f Startup\__arm_start.o
  .debug_abbrev  0x0000053d       0x45 Startup\__arm_end.o
@@ -3334,82 +3308,78 @@ OUTPUT(../gyroDemo.elf elf32-littlearm)
  .debug_abbrev  0x0000216f      0x231 Drivers\FEHXBee.o
  .debug_abbrev  0x000023a0      0x37f Libraries\FEHRPS.o
  .debug_abbrev  0x0000271f      0x33a Libraries\FEHSD.o
- .debug_abbrev  0x00002a59       0xf1 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
- .debug_abbrev  0x00002b4a       0xd9 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
- .debug_abbrev  0x00002c23       0xd9 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
- .debug_abbrev  0x00002cfc      0x100 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
- .debug_abbrev  0x00002dfc       0xd0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
- .debug_abbrev  0x00002ecc       0xf7 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
- .debug_abbrev  0x00002fc3       0xee C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
- .debug_abbrev  0x000030b1       0xc3 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
- .debug_abbrev  0x00003174       0x88 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
- .debug_abbrev  0x000031fc       0xd2 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
- .debug_abbrev  0x000032ce       0xd2 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
- .debug_abbrev  0x000033a0      0x136 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
- .debug_abbrev  0x000034d6       0x8f C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
- .debug_abbrev  0x00003565       0x66 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
- .debug_abbrev  0x000035cb       0x7e C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
- .debug_abbrev  0x00003649      0x204 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
- .debug_abbrev  0x0000384d      0x1fb C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
- .debug_abbrev  0x00003a48       0x9a C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
- .debug_abbrev  0x00003ae2       0xc6 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
- .debug_abbrev  0x00003ba8       0x8b C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
- .debug_abbrev  0x00003c33       0x99 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
- .debug_abbrev  0x00003ccc       0x8d C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
- .debug_abbrev  0x00003d59       0x9d C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
- .debug_abbrev  0x00003df6      0x160 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
- .debug_abbrev  0x00003f56      0x1d0 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .debug_abbrev  0x00002a59       0xd9 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
+ .debug_abbrev  0x00002b32      0x100 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
+ .debug_abbrev  0x00002c32       0xd0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
+ .debug_abbrev  0x00002d02       0xf7 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
+ .debug_abbrev  0x00002df9       0xee C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
+ .debug_abbrev  0x00002ee7       0xc3 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
+ .debug_abbrev  0x00002faa       0x88 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
+ .debug_abbrev  0x00003032       0xd2 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
+ .debug_abbrev  0x00003104       0xd2 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
+ .debug_abbrev  0x000031d6      0x136 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
+ .debug_abbrev  0x0000330c       0x8f C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+ .debug_abbrev  0x0000339b       0x66 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+ .debug_abbrev  0x00003401       0x7e C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+ .debug_abbrev  0x0000347f      0x204 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+ .debug_abbrev  0x00003683      0x1fb C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+ .debug_abbrev  0x0000387e       0x9a C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+ .debug_abbrev  0x00003918       0xc6 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+ .debug_abbrev  0x000039de       0x8b C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_abbrev  0x00003a69       0x99 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+ .debug_abbrev  0x00003b02       0x8d C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+ .debug_abbrev  0x00003b8f       0x9d C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_abbrev  0x00003c2c      0x160 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+ .debug_abbrev  0x00003d8c      0x1d0 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
 
-.debug_loc      0x00000000     0x7707
- .debug_loc     0x00000000      0x1fc ..\main.o
- .debug_loc     0x000001fc       0xb0 Startup\__arm_start.o
- .debug_loc     0x000002ac       0x38 Startup\__arm_end.o
- .debug_loc     0x000002e4       0x84 Startup\kinetis_sysinit.o
- .debug_loc     0x00000368       0xe0 Drivers\i2c.o
- .debug_loc     0x00000448      0x19c Drivers\spi.o
- .debug_loc     0x000005e4       0xe0 Drivers\uart.o
- .debug_loc     0x000006c4      0xa96 Drivers\ff.o
- .debug_loc     0x0000115a      0x370 Drivers\SDHC.o
- .debug_loc     0x000014ca       0x38 Drivers\lptmr.o
- .debug_loc     0x00001502       0x64 FEHProteus.o
- .debug_loc     0x00001566      0x118 Drivers\FEHPropeller.o
- .debug_loc     0x0000167e      0x1a8 Libraries\FEHUtility.o
- .debug_loc     0x00001826      0x8d6 Libraries\FEHIO.o
- .debug_loc     0x000020fc       0xa8 Drivers\adc16.o
- .debug_loc     0x000021a4      0x304 Libraries\FEHBuzzer.o
- .debug_loc     0x000024a8     0x1147 Libraries\FEHLCD.o
- .debug_loc     0x000035ef      0x144 Libraries\FEHAccel.o
- .debug_loc     0x00003733       0xd4 Libraries\FEHBattery.o
- .debug_loc     0x00003807      0x1c0 Drivers\FEHXBee.o
- .debug_loc     0x000039c7      0x420 Libraries\FEHRPS.o
- .debug_loc     0x00003de7      0x188 Libraries\FEHSD.o
- .debug_loc     0x00003f6f      0x27f C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
- .debug_loc     0x000041ee       0xee C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
- .debug_loc     0x000042dc       0xee C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
- .debug_loc     0x000043ca      0x2ae C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
- .debug_loc     0x00004678       0xff C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
- .debug_loc     0x00004777      0x5da C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
- .debug_loc     0x00004d51       0xbc C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
- .debug_loc     0x00004e0d      0x108 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
- .debug_loc     0x00004f15       0x6e C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
- .debug_loc     0x00004f83       0xb7 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
- .debug_loc     0x0000503a      0x130 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
- .debug_loc     0x0000516a      0x27c C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
- .debug_loc     0x000053e6       0x3e C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
- .debug_loc     0x00005424       0x64 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
- .debug_loc     0x00005488       0x31 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
- .debug_loc     0x000054b9     0x106f C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
- .debug_loc     0x00006528      0x8cb C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
- .debug_loc     0x00006df3      0x18e C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
- .debug_loc     0x00006f81      0x2ad C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
- .debug_loc     0x0000722e      0x12c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
- .debug_loc     0x0000735a       0x82 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
- .debug_loc     0x000073dc       0x78 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
- .debug_loc     0x00007454       0xbe C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
- .debug_loc     0x00007512       0x9b C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
- .debug_loc     0x000075ad      0x15a C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+.debug_loc      0x00000000     0x7398
+ .debug_loc     0x00000000      0x1fa ..\main.o
+ .debug_loc     0x000001fa       0xb0 Startup\__arm_start.o
+ .debug_loc     0x000002aa       0x38 Startup\__arm_end.o
+ .debug_loc     0x000002e2       0x84 Startup\kinetis_sysinit.o
+ .debug_loc     0x00000366       0xe0 Drivers\i2c.o
+ .debug_loc     0x00000446      0x19c Drivers\spi.o
+ .debug_loc     0x000005e2       0xe0 Drivers\uart.o
+ .debug_loc     0x000006c2      0xa96 Drivers\ff.o
+ .debug_loc     0x00001158      0x370 Drivers\SDHC.o
+ .debug_loc     0x000014c8       0x38 Drivers\lptmr.o
+ .debug_loc     0x00001500       0x64 FEHProteus.o
+ .debug_loc     0x00001564      0x118 Drivers\FEHPropeller.o
+ .debug_loc     0x0000167c      0x1a8 Libraries\FEHUtility.o
+ .debug_loc     0x00001824      0x8d6 Libraries\FEHIO.o
+ .debug_loc     0x000020fa       0xa8 Drivers\adc16.o
+ .debug_loc     0x000021a2      0x304 Libraries\FEHBuzzer.o
+ .debug_loc     0x000024a6     0x1147 Libraries\FEHLCD.o
+ .debug_loc     0x000035ed      0x144 Libraries\FEHAccel.o
+ .debug_loc     0x00003731       0xd4 Libraries\FEHBattery.o
+ .debug_loc     0x00003805      0x1c0 Drivers\FEHXBee.o
+ .debug_loc     0x000039c5      0x420 Libraries\FEHRPS.o
+ .debug_loc     0x00003de5      0x188 Libraries\FEHSD.o
+ .debug_loc     0x00003f6d       0xee C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
+ .debug_loc     0x0000405b      0x2ae C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
+ .debug_loc     0x00004309       0xff C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
+ .debug_loc     0x00004408      0x5da C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
+ .debug_loc     0x000049e2       0xbc C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
+ .debug_loc     0x00004a9e      0x108 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
+ .debug_loc     0x00004ba6       0x6e C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
+ .debug_loc     0x00004c14       0xb7 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
+ .debug_loc     0x00004ccb      0x130 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
+ .debug_loc     0x00004dfb      0x27c C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
+ .debug_loc     0x00005077       0x3e C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+ .debug_loc     0x000050b5       0x64 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+ .debug_loc     0x00005119       0x31 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+ .debug_loc     0x0000514a     0x106f C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+ .debug_loc     0x000061b9      0x8cb C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+ .debug_loc     0x00006a84      0x18e C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+ .debug_loc     0x00006c12      0x2ad C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+ .debug_loc     0x00006ebf      0x12c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_loc     0x00006feb       0x82 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+ .debug_loc     0x0000706d       0x78 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+ .debug_loc     0x000070e5       0xbe C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_loc     0x000071a3       0x9b C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+ .debug_loc     0x0000723e      0x15a C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
 
-.debug_aranges  0x00000000      0xf70
+.debug_aranges  0x00000000      0xf30
  .debug_aranges
                 0x00000000       0x60 ..\main.o
  .debug_aranges
@@ -3455,104 +3425,98 @@ OUTPUT(../gyroDemo.elf elf32-littlearm)
  .debug_aranges
                 0x00000b00       0x50 Libraries\FEHSD.o
  .debug_aranges
-                0x00000b50       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
+                0x00000b50       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
  .debug_aranges
-                0x00000b70       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
+                0x00000b70       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
  .debug_aranges
-                0x00000b90       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
+                0x00000b90       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
  .debug_aranges
-                0x00000bb0       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
+                0x00000bb0       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
  .debug_aranges
-                0x00000bd0       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
+                0x00000bd0       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
  .debug_aranges
-                0x00000bf0       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
+                0x00000bf0       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
  .debug_aranges
-                0x00000c10       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
+                0x00000c10       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
  .debug_aranges
-                0x00000c30       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
+                0x00000c30       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
  .debug_aranges
-                0x00000c50       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
+                0x00000c50       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
  .debug_aranges
-                0x00000c70       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
+                0x00000c70       0x60 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
  .debug_aranges
-                0x00000c90       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
+                0x00000cd0       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
  .debug_aranges
-                0x00000cb0       0x60 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
+                0x00000cf0       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
  .debug_aranges
-                0x00000d10       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+                0x00000d10       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
  .debug_aranges
-                0x00000d30       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+                0x00000d30       0x28 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
  .debug_aranges
-                0x00000d50       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+                0x00000d58       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
  .debug_aranges
-                0x00000d70       0x28 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+                0x00000d78       0x88 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
  .debug_aranges
-                0x00000d98       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+                0x00000e00       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
  .debug_aranges
-                0x00000db8       0x88 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+                0x00000e20       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
  .debug_aranges
-                0x00000e40       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+                0x00000e40       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
  .debug_aranges
-                0x00000e60       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+                0x00000e60       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
  .debug_aranges
-                0x00000e80       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+                0x00000e80       0x28 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
  .debug_aranges
-                0x00000ea0       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+                0x00000ea8       0x30 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
  .debug_aranges
-                0x00000ec0       0x28 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
- .debug_aranges
-                0x00000ee8       0x30 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
- .debug_aranges
-                0x00000f18       0x58 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x00000ed8       0x58 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
 
-.debug_line     0x00000000     0x7e6d
- .debug_line    0x00000000      0x3a9 ..\main.o
- .debug_line    0x000003a9      0x3ad Startup\__arm_start.o
- .debug_line    0x00000756      0x21a Startup\__arm_end.o
- .debug_line    0x00000970      0x283 Startup\kinetis_sysinit.o
- .debug_line    0x00000bf3      0x2ad Drivers\i2c.o
- .debug_line    0x00000ea0      0x295 Drivers\spi.o
- .debug_line    0x00001135      0x212 Drivers\uart.o
- .debug_line    0x00001347     0x1114 Drivers\ff.o
- .debug_line    0x0000245b      0x678 Drivers\SDHC.o
- .debug_line    0x00002ad3      0x1c0 Drivers\lptmr.o
- .debug_line    0x00002c93      0x1da FEHProteus.o
- .debug_line    0x00002e6d      0x264 Drivers\FEHPropeller.o
- .debug_line    0x000030d1      0x282 Libraries\FEHUtility.o
- .debug_line    0x00003353      0x6ee Libraries\FEHIO.o
- .debug_line    0x00003a41      0x20f Drivers\adc16.o
- .debug_line    0x00003c50      0x2df Libraries\FEHBuzzer.o
- .debug_line    0x00003f2f     0x1151 Libraries\FEHLCD.o
- .debug_line    0x00005080      0x23f Libraries\FEHAccel.o
- .debug_line    0x000052bf      0x218 Libraries\FEHBattery.o
- .debug_line    0x000054d7      0x349 Drivers\FEHXBee.o
- .debug_line    0x00005820      0x74a Libraries\FEHRPS.o
- .debug_line    0x00005f6a      0x334 Libraries\FEHSD.o
- .debug_line    0x0000629e       0xf2 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
- .debug_line    0x00006390       0xcd C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
- .debug_line    0x0000645d       0xc4 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
- .debug_line    0x00006521      0x124 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
- .debug_line    0x00006645       0xbf C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
- .debug_line    0x00006704      0x341 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
- .debug_line    0x00006a45       0xb6 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
- .debug_line    0x00006afb       0xd0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
- .debug_line    0x00006bcb       0x75 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
- .debug_line    0x00006c40       0xc1 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
- .debug_line    0x00006d01       0xcc C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
- .debug_line    0x00006dcd      0x178 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
- .debug_line    0x00006f45       0x94 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
- .debug_line    0x00006fd9       0x8f C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
- .debug_line    0x00007068       0x89 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
- .debug_line    0x000070f1      0x2c6 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
- .debug_line    0x000073b7      0x2e3 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
- .debug_line    0x0000769a      0x1dd C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
- .debug_line    0x00007877      0x141 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
- .debug_line    0x000079b8      0x121 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
- .debug_line    0x00007ad9       0xa3 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
- .debug_line    0x00007b7c       0x84 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
- .debug_line    0x00007c00       0x94 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
- .debug_line    0x00007c94       0xc0 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
- .debug_line    0x00007d54      0x119 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+.debug_line     0x00000000     0x7c9a
+ .debug_line    0x00000000      0x395 ..\main.o
+ .debug_line    0x00000395      0x3ad Startup\__arm_start.o
+ .debug_line    0x00000742      0x21a Startup\__arm_end.o
+ .debug_line    0x0000095c      0x283 Startup\kinetis_sysinit.o
+ .debug_line    0x00000bdf      0x2ad Drivers\i2c.o
+ .debug_line    0x00000e8c      0x295 Drivers\spi.o
+ .debug_line    0x00001121      0x212 Drivers\uart.o
+ .debug_line    0x00001333     0x1114 Drivers\ff.o
+ .debug_line    0x00002447      0x678 Drivers\SDHC.o
+ .debug_line    0x00002abf      0x1c0 Drivers\lptmr.o
+ .debug_line    0x00002c7f      0x1da FEHProteus.o
+ .debug_line    0x00002e59      0x264 Drivers\FEHPropeller.o
+ .debug_line    0x000030bd      0x282 Libraries\FEHUtility.o
+ .debug_line    0x0000333f      0x6ee Libraries\FEHIO.o
+ .debug_line    0x00003a2d      0x20f Drivers\adc16.o
+ .debug_line    0x00003c3c      0x2df Libraries\FEHBuzzer.o
+ .debug_line    0x00003f1b     0x1151 Libraries\FEHLCD.o
+ .debug_line    0x0000506c      0x23f Libraries\FEHAccel.o
+ .debug_line    0x000052ab      0x218 Libraries\FEHBattery.o
+ .debug_line    0x000054c3      0x349 Drivers\FEHXBee.o
+ .debug_line    0x0000580c      0x74a Libraries\FEHRPS.o
+ .debug_line    0x00005f56      0x334 Libraries\FEHSD.o
+ .debug_line    0x0000628a       0xc4 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
+ .debug_line    0x0000634e      0x124 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
+ .debug_line    0x00006472       0xbf C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
+ .debug_line    0x00006531      0x341 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
+ .debug_line    0x00006872       0xb6 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
+ .debug_line    0x00006928       0xd0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
+ .debug_line    0x000069f8       0x75 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
+ .debug_line    0x00006a6d       0xc1 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
+ .debug_line    0x00006b2e       0xcc C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
+ .debug_line    0x00006bfa      0x178 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
+ .debug_line    0x00006d72       0x94 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+ .debug_line    0x00006e06       0x8f C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+ .debug_line    0x00006e95       0x89 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+ .debug_line    0x00006f1e      0x2c6 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+ .debug_line    0x000071e4      0x2e3 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+ .debug_line    0x000074c7      0x1dd C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+ .debug_line    0x000076a4      0x141 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+ .debug_line    0x000077e5      0x121 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_line    0x00007906       0xa3 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+ .debug_line    0x000079a9       0x84 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+ .debug_line    0x00007a2d       0x94 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_line    0x00007ac1       0xc0 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+ .debug_line    0x00007b81      0x119 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
 
 .debug_macinfo  0x00000000   0x7d5955
  .debug_macinfo
@@ -3600,100 +3564,96 @@ OUTPUT(../gyroDemo.elf elf32-littlearm)
  .debug_macinfo
                 0x007700c4    0x65891 Libraries\FEHSD.o
 
-.debug_str      0x00000000     0x4c80
- .debug_str     0x00000000      0xbe3 ..\main.o
-                                0xc5a (size before relaxing)
- .debug_str     0x00000be3      0x398 Startup\__arm_start.o
+.debug_str      0x00000000     0x4c3b
+ .debug_str     0x00000000      0xbd4 ..\main.o
+                                0xc4b (size before relaxing)
+ .debug_str     0x00000bd4      0x398 Startup\__arm_start.o
                                 0xe67 (size before relaxing)
- .debug_str     0x00000f7b       0x23 Startup\__arm_end.o
+ .debug_str     0x00000f6c       0x23 Startup\__arm_end.o
                                  0xbb (size before relaxing)
- .debug_str     0x00000f9e      0x1df Startup\kinetis_sysinit.o
+ .debug_str     0x00000f8f      0x1df Startup\kinetis_sysinit.o
                                 0x366 (size before relaxing)
- .debug_str     0x0000117d      0x11a Drivers\i2c.o
+ .debug_str     0x0000116e      0x11a Drivers\i2c.o
                                 0x202 (size before relaxing)
- .debug_str     0x00001297      0x18b Drivers\spi.o
+ .debug_str     0x00001288      0x18b Drivers\spi.o
                                 0x3bb (size before relaxing)
- .debug_str     0x00001422      0x188 Drivers\uart.o
+ .debug_str     0x00001413      0x188 Drivers\uart.o
                                 0x350 (size before relaxing)
- .debug_str     0x000015aa      0x6bb Drivers\ff.o
+ .debug_str     0x0000159b      0x6bb Drivers\ff.o
                                 0x853 (size before relaxing)
- .debug_str     0x00001c65      0x546 Drivers\SDHC.o
+ .debug_str     0x00001c56      0x546 Drivers\SDHC.o
                                 0x829 (size before relaxing)
- .debug_str     0x000021ab       0x5a Drivers\lptmr.o
+ .debug_str     0x0000219c       0x5a Drivers\lptmr.o
                                 0x209 (size before relaxing)
- .debug_str     0x00002205       0x6c FEHProteus.o
+ .debug_str     0x000021f6       0x6c FEHProteus.o
                                 0x255 (size before relaxing)
- .debug_str     0x00002271       0x25 Drivers\FEHPropeller.o
+ .debug_str     0x00002262       0x25 Drivers\FEHPropeller.o
                                 0x396 (size before relaxing)
- .debug_str     0x00002296       0xc0 Libraries\FEHUtility.o
+ .debug_str     0x00002287       0xc0 Libraries\FEHUtility.o
                                 0x1da (size before relaxing)
- .debug_str     0x00002356      0xfde Libraries\FEHIO.o
+ .debug_str     0x00002347      0xfde Libraries\FEHIO.o
                                0x12ab (size before relaxing)
- .debug_str     0x00003334       0xd7 Drivers\adc16.o
+ .debug_str     0x00003325       0xd7 Drivers\adc16.o
                                 0x29a (size before relaxing)
- .debug_str     0x0000340b      0x1ba Libraries\FEHBuzzer.o
+ .debug_str     0x000033fc      0x1ba Libraries\FEHBuzzer.o
                                 0x3ac (size before relaxing)
- .debug_str     0x000035c5      0x471 Libraries\FEHLCD.o
+ .debug_str     0x000035b6      0x471 Libraries\FEHLCD.o
                                0x110d (size before relaxing)
- .debug_str     0x00003a36       0x2c Libraries\FEHAccel.o
+ .debug_str     0x00003a27       0x2c Libraries\FEHAccel.o
                                 0x19e (size before relaxing)
- .debug_str     0x00003a62       0x5d Libraries\FEHBattery.o
+ .debug_str     0x00003a53       0x5d Libraries\FEHBattery.o
                                 0x35f (size before relaxing)
- .debug_str     0x00003abf      0x1f6 Drivers\FEHXBee.o
+ .debug_str     0x00003ab0      0x1f6 Drivers\FEHXBee.o
                                 0x545 (size before relaxing)
- .debug_str     0x00003cb5      0x413 Libraries\FEHRPS.o
+ .debug_str     0x00003ca6      0x413 Libraries\FEHRPS.o
                                0x15b7 (size before relaxing)
- .debug_str     0x000040c8       0x75 Libraries\FEHSD.o
+ .debug_str     0x000040b9       0x75 Libraries\FEHSD.o
                                 0xf2a (size before relaxing)
- .debug_str     0x0000413d       0xa5 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
-                                0x158 (size before relaxing)
- .debug_str     0x000041e2       0x11 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
+ .debug_str     0x0000412e       0x91 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
                                 0x144 (size before relaxing)
- .debug_str     0x000041f3       0x11 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
-                                0x144 (size before relaxing)
- .debug_str     0x00004204       0x83 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
+ .debug_str     0x000041bf       0x83 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
                                 0x1b6 (size before relaxing)
- .debug_str     0x00004287       0x1e C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
+ .debug_str     0x00004242       0x1e C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
                                 0x151 (size before relaxing)
- .debug_str     0x000042a5       0x57 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
+ .debug_str     0x00004260       0x57 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
                                 0x18d (size before relaxing)
- .debug_str     0x000042fc       0x1e C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
+ .debug_str     0x000042b7       0x1e C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
                                 0x156 (size before relaxing)
- .debug_str     0x0000431a       0x19 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
+ .debug_str     0x000042d5       0x19 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
                                 0x14c (size before relaxing)
- .debug_str     0x00004333       0x1e C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
+ .debug_str     0x000042ee       0x1e C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
                                 0x13f (size before relaxing)
- .debug_str     0x00004351       0x24 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
+ .debug_str     0x0000430c       0x24 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
                                 0x15d (size before relaxing)
- .debug_str     0x00004375       0x25 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
+ .debug_str     0x00004330       0x25 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
                                 0x164 (size before relaxing)
- .debug_str     0x0000439a       0xe7 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
+ .debug_str     0x00004355       0xe7 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
                                 0x228 (size before relaxing)
- .debug_str     0x00004481       0x2e C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+ .debug_str     0x0000443c       0x2e C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
                                 0x14e (size before relaxing)
- .debug_str     0x000044af       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+ .debug_str     0x0000446a       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
                                 0x140 (size before relaxing)
- .debug_str     0x000044cb       0x24 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+ .debug_str     0x00004486       0x24 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
                                 0x140 (size before relaxing)
- .debug_str     0x000044ef      0x213 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+ .debug_str     0x000044aa      0x213 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
                                 0x3aa (size before relaxing)
- .debug_str     0x00004702      0x17b C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+ .debug_str     0x000046bd      0x17b C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
                                 0x3f0 (size before relaxing)
- .debug_str     0x0000487d       0x9d C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+ .debug_str     0x00004838       0x9d C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
                                 0x1b3 (size before relaxing)
- .debug_str     0x0000491a       0x55 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+ .debug_str     0x000048d5       0x55 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
                                 0x1f2 (size before relaxing)
- .debug_str     0x0000496f       0x25 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_str     0x0000492a       0x25 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
                                 0x152 (size before relaxing)
- .debug_str     0x00004994       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+ .debug_str     0x0000494f       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
                                 0x148 (size before relaxing)
- .debug_str     0x000049b0       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+ .debug_str     0x0000496b       0x1c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
                                 0x137 (size before relaxing)
- .debug_str     0x000049cc      0x126 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_str     0x00004987      0x126 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
                                 0x185 (size before relaxing)
- .debug_str     0x00004af2       0x9b C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+ .debug_str     0x00004aad       0x9b C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
                                 0x140 (size before relaxing)
- .debug_str     0x00004b8d       0xf3 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .debug_str     0x00004b48       0xf3 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
                                 0x1ac (size before relaxing)
 
 .comment        0x00000000       0x79
@@ -3720,8 +3680,6 @@ OUTPUT(../gyroDemo.elf elf32-littlearm)
  .comment       0x00000000       0x7a Drivers\FEHXBee.o
  .comment       0x00000000       0x7a Libraries\FEHRPS.o
  .comment       0x00000000       0x7a Libraries\FEHSD.o
- .comment       0x00000000       0x7a C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
- .comment       0x00000000       0x7a C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
  .comment       0x00000000       0x7a C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
  .comment       0x00000000       0x7a C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
  .comment       0x00000000       0x7a C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
@@ -3746,7 +3704,7 @@ OUTPUT(../gyroDemo.elf elf32-littlearm)
  .comment       0x00000000       0x7a C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
  .comment       0x00000000       0x7a C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
 
-.debug_frame    0x00000000     0x2ba8
+.debug_frame    0x00000000     0x2b40
  .debug_frame   0x00000000      0x12c ..\main.o
  .debug_frame   0x0000012c       0x98 Startup\__arm_start.o
  .debug_frame   0x000001c4       0x2c Startup\__arm_end.o
@@ -3769,28 +3727,26 @@ OUTPUT(../gyroDemo.elf elf32-littlearm)
  .debug_frame   0x00002070       0xfc Drivers\FEHXBee.o
  .debug_frame   0x0000216c      0x24c Libraries\FEHRPS.o
  .debug_frame   0x000023b8       0xf0 Libraries\FEHSD.o
- .debug_frame   0x000024a8       0x38 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_atan.o)
- .debug_frame   0x000024e0       0x30 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_cos.o)
- .debug_frame   0x00002510       0x30 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
- .debug_frame   0x00002540       0x38 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
- .debug_frame   0x00002578       0x38 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
- .debug_frame   0x000025b0       0x3c C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
- .debug_frame   0x000025ec       0x38 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
- .debug_frame   0x00002624       0x34 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
- .debug_frame   0x00002658       0x2c C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
- .debug_frame   0x00002684       0x2c C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
- .debug_frame   0x000026b0       0x34 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
- .debug_frame   0x000026e4       0xd8 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
- .debug_frame   0x000027bc       0x28 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
- .debug_frame   0x000027e4       0x28 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
- .debug_frame   0x0000280c       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
- .debug_frame   0x0000282c       0x64 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
- .debug_frame   0x00002890       0x3c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
- .debug_frame   0x000028cc       0xf0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
- .debug_frame   0x000029bc       0x3c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
- .debug_frame   0x000029f8       0x2c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
- .debug_frame   0x00002a24       0x28 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
- .debug_frame   0x00002a4c       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
- .debug_frame   0x00002a6c       0x48 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
- .debug_frame   0x00002ab4       0x48 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
- .debug_frame   0x00002afc       0xac C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .debug_frame   0x000024a8       0x30 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_sin.o)
+ .debug_frame   0x000024d8       0x38 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(e_rem_pio2.o)
+ .debug_frame   0x00002510       0x38 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_cos.o)
+ .debug_frame   0x00002548       0x3c C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_rem_pio2.o)
+ .debug_frame   0x00002584       0x38 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(k_sin.o)
+ .debug_frame   0x000025bc       0x34 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_floor.o)
+ .debug_frame   0x000025f0       0x2c C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(scalbn.o)
+ .debug_frame   0x0000261c       0x2c C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_frexp.o)
+ .debug_frame   0x00002648       0x34 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(s_ldexp.o)
+ .debug_frame   0x0000267c       0xd8 C:\fehqt\Proteus/EWL/lib/armv7e-m\libm.a(math_api.o)
+ .debug_frame   0x00002754       0x28 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+ .debug_frame   0x0000277c       0x28 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+ .debug_frame   0x000027a4       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+ .debug_frame   0x000027c4       0x64 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+ .debug_frame   0x00002828       0x3c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+ .debug_frame   0x00002864       0xf0 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+ .debug_frame   0x00002954       0x3c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+ .debug_frame   0x00002990       0x2c C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_frame   0x000029bc       0x28 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+ .debug_frame   0x000029e4       0x20 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+ .debug_frame   0x00002a04       0x48 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_frame   0x00002a4c       0x48 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+ .debug_frame   0x00002a94       0xac C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
