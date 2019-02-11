@@ -11,7 +11,7 @@ using namespace std;
 // PID class
 // lastTime stores time of previous calculation
 // kP, kI, kD, kF are constants for PID
-// lastError stores the last value of the error
+// lastValue stores the last value of the signal input
 // sigma stores the total error
 class PID {
     public:
@@ -21,21 +21,21 @@ class PID {
     private:
         double lastTime;
         double kP, kI, kD, kF;
-        double lastError;
+        double lastValue;
         double sigma;
 };
 
 // PID object constructor
 // lastTime set to current time
 // kP, kI, kD, kF set to inputted values
-// lastError, sigma set to 0
+// lastValue, sigma set to 0
 PID::PID(double p, double i, double d, double f) {
     lastTime = TimeNow();
     kP = p;
     kI = i;
     kD = d;
     kF = f;
-    lastError = 0;
+    lastValue = 0;
     sigma = 0;
 }
 
@@ -43,14 +43,14 @@ PID::PID(double p, double i, double d, double f) {
 // Allows user to input kP, kI, kD and initializes other variables
 // lastTime set to current time
 // kP, kI, kD, kF set to inputted values
-// lastError, sigma set to 0
+// lastValue, sigma set to 0
 void PID::setConstants(double p, double i, double d, double f) {
     lastTime = TimeNow();
     kP = p;
     kI = i;
     kD = d;
     kF = f;
-    lastError = 0;
+    lastValue = 0;
     sigma = 0;
 }
 
@@ -91,8 +91,8 @@ double PID::calculate(double target, double sensorValue, double range) {
 
     // Calculate derivative (D)
     // Change in value over change in time and store current
-    derivative = (error - lastError) / deltaTime;
-    lastError = error;
+    derivative = (sensorValue - lastValue) / deltaTime;
+    lastValue = sensorValue;
 
     // Calculate output
     output = kP * error + kI * sigma + kD * derivative + kF * target;
