@@ -8,6 +8,8 @@
 
 #define MAX_POWER 100
 
+#define LOOP_TIME 0.020   // 20 ms, 50 Hz
+
 using namespace std;
 
 // PID class
@@ -19,6 +21,7 @@ class PID {
     public:
         PID(float p, float i, float d, float f);
         void setConstants(float p, float i, float d, float f);
+        void initialize();
         float calculate(float target, float sensorValue, float range = 10000);
     private:
         float lastTime;
@@ -56,6 +59,14 @@ void PID::setConstants(float p, float i, float d, float f) {
     sigma = 0;
 }
 
+// PID function initialize
+// Called at the beginning of PID loop to reset state
+void PID::initialize() {
+    lastTime = TimeNow() - LOOP_TIME;
+    lastValue = 0;
+    sigma = 0;
+}
+
 // PID function calculate
 // Calculates control loop output
 // Integral range default is a large value
@@ -67,6 +78,11 @@ float PID::calculate(float target, float sensorValue, float range) {
     float currentTime = TimeNow();
     deltaTime = currentTime - lastTime;
     lastTime = currentTime;
+
+    // Make sure deltaTime isn't zero
+    if (deltaTime < 0.01) {
+        deltaTime = LOOP_TIME;
+    }
 
     // Calculate error (P)
     error = target - sensorValue;

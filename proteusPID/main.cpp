@@ -7,7 +7,7 @@
 #include <trueSpeed.h>
 
 #define MAX_STEP 10  // Max change per iteration
-#define LOOP_TIME 20   // 20 ms, 50 Hz
+#define LOOP_TIME 0.020   // 20 ms, 50 Hz
 
 #define MAX_VELOCITY 5 // Max (reasonable) velocity in in/s
 #define VELOCITY_RANGE 10 // Range of velocity PID in in
@@ -78,6 +78,10 @@ void autoDrive(float target, float vTarget = MAX_VELOCITY, float vRange = VELOCI
 
     target = inchToTicks(target);
     vRange = inchToTicks(vRange) * target / fabs(target);
+
+    basePID.initialize();
+    velocityPID.initialize();
+    driftPID.initialize();
 
     while(!done) {
         // Update current time
