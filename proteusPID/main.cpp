@@ -15,15 +15,15 @@
 #define TICKS_PER_INCH 50 // Conversion from encoder ticks to in
 
 // PID objects with random constants
-PID basePID(0.5, 0, 0, 0), velocityPID(1, 0, 0, 0), driftPID(1, 0, 0, 0);
+PID basePID(0.1, 0, 0, 0), velocityPID(0.3, 0, 0, 0), driftPID(0.1, 0, 0, 0);
 
 // Declare motors
 FEHMotor leftBase(FEHMotor::Motor0, 9);
 FEHMotor rightBase(FEHMotor::Motor1, 9);
 
 // Declare encoders
-AnalogInputPin leftEnc(FEHIO::P0_0);
-AnalogInputPin rightEnc(FEHIO::P0_1);
+DigitalEncoder leftEnc(FEHIO::P0_0);
+DigitalEncoder rightEnc(FEHIO::P0_1);
 
 // Sets left base motor
 void driveL(int power) {
@@ -36,17 +36,27 @@ void driveR(int power) {
 }
 
 // Gets left encoder
-double getLeftEnc() {
-    return leftEnc.Value();
+float getLeftEnc() {
+    return leftenc.Counts();
 }
 
 // Gets right encoder
-double getRightEnc() {
-    return rightEnc.Value();
+float getRightEnc() {
+    return rightenc.Counts();
+}
+
+// Clears left encoder
+void clearLeftEnc() {
+    leftEnc.ResetCounts();
+}
+
+// Clears right encoder
+void clearRightEnc() {
+    rightEnc.ResetCounts();
 }
 
 // Conversion from inch to ticks
-double inchToTicks(double target) {
+float inchToTicks(float target) {
     return target * TICKS_PER_INCH;
 }
 
@@ -58,13 +68,13 @@ double inchToTicks(double target) {
 // Ends function 250 ms after gets close
 // MAX_STEP is slew rate limit (10%)
 // LOOP_TIME is time per update (20 ms)
-void autoDrive(double target, double vTarget = MAX_VELOCITY, double vRange = VELOCITY_RANGE) {
+void autoDrive(float target, float vTarget = MAX_VELOCITY, float vRange = VELOCITY_RANGE) {
     bool done = false;
-    double closeTime;
-    double driveOut, driftOut;
-    double outL, outR, lastOutL = 0, lastOutR = 0;
-    double avgEnc, currentTime;
-    double velocity, lastAvgEnc = 0, lastTime = TimeNow() - LOOP_TIME;
+    float closeTime;
+    float driveOut, driftOut;
+    float outL, outR, lastOutL = 0, lastOutR = 0;
+    float avgEnc, currentTime;
+    float velocity, lastAvgEnc = 0, lastTime = TimeNow() - LOOP_TIME;
 
     target = inchToTicks(target);
     vRange = inchToTicks(vRange) * target / fabs(target);
@@ -94,7 +104,8 @@ void autoDrive(double target, double vTarget = MAX_VELOCITY, double vRange = VEL
         // Drift PID
         driftOut = driftPID.calculate(0, getLeftEnc() - getRightEnc());
 
-        // Calculate mtoor outputs
+        // Calculate motor outputs
+        // Limit driveOut contribution so driftOut can have affect it?
         outL = driveOut - driftOut;
         outR = driveOut + driftOut;
 

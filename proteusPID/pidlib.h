@@ -6,6 +6,8 @@
 #include <FEHUtility.h>
 #include <cmath>
 
+#define MAX_POWER 100
+
 using namespace std;
 
 // PID class
@@ -15,21 +17,21 @@ using namespace std;
 // sigma stores the total error
 class PID {
     public:
-        PID(double p, double i, double d, double f);
-        void setConstants(double p, double i, double d, double f);
-        double calculate(double target, double sensorValue, double range = 10000);
+        PID(float p, float i, float d, float f);
+        void setConstants(float p, float i, float d, float f);
+        float calculate(float target, float sensorValue, float range = 10000);
     private:
-        double lastTime;
-        double kP, kI, kD, kF;
-        double lastValue;
-        double sigma;
+        float lastTime;
+        float kP, kI, kD, kF;
+        float lastValue;
+        float sigma;
 };
 
 // PID object constructor
 // lastTime set to current time
 // kP, kI, kD, kF set to inputted values
 // lastValue, sigma set to 0
-PID::PID(double p, double i, double d, double f) {
+PID::PID(float p, float i, float d, float f) {
     lastTime = TimeNow();
     kP = p;
     kI = i;
@@ -44,7 +46,7 @@ PID::PID(double p, double i, double d, double f) {
 // lastTime set to current time
 // kP, kI, kD, kF set to inputted values
 // lastValue, sigma set to 0
-void PID::setConstants(double p, double i, double d, double f) {
+void PID::setConstants(float p, float i, float d, float f) {
     lastTime = TimeNow();
     kP = p;
     kI = i;
@@ -57,12 +59,12 @@ void PID::setConstants(double p, double i, double d, double f) {
 // PID function calculate
 // Calculates control loop output
 // Integral range default is a large value
-double PID::calculate(double target, double sensorValue, double range) {
+float PID::calculate(float target, float sensorValue, float range) {
     // Declare variables
-    double deltaTime, error, derivative, output;
+    float deltaTime, error, derivative, output;
 
     // Find change in time and store current
-    double currentTime = TimeNow();
+    float currentTime = TimeNow();
     deltaTime = currentTime - lastTime;
     lastTime = currentTime;
 
@@ -96,6 +98,11 @@ double PID::calculate(double target, double sensorValue, double range) {
 
     // Calculate output
     output = kP * error + kI * sigma + kD * derivative + kF * target;
+
+    // Limit output with threshold
+    if (fabs(output) > 100) {
+        output = 100 * output / fabs(output);
+    }
 
     return output;
 }
