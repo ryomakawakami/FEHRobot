@@ -83,6 +83,10 @@ void autoDrive(float target, float vTarget = MAX_VELOCITY, float vRange = VELOCI
     velocityPID.initialize();
     driftPID.initialize();
 
+    // Consider allowing for accumulating error
+    clearLeftEnc();
+    clearRightEnc();
+
     while(!done) {
         // Update current time
         currentTime = TimeNow();
