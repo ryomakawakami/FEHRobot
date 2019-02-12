@@ -37,12 +37,12 @@ void driveR(int power) {
 
 // Gets left encoder
 float getLeftEnc() {
-    return leftenc.Counts();
+    return leftEnc.Counts();
 }
 
 // Gets right encoder
 float getRightEnc() {
-    return rightenc.Counts();
+    return rightEnc.Counts();
 }
 
 // Clears left encoder
