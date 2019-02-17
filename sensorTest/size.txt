@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+  32012	   3424	   5556	  40992	   a020	../sensorTest.elf
