@@ -1,0 +1,2 @@
+xcopy /s/y C:\Users\ryoma\Desktop\FEHRobot\FEHIO_edit\fehproteusfirmware\Libraries\FEHIO.cpp C:\Users\ryoma\Desktop\FEHRobot\quadEncoder\fehproteusfirmware\Libraries\FEHIO.cpp
+xcopy /s/y C:\Users\ryoma\Desktop\FEHRobot\FEHIO_edit\fehproteusfirmware\Libraries\FEHIO.h C:\Users\ryoma\Desktop\FEHRobot\quadEncoder\fehproteusfirmware\Libraries\FEHIO.h
