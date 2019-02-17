@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+  32280	   3420	   5552	  41252	   a124	../quadEncoder.elf
