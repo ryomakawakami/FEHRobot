@@ -9,4 +9,6 @@ set Sec=%dt:~12,2%
 
 set stamp=%YYYY%-%MM%-%DD%_%HH%-%Min%-%Sec%
 
-copy "C:\Users\ryoma\Desktop\FEHRobot\FEHRobot\main.cpp" "C:\Users\ryoma\Desktop\FEHRobot\Archive\%stamp%.cpp"
+mk "C:\Users\ryoma\Desktop\FEHRobot\Archive\%stamp%"
+
+xcopy "C:\Users\ryoma\Desktop\FEHRobot\FEHRobot" "C:\Users\ryoma\Desktop\FEHRobot\Archive\%stamp%"
