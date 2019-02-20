@@ -1,3 +1,5 @@
+fehproteusfirmware/Libraries/FEHIO_quad.cpp
+fehproteusfirmware/Libraries/FEHIO_quad.h
 main.cpp
 fehproteusfirmware/Drivers/FEHPropeller.cpp
 fehproteusfirmware/Drivers/FEHPropeller.h

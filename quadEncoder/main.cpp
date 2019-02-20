@@ -1,22 +1,20 @@
 #include <FEHLCD.h>
-#include <FEHIO.h>
+#include <FEHIO_quad.h>
 #include <FEHUtility.h>
 
 int main(void)
 {
-
     float x,y;
 
-    LCD.Clear( FEHLCD::Black );
-    LCD.SetFontColor( FEHLCD::White );
+    LCD.Clear(FEHLCD::Black);
+    LCD.SetFontColor(FEHLCD::White);
 
-    while( true )
-    {
-        if( LCD.Touch(&x,&y) )
-        {
-            LCD.WriteLine( "Hello World!" );
-            Sleep( 100 );
-        }
+    // How do I include FEHIO_quad in the build process
+    QuadEncoder enc(FEHIO::P0_0, FEHIO::P0_1);
+
+    while(1) {
+
     }
+
     return 0;
 }
