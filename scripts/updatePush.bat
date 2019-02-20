@@ -1,0 +1,1 @@
+xcopy /s/y C:\Users\ryoma\Desktop\FEHRobot\FEHIO_edit\fehproteusfirmware C:\Users\ryoma\Desktop\FEHRobot\fehproteusfirmware

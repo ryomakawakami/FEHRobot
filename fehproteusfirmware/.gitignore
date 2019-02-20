@@ -1,0 +1,11 @@
+# Eagle Backup files
+*.b#*
+*.s#*
+*.l#*
+*.obj
+*.lst
+*.o
+*.d
+
+# Ignore Mac junk
+*.DS_Store
