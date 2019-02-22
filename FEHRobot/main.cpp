@@ -145,7 +145,7 @@ void autoDrive(float target, float vTarget = MAX_VELOCITY, float vRange = VELOCI
 // MAX_STEP is slew rate limit (10%)
 // LOOP_TIME is time per update (20 ms)
 void autoDriveF(float target) {
-    PID basePID(0.5, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(0.5, 0.01, 0, 0), driftPID(2, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -499,7 +499,7 @@ void autoTurnR(float target) {
 
 void setBase(int power) {
     leftBase.SetPercent(power);
-    rightBase.SetPercent(power);
+    rightBase.SetPercent(-power);
 }
 
 void timeDrive(int power, int time) {
@@ -509,7 +509,7 @@ void timeDrive(int power, int time) {
 }
 
 void upRamp() {
-    setBase(50);
+    setBase(30);
     while(Accel.Y() < 0.25) {
         LCD.WriteLine(Accel.Y());
         Sleep(100);
@@ -532,11 +532,6 @@ int main(void)
     LCD.Clear(FEHLCD::Black);
     LCD.SetFontColor(FEHLCD::White);
 
-    while(1) {
-        while(!LCD.Touch(&x, &y));
-        upRamp();
-    }
-
     // Wait for start light or 30 seconds
     LCD.WriteLine("I'm waiting :P");
     float startTime = TimeNow();
@@ -549,50 +544,49 @@ int main(void)
     armServo.SetDegree(90);
 
     // To ramp
-    autoDriveF(5);
+    autoDriveF(6);
     Sleep(250);
 
     autoTurnR(2.75);
     Sleep(250);
 
-    autoDriveF(16);
+    autoDriveF(14);
     Sleep(500);
 
-    autoTurnL(5.7);
+    autoTurnL(6.4);
     Sleep(250);
 
     // Up ramp to foosball
     LCD.WriteLine("I'm scared ;-;");
-    autoDriveF(54);
+    upRamp();
     Sleep(250);
     LCD.WriteLine("Am I still alive?");
 
-    autoTurnR(5.7);
+    autoDriveF(10);
     Sleep(250);
 
+    autoTurnR(5.75);
+    Sleep(250);
+
+    timeDrive(25, 1500);
+
     // Backwards to lever
-    autoDriveB(32);
+    autoDriveB(20);
+    Sleep(250);
+
+    armServo.SetDegree(40);
+    Sleep(500);
+
+    autoDriveB(1);
     Sleep(250);
 
     autoTurnL(2.75);
-
-    LCD.Clear();
-    LCD.WriteLine("LEVER \O/");
-    autoDriveB(4);
-
-    // Flick lever
-    armServo.SetDegree(9);
-    Sleep(500);
-
-    LCD.Clear();
-    LCD.WriteLine("REKT  \O7");
-    armServo.SetDegree(90);
-    Sleep(500);
-
-    // To ramp
-    autoDriveB(5);
     Sleep(250);
 
+    autoDriveB(4);
+    Sleep(250);
+
+    // To ramp
     autoTurnL(2.75);
     Sleep(250);
 
