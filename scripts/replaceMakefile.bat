@@ -1,0 +1,1 @@
+xcopy /s/y C:\Users\ryoma\Desktop\FEHRobot\Makefiles\New C:\fehqt\Qt\Tools\QtCreator\share\qtcreator\templates\wizards\fehproteussd\Makefile

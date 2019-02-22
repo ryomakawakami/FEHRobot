@@ -6,7 +6,7 @@
 #include <FEHUtility.h>
 #include <cmath>
 
-#define MAX_POWER 100
+#define MAX_POWER 40
 
 #define LOOP_TIME 0.020   // 20 ms, 50 Hz
 
@@ -116,8 +116,8 @@ float PID::calculate(float target, float sensorValue, float range) {
     output = kP * error + kI * sigma + kD * derivative + kF * target;
 
     // Limit output with threshold
-    if (fabs(output) > 100) {
-        output = 100 * output / fabs(output);
+    if (fabs(output) > MAX_POWER) {
+        output = MAX_POWER * output / fabs(output);
     }
 
     return output;

@@ -1,2 +1,2 @@
    text	   data	    bss	    dec	    hex	filename
-  31448	   3420	   5552	  40420	   9de4	../quadEncoder.elf
+  32692	   3420	   5808	  41920	   a3c0	../quadEncoder.elf

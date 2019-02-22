@@ -12,7 +12,7 @@
  C:\fehqt\Proteus/EWL/EWL_C/include/cstdint \
  C:\fehqt\Proteus/EWL/EWL_C/include/limits_api.h \
  C:\fehqt\Proteus/EWL/EWL_C/include/ewl_lib_ext1.h Libraries/FEHUtility.h \
- Startup/derivative.h Libraries/LCDColors.h Libraries/FEHIO_quad.h \
+ Startup/derivative.h Libraries/LCDColors.h Libraries/FEHIO.h \
  Drivers/adc16.h
 
 C:\fehqt\Proteus/EWL/EWL_C++/include/lib_ewl_c++.prefix:
@@ -53,6 +53,6 @@ Startup/derivative.h:
 
 Libraries/LCDColors.h:
 
-Libraries/FEHIO_quad.h:
+Libraries/FEHIO.h:
 
 Drivers/adc16.h:
