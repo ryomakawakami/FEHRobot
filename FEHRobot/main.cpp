@@ -30,114 +30,6 @@ DigitalEncoder leftEnc(FEHIO::P0_1);
 DigitalEncoder rightEnc(FEHIO::P1_0);
 
 // PID control loop
-// target is desired encoder count, vTarget is desired velocity, vRange is active range of velocity PID
-// Velocity PID until some distance to target
-// Position PID when some distance away
-// Drift PID and slew rate are constantly active
-// Ends function 250 ms after gets close
-// MAX_STEP is slew rate limit (10%)
-// LOOP_TIME is time per update (20 ms)
-void autoDrive(float target, float vTarget = MAX_VELOCITY, float vRange = VELOCITY_RANGE) {
-    PID basePID(0.4, 0.001, 0, 0), velocityPID(0.01, 0, 0, 0), driftPID(1, 0, 0, 0);
-
-    bool done = false;
-    float closeTime;
-    float driveOut, driftOut;
-    float outL, outR, lastOutL = 0, lastOutR = 0;
-    float avgEnc, currentTime;
-    float velocity, lastAvgEnc = 0, lastTime = TimeNow() - LOOP_TIME;
-
-    target *= TICKS_PER_INCH;
-    vTarget *= TICKS_PER_INCH;
-    vRange *= TICKS_PER_INCH * target / fabs(target);
-
-    basePID.initialize();
-    velocityPID.initialize();
-    driftPID.initialize();
-
-    // Consider allowing for accumulating error
-    leftEnc.ResetCounts();
-    rightEnc.ResetCounts();
-
-    while(!done) {
-        // Update current time
-        currentTime = TimeNow();
-
-        // Update average distance
-        avgEnc = (leftEnc.Counts() + rightEnc.Counts()) / 2;
-
-        // Calculate velocity
-        velocity = (avgEnc - lastAvgEnc) / (currentTime - lastTime);
-        lastAvgEnc = avgEnc;
-        lastTime = currentTime;
-
-        // Drift PID
-        driftOut = driftPID.calculate(0, leftEnc.Counts() - rightEnc.Counts());
-
-        // Velocity PID
-        if(fabs(target) - fabs(avgEnc) > vRange) {
-            driveOut = velocityPID.calculate(vTarget, velocity);
-
-            // Calculate motor outputs
-            // Limit driveOut contribution so driftOut can have affect it?
-            outL += driveOut;
-            outR += driveOut;
-
-            LCD.WriteLine(driveOut);
-        }
-
-        // Position PID
-        else {
-            driveOut = basePID.calculate(target, avgEnc);
-
-            // Calculate motor outputs
-            // Limit driveOut contribution so driftOut can have affect it?
-            outL = driveOut;
-            outR = driveOut;
-        }
-
-        // Slew rate limit
-        if(outL + driftOut - lastOutL > MAX_STEP) {
-            outL = lastOutL + 10;
-        }
-        else if(outL + driftOut - lastOutL < -MAX_STEP) {
-            outL = lastOutL - 10;
-        }
-
-        if(outR - driftOut - lastOutR > MAX_STEP) {
-            outR = lastOutR + 10;
-        }
-        else if(outR - driftOut - lastOutR < -MAX_STEP) {
-            outR = lastOutR - 10;
-        }
-
-        // Set motors to output
-        leftBase.SetPercent(outL + driftOut);
-        rightBase.SetPercent(outR - driftOut);
-
-        // Store output for slew rate
-        lastOutL = outL + driftOut;
-        lastOutR = outR - driftOut;
-
-        // Sleep for set time
-        Sleep(LOOP_TIME);
-
-        // Loop ends .25 seconds after average gets within 100 ticks
-        if(fabs(target - avgEnc) > 100) {
-            closeTime = currentTime;
-        }
-
-        if(currentTime - closeTime > 250) {
-            done = true;
-        }
-    }
-
-    // Stop motors
-    leftBase.SetPercent(0);
-    rightBase.SetPercent(0);
-}
-
-// PID control loop without velocity control
 // target is desired encoder count
 // Position PID when some distance away
 // Drift PID and slew rate are constantly active
@@ -227,7 +119,7 @@ void autoDriveF(float target) {
     rightBase.SetPercent(0);
 }
 
-// PID control loop without velocity control
+// PID control loop
 // target is desired encoder count
 // Position PID when some distance away
 // Drift PID and slew rate are constantly active
@@ -317,7 +209,7 @@ void autoDriveB(float target) {
     rightBase.SetPercent(0);
 }
 
-// PID control loop without velocity control
+// PID control loop
 // target is desired encoder count
 // Position PID when some distance away
 // Drift PID and slew rate are constantly active
@@ -407,7 +299,7 @@ void autoTurnL(float target) {
     rightBase.SetPercent(0);
 }
 
-// PID control loop without velocity control
+// PID control loop
 // target is desired encoder count
 // Position PID when some distance away
 // Drift PID and slew rate are constantly active
@@ -580,7 +472,13 @@ int main(void)
     autoDriveB(1);
     Sleep(250);
 
-    autoTurnL(2.75);
+    leftBase.SetPercent(-50);
+    rightBase.SetPercent(-50);
+    Sleep(250);
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+    armServo.SetDegree(90);
+    autoTurnL(0.75);
     Sleep(250);
 
     autoDriveB(4);
