@@ -4,7 +4,8 @@
 #include <FEHMotor.h>
 #include <FEHServo.h>
 #include <FEHAccel.h>
-#include <pidlib.h>
+#include "pidlib.h"
+#include "pikachu.h"
 
 #define MIN_SPEED 8
 
@@ -97,16 +98,6 @@ void autoDriveF(float target) {
         if(target - avgEnc < 0) {
             done = true;
         }
-
-        LCD.Write(avgEnc);
-        LCD.Write("\t");
-        LCD.Write(leftEnc.Counts());
-        LCD.Write("\t");
-        LCD.WriteLine(rightEnc.Counts());
-
-        LCD.Write(outL);
-        LCD.Write(" ");
-        LCD.WriteLine(outR);
     }
 
     // Stop motors
@@ -182,16 +173,6 @@ void autoDriveB(float target) {
         if(target - avgEnc < 0) {
             done = true;
         }
-
-        LCD.Write(avgEnc);
-        LCD.Write("\t");
-        LCD.Write(leftEnc.Counts());
-        LCD.Write("\t");
-        LCD.WriteLine(rightEnc.Counts());
-
-        LCD.Write(outL);
-        LCD.Write(" ");
-        LCD.WriteLine(outR);
     }
 
     // Stop motors
@@ -267,16 +248,6 @@ void autoTurnL(float target) {
         if(target - avgEnc < 0) {
             done = true;
         }
-
-        LCD.Write(avgEnc);
-        LCD.Write("\t");
-        LCD.Write(leftEnc.Counts());
-        LCD.Write("\t");
-        LCD.WriteLine(rightEnc.Counts());
-
-        LCD.Write(outL);
-        LCD.Write(" ");
-        LCD.WriteLine(outR);
     }
 
     // Stop motors
@@ -352,16 +323,6 @@ void autoTurnR(float target) {
         if(target - avgEnc < 0) {
             done = true;
         }
-
-        LCD.Write(avgEnc);
-        LCD.Write("\t");
-        LCD.Write(leftEnc.Counts());
-        LCD.Write("\t");
-        LCD.WriteLine(rightEnc.Counts());
-
-        LCD.Write(outL);
-        LCD.Write(" ");
-        LCD.WriteLine(outR);
     }
 
     // Stop motors
@@ -401,16 +362,23 @@ int main(void)
 
     float x, y;
 
-    LCD.Clear(FEHLCD::Black);
-    LCD.SetFontColor(FEHLCD::White);
+    LCD.Clear(FEHLCD::White);
+    LCD.SetFontColor(FEHLCD::Black);
+
+    LCD.WriteLine(" ");
+    LCD.WriteLine("    Me: Tries to put");
+    LCD.WriteLine("    4k movie on Proteus");
+    LCD.WriteLine("    Proteus: Dies");
+    LCD.WriteLine("    Me:");
+    drawPicture(pikaPic, 123, 108, 99, 110);
 
     // Wait for start light or 30 seconds
-    LCD.WriteLine("I'm waiting :P");
     float startTime = TimeNow();
     while((TimeNow() - startTime < 30) && cds.Value() > RED_THRESHOLD) {
         Sleep(100);
     }
-    LCD.WriteLine("Sigh...");
+
+    // LCD.Clear(FEHLCD::Black);
 
     // Set servo to initial position
     armServo.SetDegree(90);
@@ -429,10 +397,8 @@ int main(void)
     Sleep(250);
 
     // Up ramp to foosball
-    LCD.WriteLine("I'm scared ;-;");
     upRamp();
     Sleep(250);
-    LCD.WriteLine("Am I still alive?");
 
     autoDriveF(10);
     Sleep(250);
@@ -467,16 +433,6 @@ int main(void)
     // To ramp
     autoTurnL(2.75);
     Sleep(250);
-
-    LCD.WriteLine("Fingers crossed");
-    Sleep(500);
-    LCD.WriteLine("DEEP BREATHS");
-    Sleep(500);
-    LCD.Write("3...");
-    Sleep(500);
-    LCD.WriteLine("2...");
-    Sleep(500);
-    LCD.WriteLine("Yolo");
 
     autoDriveB(60);
 
