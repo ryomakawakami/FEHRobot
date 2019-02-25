@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+  30772	  48320	   5552	  84644	  14aa4	../drawKermit.elf
