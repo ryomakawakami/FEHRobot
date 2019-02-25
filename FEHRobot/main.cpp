@@ -6,7 +6,7 @@
 #include <FEHAccel.h>
 #include <pidlib.h>
 
-#define MIN_SPEED 10
+#define MIN_SPEED 8
 
 #define MAX_STEP 10  // Max change per iteration
 #define LOOP_TIME 0.020   // 20 ms, 50 Hz
@@ -110,11 +110,6 @@ void autoDriveF(float target) {
     }
 
     // Stop motors
-    leftBase.SetPercent(-30);
-    rightBase.SetPercent(0);
-
-    Sleep(100);
-
     leftBase.SetPercent(0);
     rightBase.SetPercent(0);
 }
@@ -200,11 +195,6 @@ void autoDriveB(float target) {
     }
 
     // Stop motors
-    leftBase.SetPercent(10);
-    rightBase.SetPercent(-10);
-
-    Sleep(100);
-
     leftBase.SetPercent(0);
     rightBase.SetPercent(0);
 }
@@ -290,11 +280,6 @@ void autoTurnL(float target) {
     }
 
     // Stop motors
-    leftBase.SetPercent(-10);
-    rightBase.SetPercent(-10);
-
-    Sleep(100);
-
     leftBase.SetPercent(0);
     rightBase.SetPercent(0);
 }
@@ -380,11 +365,6 @@ void autoTurnR(float target) {
     }
 
     // Stop motors
-    leftBase.SetPercent(10);
-    rightBase.SetPercent(10);
-
-    Sleep(100);
-
     leftBase.SetPercent(0);
     rightBase.SetPercent(0);
 }
