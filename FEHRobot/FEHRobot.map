@@ -3318,47 +3318,47 @@ OUTPUT(../FEHRobot.elf elf32-littlearm)
  .debug_aranges
                 0x00000ea0       0x58 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
 
-.debug_line     0x00000000     0x7e0d
- .debug_line    0x00000000      0x5b1 ..\main.o
- .debug_line    0x000005b1      0x3ad Startup\__arm_start.o
- .debug_line    0x0000095e      0x21a Startup\__arm_end.o
- .debug_line    0x00000b78      0x291 Startup\kinetis_sysinit.o
- .debug_line    0x00000e09      0x237 Libraries\FEHMotor.o
- .debug_line    0x00001040      0x2ad Drivers\i2c.o
- .debug_line    0x000012ed      0x295 Drivers\spi.o
- .debug_line    0x00001582      0x212 Drivers\uart.o
- .debug_line    0x00001794     0x1114 Drivers\ff.o
- .debug_line    0x000028a8      0x678 Drivers\SDHC.o
- .debug_line    0x00002f20      0x1c0 Drivers\lptmr.o
- .debug_line    0x000030e0      0x1da FEHProteus.o
- .debug_line    0x000032ba      0x264 Drivers\FEHPropeller.o
- .debug_line    0x0000351e      0x282 Libraries\FEHUtility.o
- .debug_line    0x000037a0      0x6ee Libraries\FEHIO.o
- .debug_line    0x00003e8e      0x20f Drivers\adc16.o
- .debug_line    0x0000409d      0x2df Libraries\FEHBuzzer.o
- .debug_line    0x0000437c      0x545 Libraries\FEHServo.o
- .debug_line    0x000048c1     0x1151 Libraries\FEHLCD.o
- .debug_line    0x00005a12      0x23f Libraries\FEHAccel.o
- .debug_line    0x00005c51      0x218 Libraries\FEHBattery.o
- .debug_line    0x00005e69      0x349 Drivers\FEHXBee.o
- .debug_line    0x000061b2      0x746 Libraries\FEHRPS.o
- .debug_line    0x000068f8      0x3fa Libraries\FEHSD.o
- .debug_line    0x00006cf2       0x94 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(sprintf.o)
- .debug_line    0x00006d86       0xd2 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(vsnprintf.o)
- .debug_line    0x00006e58       0x94 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
- .debug_line    0x00006eec       0x8d C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memcpy.o)
- .debug_line    0x00006f79       0x8f C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
- .debug_line    0x00007008       0x89 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
- .debug_line    0x00007091      0x2c6 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
- .debug_line    0x00007357      0x2e3 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
- .debug_line    0x0000763a      0x1dd C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
- .debug_line    0x00007817      0x141 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
- .debug_line    0x00007958      0x121 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
- .debug_line    0x00007a79       0xa3 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
- .debug_line    0x00007b1c       0x84 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
- .debug_line    0x00007ba0       0x94 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
- .debug_line    0x00007c34       0xc0 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
- .debug_line    0x00007cf4      0x119 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+.debug_line     0x00000000     0x7e0f
+ .debug_line    0x00000000      0x5b3 ..\main.o
+ .debug_line    0x000005b3      0x3ad Startup\__arm_start.o
+ .debug_line    0x00000960      0x21a Startup\__arm_end.o
+ .debug_line    0x00000b7a      0x291 Startup\kinetis_sysinit.o
+ .debug_line    0x00000e0b      0x237 Libraries\FEHMotor.o
+ .debug_line    0x00001042      0x2ad Drivers\i2c.o
+ .debug_line    0x000012ef      0x295 Drivers\spi.o
+ .debug_line    0x00001584      0x212 Drivers\uart.o
+ .debug_line    0x00001796     0x1114 Drivers\ff.o
+ .debug_line    0x000028aa      0x678 Drivers\SDHC.o
+ .debug_line    0x00002f22      0x1c0 Drivers\lptmr.o
+ .debug_line    0x000030e2      0x1da FEHProteus.o
+ .debug_line    0x000032bc      0x264 Drivers\FEHPropeller.o
+ .debug_line    0x00003520      0x282 Libraries\FEHUtility.o
+ .debug_line    0x000037a2      0x6ee Libraries\FEHIO.o
+ .debug_line    0x00003e90      0x20f Drivers\adc16.o
+ .debug_line    0x0000409f      0x2df Libraries\FEHBuzzer.o
+ .debug_line    0x0000437e      0x545 Libraries\FEHServo.o
+ .debug_line    0x000048c3     0x1151 Libraries\FEHLCD.o
+ .debug_line    0x00005a14      0x23f Libraries\FEHAccel.o
+ .debug_line    0x00005c53      0x218 Libraries\FEHBattery.o
+ .debug_line    0x00005e6b      0x349 Drivers\FEHXBee.o
+ .debug_line    0x000061b4      0x746 Libraries\FEHRPS.o
+ .debug_line    0x000068fa      0x3fa Libraries\FEHSD.o
+ .debug_line    0x00006cf4       0x94 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(sprintf.o)
+ .debug_line    0x00006d88       0xd2 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(vsnprintf.o)
+ .debug_line    0x00006e5a       0x94 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(exit.o)
+ .debug_line    0x00006eee       0x8d C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memcpy.o)
+ .debug_line    0x00006f7b       0x8f C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memset.o)
+ .debug_line    0x0000700a       0x89 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strlen.o)
+ .debug_line    0x00007093      0x2c6 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(printformat_.o)
+ .debug_line    0x00007359      0x2e3 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(scanformat_.o)
+ .debug_line    0x0000763c      0x1dd C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(ctype_aeabi.o)
+ .debug_line    0x00007819      0x141 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__strtoul.o)
+ .debug_line    0x0000795a      0x121 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_line    0x00007a7b       0xa3 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(memchr.o)
+ .debug_line    0x00007b1e       0x84 C:\fehqt\Proteus/EWL/lib/armv7e-m\libc.a(strchr.o)
+ .debug_line    0x00007ba2       0x94 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_line    0x00007c36       0xc0 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
+ .debug_line    0x00007cf6      0x119 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
 
 .debug_macinfo  0x00000000   0x89d3b1
  .debug_macinfo

@@ -440,35 +440,5 @@ int main(void)
     autoTurnR(2.75);
     timeDrive(50, 1000);
 
-    /*
-    while(1) {
-        while(!LCD.Touch(&x, &y)) {
-            LCD.WriteLine(cds.Value());
-            Sleep(250);
-        }
-        armServo.SetDegree(0);
-        Sleep(1000);
-        while(!LCD.Touch(&x, &y)) {
-            LCD.WriteLine(cds.Value());
-            Sleep(250);
-        }
-        armServo.SetDegree(30);
-        Sleep(1000);
-    }
-    */
-
-    /*
-    while(1) {
-        while(!LCD.Touch(&x, &y));
-        autoDriveF(24);
-        while(!LCD.Touch(&x, &y));
-        autoDriveB(24);
-        while(!LCD.Touch(&x, &y));
-        autoTurnL(12);
-        while(!LCD.Touch(&x, &y));
-        autoTurnR(12);
-    }
-    */
-
     return 0;
 }
