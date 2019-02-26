@@ -6,7 +6,7 @@
 #include <FEHUtility.h>
 #include <cmath>
 
-#define MAX_POWER 30
+#define MAX_POWER 80
 
 #define LOOP_TIME 0.020   // 20 ms, 50 Hz
 
