@@ -8,27 +8,40 @@
 #include "pikachu.h"
 
 #define MIN_SPEED 8
+#define MIN_SPEED_TURNING 12
+#define MIN_SPEED_SWEEP 12
 
 #define MAX_STEP 10  // Max change per iteration
 #define LOOP_TIME 0.020   // 20 ms, 50 Hz
 
-#define MAX_VELOCITY 28 // Max (reasonable) velocity in in/s
-#define VELOCITY_RANGE 12 // Range of velocity PID in in
+#define KP_DRIVE 0.4
+#define KP_TURN 0.4
+#define KP_SWEEP 0.6
 
 #define TICKS_PER_INCH 28 // Conversion from encoder ticks to in
 
-#define RED_THRESHOLD 0.5 // Threshold for red light vs no light
+#define NO_LIGHT_THRESHOLD 1.5 // 1.5+ is no light
+#define BLUE_LIGHT_THRESHOLD 0.8 // 0.8 to 1.5 is blue light
+
+enum {
+    NO_LIGHT,
+    BLUE_LIGHT,
+    RED_LIGHT
+};
 
 // Declare servo
 FEHServo armServo(FEHServo::Servo0);
 
 // Declare motors
-FEHMotor leftBase(FEHMotor::Motor0, 9);
-FEHMotor rightBase(FEHMotor::Motor1, 9);
+FEHMotor rightBase(FEHMotor::Motor0, 9);
+FEHMotor leftBase(FEHMotor::Motor1, 9);
 
 // Declare encoders
-DigitalEncoder leftEnc(FEHIO::P0_1);
-DigitalEncoder rightEnc(FEHIO::P1_0);
+DigitalEncoder rightEnc(FEHIO::P0_1);
+DigitalEncoder leftEnc(FEHIO::P1_0);
+
+// Declare CdS cell
+AnalogInputPin cds(FEHIO::P3_0);
 
 // PID control loop
 // target is desired encoder count
@@ -38,7 +51,7 @@ DigitalEncoder rightEnc(FEHIO::P1_0);
 // MAX_STEP is slew rate limit (10%)
 // LOOP_TIME is time per update (20 ms)
 void autoDriveF(float target) {
-    PID basePID(0.5, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+    PID basePID(KP_DRIVE, 0.01, 0, 0), driftPID(2, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -71,22 +84,30 @@ void autoDriveF(float target) {
 
         // Slew rate limit
         if(outL - lastOutL > MAX_STEP) {
-            outL = lastOutL + 10;
+            outL = lastOutL + MAX_STEP;
         }
         else if(outL - lastOutL < -MAX_STEP) {
-            outL = lastOutL - 10;
+            outL = lastOutL - MAX_STEP;
         }
 
         if(outR - lastOutR > MAX_STEP) {
-            outR = lastOutR + 10;
+            outR = lastOutR + MAX_STEP;
         }
         else if(outR - lastOutR < -MAX_STEP) {
-            outR = lastOutR - 10;
+            outR = lastOutR - MAX_STEP;
+        }
+
+        // Make sure output is at least minimum speed
+        if(fabs(outL) < MIN_SPEED) {
+            outL = MIN_SPEED * outL / fabs(outL);
+        }
+        if(fabs(outR) < MIN_SPEED) {
+            outR = MIN_SPEED * outR / fabs(outR);
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL + MIN_SPEED);
-        rightBase.SetPercent(-outR - MIN_SPEED);
+        leftBase.SetPercent(-outL);
+        rightBase.SetPercent(outR);
 
         // Store output for slew rate
         lastOutL = outL;
@@ -105,15 +126,8 @@ void autoDriveF(float target) {
     rightBase.SetPercent(0);
 }
 
-// PID control loop
-// target is desired encoder count
-// Position PID when some distance away
-// Drift PID and slew rate are constantly active
-// Ends function once at location
-// MAX_STEP is slew rate limit (10%)
-// LOOP_TIME is time per update (20 ms)
 void autoDriveB(float target) {
-    PID basePID(0.5, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_DRIVE, 0.01, 0, 0), driftPID(2, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -131,7 +145,7 @@ void autoDriveB(float target) {
 
     while(!done) {
         // Update average distance
-        avgEnc = (leftEnc.Counts() + rightEnc.Counts()) / 2;
+        avgEnc = rightEnc.Counts();
 
         // Position PID
         driveOut = basePID.calculate(target, avgEnc);
@@ -146,22 +160,30 @@ void autoDriveB(float target) {
 
         // Slew rate limit
         if(outL - lastOutL > MAX_STEP) {
-            outL = lastOutL + 10;
+            outL = lastOutL + MAX_STEP;
         }
         else if(outL - lastOutL < -MAX_STEP) {
-            outL = lastOutL - 10;
+            outL = lastOutL - MAX_STEP;
         }
 
         if(outR - lastOutR > MAX_STEP) {
-            outR = lastOutR + 10;
+            outR = lastOutR + MAX_STEP;
         }
         else if(outR - lastOutR < -MAX_STEP) {
-            outR = lastOutR - 10;
+            outR = lastOutR - MAX_STEP;
+        }
+
+        // Make sure output is at least minimum speed
+        if(fabs(outL) < MIN_SPEED) {
+            outL = MIN_SPEED * outL / fabs(outL);
+        }
+        if(fabs(outR) < MIN_SPEED) {
+            outR = MIN_SPEED * outR / fabs(outR);
         }
 
         // Set motors to output
-        leftBase.SetPercent(-outL - MIN_SPEED);
-        rightBase.SetPercent(outR + MIN_SPEED);
+        leftBase.SetPercent(outL);
+        rightBase.SetPercent(-outR);
 
         // Store output for slew rate
         lastOutL = outL;
@@ -180,15 +202,8 @@ void autoDriveB(float target) {
     rightBase.SetPercent(0);
 }
 
-// PID control loop
-// target is desired encoder count
-// Position PID when some distance away
-// Drift PID and slew rate are constantly active
-// Ends function once at location
-// MAX_STEP is slew rate limit (10%)
-// LOOP_TIME is time per update (20 ms)
 void autoTurnL(float target) {
-    PID basePID(0.5, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_TURN, 0.01, 0, 0), driftPID(2, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -206,7 +221,7 @@ void autoTurnL(float target) {
 
     while(!done) {
         // Update average distance
-        avgEnc = (leftEnc.Counts() + rightEnc.Counts()) / 2;
+        avgEnc = rightEnc.Counts();
 
         // Position PID
         driveOut = basePID.calculate(target, avgEnc);
@@ -221,22 +236,30 @@ void autoTurnL(float target) {
 
         // Slew rate limit
         if(outL - lastOutL > MAX_STEP) {
-            outL = lastOutL + 10;
+            outL = lastOutL + MAX_STEP;
         }
         else if(outL - lastOutL < -MAX_STEP) {
-            outL = lastOutL - 10;
+            outL = lastOutL - MAX_STEP;
         }
 
         if(outR - lastOutR > MAX_STEP) {
-            outR = lastOutR + 10;
+            outR = lastOutR + MAX_STEP;
         }
         else if(outR - lastOutR < -MAX_STEP) {
-            outR = lastOutR - 10;
+            outR = lastOutR - MAX_STEP;
+        }
+
+        // Make sure output is at least minimum speed
+        if(fabs(outL) < MIN_SPEED_TURNING) {
+            outL = MIN_SPEED_TURNING * outL / fabs(outL);
+        }
+        if(fabs(outR) < MIN_SPEED_TURNING) {
+            outR = MIN_SPEED_TURNING * outR / fabs(outR);
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL + MIN_SPEED);
-        rightBase.SetPercent(outR + MIN_SPEED);
+        leftBase.SetPercent(outL);
+        rightBase.SetPercent(outR);
 
         // Store output for slew rate
         lastOutL = outL;
@@ -255,15 +278,8 @@ void autoTurnL(float target) {
     rightBase.SetPercent(0);
 }
 
-// PID control loop
-// target is desired encoder count
-// Position PID when some distance away
-// Drift PID and slew rate are constantly active
-// Ends function once at location
-// MAX_STEP is slew rate limit (10%)
-// LOOP_TIME is time per update (20 ms)
 void autoTurnR(float target) {
-    PID basePID(0.5, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_TURN, 0.01, 0, 0), driftPID(2, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -281,7 +297,7 @@ void autoTurnR(float target) {
 
     while(!done) {
         // Update average distance
-        avgEnc = (leftEnc.Counts() + rightEnc.Counts()) / 2;
+        avgEnc = rightEnc.Counts();
 
         // Position PID
         driveOut = basePID.calculate(target, avgEnc);
@@ -296,22 +312,30 @@ void autoTurnR(float target) {
 
         // Slew rate limit
         if(outL - lastOutL > MAX_STEP) {
-            outL = lastOutL + 10;
+            outL = lastOutL + MAX_STEP;
         }
         else if(outL - lastOutL < -MAX_STEP) {
-            outL = lastOutL - 10;
+            outL = lastOutL - MAX_STEP;
         }
 
         if(outR - lastOutR > MAX_STEP) {
-            outR = lastOutR + 10;
+            outR = lastOutR + MAX_STEP;
         }
         else if(outR - lastOutR < -MAX_STEP) {
-            outR = lastOutR - 10;
+            outR = lastOutR - MAX_STEP;
+        }
+
+        // Make sure output is at least minimum speed
+        if(fabs(outL) < MIN_SPEED_TURNING) {
+            outL = MIN_SPEED_TURNING * outL / fabs(outL);
+        }
+        if(fabs(outR) < MIN_SPEED_TURNING) {
+            outR = MIN_SPEED_TURNING * outR / fabs(outR);
         }
 
         // Set motors to output
-        leftBase.SetPercent(-outL - MIN_SPEED);
-        rightBase.SetPercent(-outR - MIN_SPEED);
+        leftBase.SetPercent(-outL);
+        rightBase.SetPercent(-outR);
 
         // Store output for slew rate
         lastOutL = outL;
@@ -321,6 +345,112 @@ void autoTurnR(float target) {
         Sleep(LOOP_TIME);
 
         if(target - avgEnc < 0) {
+            done = true;
+        }
+    }
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+}
+
+void autoSweepR(float target) {
+    PID basePID(KP_SWEEP, 0.01, 0, 0);
+
+    bool done = false;
+    float out, lastOut = 0;
+    float counts;
+
+    target *= TICKS_PER_INCH;
+
+    basePID.initialize();
+
+    // Consider allowing for accumulating error
+    rightEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        counts = rightEnc.Counts();
+
+        // Position PID
+        out = basePID.calculate(target, counts);
+
+        // Slew rate limit
+        if(out - lastOut > MAX_STEP) {
+            out = lastOut + MAX_STEP;
+        }
+        else if(out - lastOut < -MAX_STEP) {
+            out = lastOut - MAX_STEP;
+        }
+
+        // Make sure output is at least minimum speed
+        if(fabs(out) < MIN_SPEED_SWEEP) {
+            out = MIN_SPEED_SWEEP * out / fabs(out);
+        }
+
+        // Set motors to output
+        rightBase.SetPercent(out);
+
+        // Store output for slew rate
+        lastOut = out;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - counts < 0) {
+            done = true;
+        }
+    }
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+}
+
+void autoSweepL(float target) {
+    PID basePID(KP_SWEEP, 0.01, 0, 0);
+
+    bool done = false;
+    float out, lastOut = 0;
+    float counts;
+
+    target *= TICKS_PER_INCH;
+
+    basePID.initialize();
+
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        counts = leftEnc.Counts();
+
+        // Position PID
+        out = basePID.calculate(target, counts);
+
+        // Slew rate limit
+        if(out - lastOut > MAX_STEP) {
+            out = lastOut + MAX_STEP;
+        }
+        else if(out - lastOut < -MAX_STEP) {
+            out = lastOut - MAX_STEP;
+        }
+
+        // Make sure output is at least minimum speed
+        if(fabs(out) < MIN_SPEED_SWEEP) {
+            out = MIN_SPEED_SWEEP * out / fabs(out);
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(-out);
+
+        // Store output for slew rate
+        lastOut = out;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - counts < 0) {
             done = true;
         }
     }
@@ -331,8 +461,8 @@ void autoTurnR(float target) {
 }
 
 void setBase(int power) {
-    leftBase.SetPercent(power);
-    rightBase.SetPercent(-power);
+    leftBase.SetPercent(-power);
+    rightBase.SetPercent(power);
 }
 
 void timeDrive(int power, int time) {
@@ -344,19 +474,28 @@ void timeDrive(int power, int time) {
 void upRamp() {
     setBase(30);
     while(Accel.Y() < 0.25) {
-        LCD.WriteLine(Accel.Y());
         Sleep(100);
     }
     setBase(50);
     while(Accel.Y() > 0.25);
-    Sleep(500);
+    Sleep(250);
     setBase(0);
+}
+
+int findColor() {
+    if(cds.Value() > NO_LIGHT_THRESHOLD) {
+        return NO_LIGHT;
+    }
+    else if(cds.Value() > BLUE_LIGHT_THRESHOLD) {
+        return BLUE_LIGHT;
+    }
+    else {
+        return RED_LIGHT;
+    }
 }
 
 int main(void)
 {
-    AnalogInputPin cds(FEHIO::P3_0);
-
     armServo.SetMin(748);
     armServo.SetMax(2500);
 
@@ -374,71 +513,39 @@ int main(void)
 
     // Wait for start light or 30 seconds
     float startTime = TimeNow();
-    while((TimeNow() - startTime < 30) && cds.Value() > RED_THRESHOLD) {
-        Sleep(100);
+    while((TimeNow() - startTime < 30) && (cds.Value() > NO_LIGHT_THRESHOLD)) {
+        Sleep(50);
     }
 
-    // LCD.Clear(FEHLCD::Black);
-
-    // Set servo to initial position
-    armServo.SetDegree(90);
-
-    // To ramp
-    autoDriveF(6);
-    Sleep(250);
-
-    autoTurnR(2.75);
-    Sleep(250);
-
+    // Move to DDR light
+    autoDriveB(5);
+    autoTurnL(8.75);
     autoDriveF(14);
-    Sleep(500);
 
-    autoTurnL(6.4);
-    Sleep(250);
+    // Read light
+    switch(findColor()) {
+        case BLUE_LIGHT:
+            // Empty
+        break;
+        case RED_LIGHT:
+            autoDriveB(4);
+        break;
+        default:
+            // RPS
+        break;
+    }
 
-    // Up ramp to foosball
+    // Turn and back into button
+    autoSweepR(11.67);
+    timeDrive(-30, 7000);
+
+    // Move up ramp
+    autoDriveF(12);
     upRamp();
-    Sleep(250);
 
-    autoDriveF(10);
-    Sleep(250);
-
-    autoTurnR(5.75);
-    Sleep(250);
-
-    timeDrive(25, 1500);
-
-    // Backwards to lever
-    autoDriveB(20);
-    Sleep(250);
-
-    armServo.SetDegree(40);
-    Sleep(500);
-
-    autoDriveB(1);
-    Sleep(250);
-
-    leftBase.SetPercent(-50);
-    rightBase.SetPercent(-50);
-    Sleep(250);
-    leftBase.SetPercent(0);
-    rightBase.SetPercent(0);
-    armServo.SetDegree(90);
-    autoTurnL(0.75);
-    Sleep(250);
-
-    autoDriveB(4);
-    Sleep(250);
-
-    // To ramp
-    autoTurnL(2.75);
-    Sleep(250);
-
-    autoDriveB(60);
-
-    // Boom
-    autoTurnR(2.75);
-    timeDrive(50, 1000);
+    // Run into foosball
+    autoTurnL(1);
+    timeDrive(30, 5000);
 
     return 0;
 }
