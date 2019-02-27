@@ -20,7 +20,7 @@
 
 #define TICKS_PER_INCH 28 // Conversion from encoder ticks to in
 
-#define NO_LIGHT_THRESHOLD 1.5 // 1.5+ is no light
+#define NO_LIGHT_THRESHOLD 1.9 // 1.5+ is no light
 #define BLUE_LIGHT_THRESHOLD 0.8 // 0.8 to 1.5 is blue light
 
 enum {
@@ -41,7 +41,7 @@ DigitalEncoder rightEnc(FEHIO::P0_1);
 DigitalEncoder leftEnc(FEHIO::P1_0);
 
 // Declare CdS cell
-AnalogInputPin cds(FEHIO::P3_0);
+AnalogInputPin cds(FEHIO::P0_7);
 
 // PID control loop
 // target is desired encoder count
@@ -518,29 +518,38 @@ int main(void)
     }
 
     // Move to DDR light
-    autoDriveB(5);
-    autoTurnL(8.75);
+    autoDriveB(7);
+    autoTurnL(8.4);
     autoDriveF(14);
 
     // Read light
+    // Turn and back into button
     switch(findColor()) {
         case BLUE_LIGHT:
-            // Empty
+            LCD.SetFontColor(FEHLCD::Red);
+            LCD.WriteRC("BLUE", 11, 0);
+            autoDriveB(2);
+            autoSweepR(11.4);
+            timeDrive(-30, 7000);
+            autoDriveF(8);
         break;
         case RED_LIGHT:
-            autoDriveB(4);
+            LCD.SetFontColor(FEHLCD::Blue);
+            LCD.WriteRC("RED", 11, 0);
+            autoDriveB(6);
+            autoSweepR(11.4);
+            timeDrive(-30, 7000);
+            autoDriveF(1);
+            autoTurnR(2.8);
+            autoDriveF(6);
+            autoTurnL(2.85);
         break;
         default:
-            // RPS
+            return 0;
         break;
     }
 
-    // Turn and back into button
-    autoSweepR(11.67);
-    timeDrive(-30, 7000);
-
     // Move up ramp
-    autoDriveF(12);
     upRamp();
 
     // Run into foosball
