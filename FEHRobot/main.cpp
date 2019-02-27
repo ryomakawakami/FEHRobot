@@ -97,12 +97,16 @@ void autoDriveF(float target) {
             outR = lastOutR - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed
-        if(fabs(outL) < MIN_SPEED) {
-            outL = MIN_SPEED * outL / fabs(outL);
+        // Make sure output is at least minimum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED) {
+                outL = MIN_SPEED * outL / fabs(outL);
+            }
         }
-        if(fabs(outR) < MIN_SPEED) {
-            outR = MIN_SPEED * outR / fabs(outR);
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED) {
+                outR = MIN_SPEED * outR / fabs(outR);
+            }
         }
 
         // Set motors to output
@@ -173,12 +177,16 @@ void autoDriveB(float target) {
             outR = lastOutR - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed
-        if(fabs(outL) < MIN_SPEED) {
-            outL = MIN_SPEED * outL / fabs(outL);
+        // Make sure output is at least minimum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED) {
+                outL = MIN_SPEED * outL / fabs(outL);
+            }
         }
-        if(fabs(outR) < MIN_SPEED) {
-            outR = MIN_SPEED * outR / fabs(outR);
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED) {
+                outR = MIN_SPEED * outR / fabs(outR);
+            }
         }
 
         // Set motors to output
@@ -249,12 +257,16 @@ void autoTurnL(float target) {
             outR = lastOutR - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed
-        if(fabs(outL) < MIN_SPEED_TURNING) {
-            outL = MIN_SPEED_TURNING * outL / fabs(outL);
+        // Make sure output is at least minimum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED_TURNING) {
+                outL = MIN_SPEED_TURNING * outL / fabs(outL);
+            }
         }
-        if(fabs(outR) < MIN_SPEED_TURNING) {
-            outR = MIN_SPEED_TURNING * outR / fabs(outR);
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED_TURNING) {
+                outR = MIN_SPEED_TURNING * outR / fabs(outR);
+            }
         }
 
         // Set motors to output
@@ -325,12 +337,16 @@ void autoTurnR(float target) {
             outR = lastOutR - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed
-        if(fabs(outL) < MIN_SPEED_TURNING) {
-            outL = MIN_SPEED_TURNING * outL / fabs(outL);
+        // Make sure output is at least minimum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED_TURNING) {
+                outL = MIN_SPEED_TURNING * outL / fabs(outL);
+            }
         }
-        if(fabs(outR) < MIN_SPEED_TURNING) {
-            outR = MIN_SPEED_TURNING * outR / fabs(outR);
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED_TURNING) {
+                outR = MIN_SPEED_TURNING * outR / fabs(outR);
+            }
         }
 
         // Set motors to output
@@ -383,9 +399,11 @@ void autoSweepR(float target) {
             out = lastOut - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed
-        if(fabs(out) < MIN_SPEED_SWEEP) {
-            out = MIN_SPEED_SWEEP * out / fabs(out);
+        // Make sure output is at least minimum speed (prevent division by 0 too)
+        if(out != 0) {
+            if(fabs(out) < MIN_SPEED_SWEEP) {
+                out = MIN_SPEED_SWEEP * out / fabs(out);
+            }
         }
 
         // Set motors to output
@@ -436,9 +454,11 @@ void autoSweepL(float target) {
             out = lastOut - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed
-        if(fabs(out) < MIN_SPEED_SWEEP) {
-            out = MIN_SPEED_SWEEP * out / fabs(out);
+        // Make sure output is at least minimum speed (prevent division by 0 too)
+        if(out != 0) {
+            if(fabs(out) < MIN_SPEED_SWEEP) {
+                out = MIN_SPEED_SWEEP * out / fabs(out);
+            }
         }
 
         // Set motors to output
