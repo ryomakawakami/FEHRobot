@@ -501,7 +501,18 @@ int main(void)
             switch(status) {
             case SETTING:
                 LCD.Clear(FEHLCD::Black);
-                LCD.WriteLine("Straight or turning");
+                LCD.WriteLine("Mode selection");
+                switch(option) {
+                    case AUTO_DRIVE:
+                        LCD.WriteRC("autoDrive", 2, 0);
+                    break;
+                    case AUTO_TURN:
+                        LCD.WriteRC("autoTurn ", 2, 0);
+                    break;
+                    case AUTO_SWEEP:
+                        LCD.WriteRC("autoSweep", 2, 0);
+                    break;
+                }
             break;
             case RUN:
                 LCD.Clear(FEHLCD::Black);
