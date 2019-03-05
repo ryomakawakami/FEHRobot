@@ -1,2 +1,2 @@
    text	   data	    bss	    dec	    hex	filename
-  43420	   3424	   5576	  52420	   ccc4	../PIDtuning.elf
+  45132	   3424	   5576	  54132	   d374	../PIDtuning.elf

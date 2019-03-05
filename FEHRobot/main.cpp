@@ -5,7 +5,6 @@
 #include <FEHServo.h>
 #include <FEHAccel.h>
 #include "pidlib.h"
-#include "pikachu.h"
 
 #define MIN_SPEED 8
 #define MIN_SPEED_TURNING 12
@@ -33,11 +32,11 @@ enum {
 FEHServo armServo(FEHServo::Servo0);
 
 // Declare motors
-FEHMotor rightBase(FEHMotor::Motor0, 9);
-FEHMotor leftBase(FEHMotor::Motor1, 9);
+FEHMotor leftBase(FEHMotor::Motor0, 9);
+FEHMotor rightBase(FEHMotor::Motor1, 9);
 
 // Declare encoders
-DigitalEncoder rightEnc(FEHIO::P0_1);
+DigitalEncoder rightEnc(FEHIO::P0_0);
 DigitalEncoder leftEnc(FEHIO::P1_0);
 
 // Declare CdS cell
@@ -480,6 +479,61 @@ void autoSweepL(float target) {
     rightBase.SetPercent(0);
 }
 
+void autoSweepLB(float target) {
+    PID basePID(KP_SWEEP, 0.01, 0, 0);
+
+    bool done = false;
+    float out, lastOut = 0;
+    float counts;
+
+    target *= TICKS_PER_INCH;
+
+    basePID.initialize();
+
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        counts = leftEnc.Counts();
+
+        // Position PID
+        out = basePID.calculate(target, counts);
+
+        // Slew rate limit
+        if(out - lastOut > MAX_STEP) {
+            out = lastOut + MAX_STEP;
+        }
+        else if(out - lastOut < -MAX_STEP) {
+            out = lastOut - MAX_STEP;
+        }
+
+        // Make sure output is at least minimum speed (prevent division by 0 too)
+        if(out != 0) {
+            if(fabs(out) < MIN_SPEED_SWEEP) {
+                out = MIN_SPEED_SWEEP * out / fabs(out);
+            }
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(out);
+
+        // Store output for slew rate
+        lastOut = out;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - counts < 0) {
+            done = true;
+        }
+    }
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+}
+
 void setBase(int power) {
     leftBase.SetPercent(-power);
     rightBase.SetPercent(power);
@@ -514,22 +568,14 @@ int findColor() {
     }
 }
 
-int main(void)
-{
+int main(void) {
     armServo.SetMin(748);
     armServo.SetMax(2500);
 
     float x, y;
 
-    LCD.Clear(FEHLCD::White);
-    LCD.SetFontColor(FEHLCD::Black);
-
-    LCD.WriteLine(" ");
-    LCD.WriteLine("    Me: Tries to put");
-    LCD.WriteLine("    4k movie on Proteus");
-    LCD.WriteLine("    Proteus: Dies");
-    LCD.WriteLine("    Me:");
-    drawPicture(pikaPic, 123, 108, 99, 110);
+    LCD.Clear(FEHLCD::Black);
+    LCD.SetFontColor(FEHLCD::White);
 
     // Wait for start light or 30 seconds
     float startTime = TimeNow();
@@ -537,44 +583,8 @@ int main(void)
         Sleep(50);
     }
 
-    // Move to DDR light
-    autoDriveB(7);
-    autoTurnL(8.4);
-    autoDriveF(14);
+    // Move to token and run into it
 
-    // Read light
-    // Turn and back into button
-    switch(findColor()) {
-        case BLUE_LIGHT:
-            LCD.SetFontColor(FEHLCD::Red);
-            LCD.WriteRC("BLUE", 11, 0);
-            autoDriveB(2);
-            autoSweepR(11.4);
-            timeDrive(-30, 7000);
-            autoDriveF(8);
-        break;
-        case RED_LIGHT:
-            LCD.SetFontColor(FEHLCD::Blue);
-            LCD.WriteRC("RED", 11, 0);
-            autoDriveB(6);
-            autoSweepR(11.4);
-            timeDrive(-30, 7000);
-            autoDriveF(1);
-            autoTurnR(2.8);
-            autoDriveF(6);
-            autoTurnL(2.85);
-        break;
-        default:
-            return 0;
-        break;
-    }
-
-    // Move up ramp
-    upRamp();
-
-    // Run into foosball
-    autoTurnL(1);
-    timeDrive(30, 5000);
 
     return 0;
 }

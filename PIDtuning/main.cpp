@@ -24,15 +24,16 @@ enum {
 enum {
     AUTO_DRIVE,
     AUTO_TURN,
-    AUTO_SWEEP
+    AUTO_SWEEP,
+    TOKEN
 };
 
 // Declare motors
-FEHMotor rightBase(FEHMotor::Motor0, 9);
-FEHMotor leftBase(FEHMotor::Motor1, 9);
+FEHMotor leftBase(FEHMotor::Motor0, 9);
+FEHMotor rightBase(FEHMotor::Motor1, 9);
 
 // Declare encoders
-DigitalEncoder rightEnc(FEHIO::P0_1);
+DigitalEncoder rightEnc(FEHIO::P0_0);
 DigitalEncoder leftEnc(FEHIO::P1_0);
 
 // PID control loop
@@ -452,6 +453,142 @@ void autoSweepR(float target, float kP) {
     rightBase.SetPercent(0);
 }
 
+void moveToToken(float kP) {
+    PID basePID(kP, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+
+    bool leftDone = false, rightDone = false, done = false;
+    float leftOut, rightOut, driveOut, driftOut;
+    float outL, outR, lastOutL = 0, lastOutR = 0;
+    float avgEnc;
+
+    float rightTarget = 5 * TICKS_PER_INCH;
+    float leftTarget = rightTarget + 8 * TICKS_PER_INCH;
+    float target = 12 * TICKS_PER_INCH;
+
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+
+    while(!done) {
+        if(!leftDone) {
+            leftOut = 50;
+        }
+        if(!rightDone) {
+            rightOut = 50;
+        }
+        else {
+            rightOut = 10;
+        }
+
+        // Slew rate limit
+        if(leftOut - lastOutL > MAX_STEP) {
+            leftOut = lastOutL + MAX_STEP;
+        }
+        else if(leftOut - lastOutL < -MAX_STEP) {
+            leftOut = lastOutL - MAX_STEP;
+        }
+
+        if(rightOut - lastOutR > MAX_STEP) {
+            rightOut = lastOutR + MAX_STEP;
+        }
+        else if(rightOut - lastOutR < -MAX_STEP) {
+            rightOut = lastOutR - MAX_STEP;
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(leftOut);
+        rightBase.SetPercent(-rightOut);
+
+        // Store output for slew rate
+        lastOutL = leftOut;
+        lastOutR = rightOut;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(leftTarget - leftEnc.Counts() < 20) {
+            leftDone = true;
+        }
+        if(rightTarget - rightEnc.Counts() < 20) {
+            rightDone = true;
+        }
+        if(leftDone && rightDone) {
+            done = true;
+        }
+    }
+
+    lastOutR = 50;
+
+    rightBase.SetPercent(-50);
+    Sleep(250);
+
+    done = false;
+
+    basePID.initialize();
+    driftPID.initialize();
+
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        avgEnc = (leftEnc.Counts() + rightEnc.Counts()) / 2;
+
+        // Position PID
+        driveOut = basePID.calculate(target, avgEnc);
+
+        // Drift PID
+        driftOut = driftPID.calculate(0, leftEnc.Counts() - rightEnc.Counts());
+
+        // Calculate motor outputs
+        // Limit driveOut contribution so driftOut can have affect it?
+        outL = driveOut + driftOut;
+        outR = driveOut - driftOut;
+
+        // Slew rate limit
+        if(outL - lastOutL > MAX_STEP) {
+            outL = lastOutL + MAX_STEP;
+        }
+        else if(outL - lastOutL < -MAX_STEP) {
+            outL = lastOutL - MAX_STEP;
+        }
+
+        if(outR - lastOutR > MAX_STEP) {
+            outR = lastOutR + MAX_STEP;
+        }
+        else if(outR - lastOutR < -MAX_STEP) {
+            outR = lastOutR - MAX_STEP;
+        }
+
+        // Make sure output is at least minimum speed
+        if(fabs(outL) < MIN_SPEED) {
+            outL = MIN_SPEED * outL / fabs(outL);
+        }
+        if(fabs(outR) < MIN_SPEED) {
+            outR = MIN_SPEED * outR / fabs(outR);
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(outL);
+        rightBase.SetPercent(-outR);
+
+        // Store output for slew rate
+        lastOutL = outL;
+        lastOutR = outR;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - avgEnc < 0) {
+            done = true;
+        }
+    }
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+}
+
 int main(void)
 {
     float x,y;
@@ -512,6 +649,9 @@ int main(void)
                     case AUTO_SWEEP:
                         LCD.WriteRC("autoSweep", 2, 0);
                     break;
+                    case TOKEN:
+                        LCD.WriteRC("Token", 2, 0);
+                    break;
                 }
             break;
             case RUN:
@@ -536,7 +676,7 @@ int main(void)
             switch(status) {
             case SETTING:
                 option++;
-                if(option > 2) {
+                if(option > 3) {
                     option = 0;
                 }
                 switch(option) {
@@ -548,6 +688,9 @@ int main(void)
                     break;
                     case AUTO_SWEEP:
                         LCD.WriteRC("autoSweep", 2, 0);
+                    break;
+                    case TOKEN:
+                        LCD.WriteRC("Token    ", 2, 0);
                     break;
                 }
                 while(LCD.Touch(&x, &y));
@@ -577,6 +720,9 @@ int main(void)
                         else {
                             autoSweepL(-distance, kP);
                         }
+                    break;
+                    case TOKEN:
+                        moveToToken(kP);
                     break;
                 }
             break;
