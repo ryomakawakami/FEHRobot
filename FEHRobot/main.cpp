@@ -653,7 +653,7 @@ int main(void) {
     LCD.Clear(FEHLCD::Black);
     LCD.SetFontColor(FEHLCD::White);
 
-    // Wait for start light or 30 seconds
+    // Wait for start light or for 30 seconds
     float startTime = TimeNow();
     while((TimeNow() - startTime < 30) && (cds.Value() > NO_LIGHT_THRESHOLD)) {
         Sleep(50);
