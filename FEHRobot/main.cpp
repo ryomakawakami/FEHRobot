@@ -545,6 +545,82 @@ void timeDrive(int power, int time) {
     setBase(0);
 }
 
+void moveToToken() {
+    PID basePID(0.5, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+
+    bool leftDone = false, rightDone = false, done = false;
+    float leftOut, rightOut, driveOut, driftOut;
+    float outL, outR, lastOutL = 0, lastOutR = 0;
+    float avgEnc;
+
+    float rightTarget = 4.5 * TICKS_PER_INCH;
+    float leftTarget = rightTarget + 7 * TICKS_PER_INCH;
+    float target = 12 * TICKS_PER_INCH;
+
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+
+    while(!done) {
+        if(!leftDone) {
+            leftOut = 50;
+        }
+        if(!rightDone) {
+            rightOut = 50;
+        }
+        else {
+            rightOut = 0;
+        }
+
+        // Slew rate limit
+        if(leftOut - lastOutL > MAX_STEP) {
+            leftOut = lastOutL + MAX_STEP;
+        }
+        else if(leftOut - lastOutL < -MAX_STEP) {
+            leftOut = lastOutL - MAX_STEP;
+        }
+
+        if(rightOut - lastOutR > MAX_STEP) {
+            rightOut = lastOutR + MAX_STEP;
+        }
+        else if(rightOut - lastOutR < -MAX_STEP) {
+            rightOut = lastOutR - MAX_STEP;
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(leftOut);
+        rightBase.SetPercent(-rightOut);
+
+        // Store output for slew rate
+        lastOutL = leftOut;
+        lastOutR = rightOut;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(leftTarget - leftEnc.Counts() < 20) {
+            leftDone = true;
+        }
+        if(rightTarget - rightEnc.Counts() < 20) {
+            rightDone = true;
+        }
+        if(leftDone && rightDone) {
+            done = true;
+        }
+    }
+
+    lastOutR = 50;
+
+    rightBase.SetPercent(-50);
+    Sleep(250);
+
+    timeDrive(-75, 400);
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+}
+
 void upRamp() {
     setBase(30);
     while(Accel.Y() < 0.25) {
@@ -584,7 +660,7 @@ int main(void) {
     }
 
     // Move to token and run into it
-
+    moveToToken();
 
     return 0;
 }
