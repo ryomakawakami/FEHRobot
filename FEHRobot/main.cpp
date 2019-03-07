@@ -10,6 +10,8 @@
 #define MIN_SPEED_TURNING 12
 #define MIN_SPEED_SWEEP 12
 
+#define MAX_SPEED 80
+
 #define MAX_STEP 10  // Max change per iteration
 #define LOOP_TIME 0.020   // 20 ms, 50 Hz
 
@@ -96,15 +98,21 @@ void autoDriveF(float target) {
             outR = lastOutR - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed (prevent division by 0 too)
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
         if(outL != 0) {
             if(fabs(outL) < MIN_SPEED) {
                 outL = MIN_SPEED * outL / fabs(outL);
+            }
+            else if(fabs(outL) > MAX_SPEED) {
+                outL = MAX_SPEED * outL / fabs(outL);
             }
         }
         if(outR != 0) {
             if(fabs(outR) < MIN_SPEED) {
                 outR = MIN_SPEED * outR / fabs(outR);
+            }
+            else if(fabs(outR) > MAX_SPEED) {
+                outR = MAX_SPEED * outR / fabs(outR);
             }
         }
 
@@ -176,15 +184,21 @@ void autoDriveB(float target) {
             outR = lastOutR - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed (prevent division by 0 too)
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
         if(outL != 0) {
             if(fabs(outL) < MIN_SPEED) {
                 outL = MIN_SPEED * outL / fabs(outL);
+            }
+            else if(fabs(outL) > MAX_SPEED) {
+                outL = MAX_SPEED * outL / fabs(outL);
             }
         }
         if(outR != 0) {
             if(fabs(outR) < MIN_SPEED) {
                 outR = MIN_SPEED * outR / fabs(outR);
+            }
+            else if(fabs(outR) > MAX_SPEED) {
+                outR = MAX_SPEED * outR / fabs(outR);
             }
         }
 
@@ -256,15 +270,21 @@ void autoTurnL(float target) {
             outR = lastOutR - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed (prevent division by 0 too)
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
         if(outL != 0) {
             if(fabs(outL) < MIN_SPEED_TURNING) {
                 outL = MIN_SPEED_TURNING * outL / fabs(outL);
+            }
+            else if(fabs(outL) > MAX_SPEED) {
+                outL = MAX_SPEED * outL / fabs(outL);
             }
         }
         if(outR != 0) {
             if(fabs(outR) < MIN_SPEED_TURNING) {
                 outR = MIN_SPEED_TURNING * outR / fabs(outR);
+            }
+            else if(fabs(outR) > MAX_SPEED) {
+                outR = MAX_SPEED * outR / fabs(outR);
             }
         }
 
@@ -336,15 +356,21 @@ void autoTurnR(float target) {
             outR = lastOutR - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed (prevent division by 0 too)
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
         if(outL != 0) {
             if(fabs(outL) < MIN_SPEED_TURNING) {
                 outL = MIN_SPEED_TURNING * outL / fabs(outL);
+            }
+            else if(fabs(outL) > MAX_SPEED) {
+                outL = MAX_SPEED * outL / fabs(outL);
             }
         }
         if(outR != 0) {
             if(fabs(outR) < MIN_SPEED_TURNING) {
                 outR = MIN_SPEED_TURNING * outR / fabs(outR);
+            }
+            else if(fabs(outR) > MAX_SPEED) {
+                outR = MAX_SPEED * outR / fabs(outR);
             }
         }
 
@@ -403,6 +429,9 @@ void autoSweepR(float target) {
             if(fabs(out) < MIN_SPEED_SWEEP) {
                 out = MIN_SPEED_SWEEP * out / fabs(out);
             }
+            else if(fabs(out) > MAX_SPEED) {
+                out = MAX_SPEED * out / fabs(out);
+            }
         }
 
         // Set motors to output
@@ -458,6 +487,9 @@ void autoSweepL(float target) {
             if(fabs(out) < MIN_SPEED_SWEEP) {
                 out = MIN_SPEED_SWEEP * out / fabs(out);
             }
+            else if(fabs(out) > MAX_SPEED) {
+                out = MAX_SPEED * out / fabs(out);
+            }
         }
 
         // Set motors to output
@@ -512,6 +544,9 @@ void autoSweepLB(float target) {
         if(out != 0) {
             if(fabs(out) < MIN_SPEED_SWEEP) {
                 out = MIN_SPEED_SWEEP * out / fabs(out);
+            }
+            else if(fabs(out) > MAX_SPEED) {
+                out = MAX_SPEED * out / fabs(out);
             }
         }
 
@@ -587,6 +622,24 @@ void moveToToken() {
             rightOut = lastOutR - MAX_STEP;
         }
 
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED) {
+                outL = MIN_SPEED * outL / fabs(outL);
+            }
+            else if(fabs(outL) > MAX_SPEED) {
+                outL = MAX_SPEED * outL / fabs(outL);
+            }
+        }
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED) {
+                outR = MIN_SPEED * outR / fabs(outR);
+            }
+            else if(fabs(outR) > 60) {
+                outR = 60 * outR / fabs(outR);
+            }
+        }
+
         // Set motors to output
         leftBase.SetPercent(leftOut);
         rightBase.SetPercent(-rightOut);
@@ -608,13 +661,6 @@ void moveToToken() {
             done = true;
         }
     }
-
-    lastOutR = 50;
-
-    rightBase.SetPercent(-50);
-    Sleep(250);
-
-    timeDrive(-75, 400);
 
     // Stop motors
     leftBase.SetPercent(0);

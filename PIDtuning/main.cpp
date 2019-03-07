@@ -9,6 +9,8 @@
 #define MIN_SPEED_TURNING 12
 #define MIN_SPEED_SWEEP 12
 
+#define MAX_SPEED 80
+
 #define MAX_STEP 7  // Max change per iteration
 #define LOOP_TIME 0.020   // 20 ms, 50 Hz
 
@@ -90,12 +92,22 @@ void autoDriveF(float target, float kP) {
             outR = lastOutR - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed
-        if(fabs(outL) < MIN_SPEED) {
-            outL = MIN_SPEED * outL / fabs(outL);
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED) {
+                outL = MIN_SPEED * outL / fabs(outL);
+            }
+            else if(fabs(outL) > MAX_SPEED) {
+                outL = MAX_SPEED * outL / fabs(outL);
+            }
         }
-        if(fabs(outR) < MIN_SPEED) {
-            outR = MIN_SPEED * outR / fabs(outR);
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED) {
+                outR = MIN_SPEED * outR / fabs(outR);
+            }
+            else if(fabs(outR) > MAX_SPEED) {
+                outR = MAX_SPEED * outR / fabs(outR);
+            }
         }
 
         // Set motors to output
@@ -166,12 +178,22 @@ void autoDriveB(float target, float kP) {
             outR = lastOutR - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed
-        if(fabs(outL) < MIN_SPEED) {
-            outL = MIN_SPEED * outL / fabs(outL);
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED) {
+                outL = MIN_SPEED * outL / fabs(outL);
+            }
+            else if(fabs(outL) > MAX_SPEED) {
+                outL = MAX_SPEED * outL / fabs(outL);
+            }
         }
-        if(fabs(outR) < MIN_SPEED) {
-            outR = MIN_SPEED * outR / fabs(outR);
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED) {
+                outR = MIN_SPEED * outR / fabs(outR);
+            }
+            else if(fabs(outR) > MAX_SPEED) {
+                outR = MAX_SPEED * outR / fabs(outR);
+            }
         }
 
         // Set motors to output
@@ -242,12 +264,22 @@ void autoTurnL(float target, float kP) {
             outR = lastOutR - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed
-        if(fabs(outL) < MIN_SPEED_TURNING) {
-            outL = MIN_SPEED_TURNING * outL / fabs(outL);
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED_TURNING) {
+                outL = MIN_SPEED_TURNING * outL / fabs(outL);
+            }
+            else if(fabs(outL) > MAX_SPEED) {
+                outL = MAX_SPEED * outL / fabs(outL);
+            }
         }
-        if(fabs(outR) < MIN_SPEED_TURNING) {
-            outR = MIN_SPEED_TURNING * outR / fabs(outR);
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED_TURNING) {
+                outR = MIN_SPEED_TURNING * outR / fabs(outR);
+            }
+            else if(fabs(outR) > MAX_SPEED) {
+                outR = MAX_SPEED * outR / fabs(outR);
+            }
         }
 
         // Set motors to output
@@ -318,12 +350,22 @@ void autoTurnR(float target, float kP) {
             outR = lastOutR - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed
-        if(fabs(outL) < MIN_SPEED_TURNING) {
-            outL = MIN_SPEED_TURNING * outL / fabs(outL);
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED_TURNING) {
+                outL = MIN_SPEED_TURNING * outL / fabs(outL);
+            }
+            else if(fabs(outL) > MAX_SPEED) {
+                outL = MAX_SPEED * outL / fabs(outL);
+            }
         }
-        if(fabs(outR) < MIN_SPEED_TURNING) {
-            outR = MIN_SPEED_TURNING * outR / fabs(outR);
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED_TURNING) {
+                outR = MIN_SPEED_TURNING * outR / fabs(outR);
+            }
+            else if(fabs(outR) > MAX_SPEED) {
+                outR = MAX_SPEED * outR / fabs(outR);
+            }
         }
 
         // Set motors to output
@@ -376,9 +418,14 @@ void autoSweepL(float target, float kP) {
             out = lastOut - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed
-        if(fabs(out) < MIN_SPEED_SWEEP) {
-            out = MIN_SPEED_SWEEP * out / fabs(out);
+        // Make sure output is at least minimum speed (prevent division by 0 too)
+        if(out != 0) {
+            if(fabs(out) < MIN_SPEED_SWEEP) {
+                out = MIN_SPEED_SWEEP * out / fabs(out);
+            }
+            else if(fabs(out) > MAX_SPEED) {
+                out = MAX_SPEED * out / fabs(out);
+            }
         }
 
         // Set motors to output
@@ -429,9 +476,14 @@ void autoSweepR(float target, float kP) {
             out = lastOut - MAX_STEP;
         }
 
-        // Make sure output is at least minimum speed
-        if(fabs(out) < MIN_SPEED_SWEEP) {
-            out = MIN_SPEED_SWEEP * out / fabs(out);
+        // Make sure output is at least minimum speed (prevent division by 0 too)
+        if(out != 0) {
+            if(fabs(out) < MIN_SPEED_SWEEP) {
+                out = MIN_SPEED_SWEEP * out / fabs(out);
+            }
+            else if(fabs(out) > MAX_SPEED) {
+                out = MAX_SPEED * out / fabs(out);
+            }
         }
 
         // Set motors to output
@@ -465,31 +517,27 @@ void timeDrive(int power, int time) {
 }
 
 void moveToToken(float kP) {
-    PID basePID(kP, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+    PID leftPID(kP, 0.01, 0, 0), rightPID(kP, 0.01, 0, 0);
 
-    bool leftDone = false, rightDone = false, done = false;
-    float leftOut, rightOut, driveOut, driftOut;
-    float outL, outR, lastOutL = 0, lastOutR = 0;
-    float avgEnc;
+    bool done = false;
+    float leftOut, rightOut;
+    float lastOutL = 0, lastOutR = 0;
 
-    float rightTarget = 4.5 * TICKS_PER_INCH;
-    float leftTarget = rightTarget + 7 * TICKS_PER_INCH;
-    float target = 12 * TICKS_PER_INCH;
+    float rightTarget = 12 * TICKS_PER_INCH;
+    float leftTarget = 16 * TICKS_PER_INCH;
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
     rightEnc.ResetCounts();
 
+    // Initialize left and right PID
+    leftPID.initialize();
+    rightPID.initialize();
+
     while(!done) {
-        if(!leftDone) {
-            leftOut = 50;
-        }
-        if(!rightDone) {
-            rightOut = 50;
-        }
-        else {
-            rightOut = 0;
-        }
+        // Position PID
+        leftOut = leftPID.calculate(leftTarget, leftEnc.Counts());
+        rightOut = rightPID.calculate(rightTarget, rightEnc.Counts());
 
         // Slew rate limit
         if(leftOut - lastOutL > MAX_STEP) {
@@ -506,6 +554,24 @@ void moveToToken(float kP) {
             rightOut = lastOutR - MAX_STEP;
         }
 
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
+        if(leftOut != 0) {
+            if(fabs(leftOut) < MIN_SPEED) {
+                leftOut = MIN_SPEED * leftOut / fabs(leftOut);
+            }
+            else if(fabs(leftOut) > MAX_SPEED) {
+                leftOut = MAX_SPEED * leftOut / fabs(leftOut);
+            }
+        }
+        if(rightOut != 0) {
+            if(fabs(rightOut) < MIN_SPEED) {
+                rightOut = MIN_SPEED * rightOut / fabs(rightOut);
+            }
+            else if(fabs(rightOut) > 60) {
+                rightOut = 60 * rightOut / fabs(rightOut);
+            }
+        }
+
         // Set motors to output
         leftBase.SetPercent(leftOut);
         rightBase.SetPercent(-rightOut);
@@ -517,27 +583,169 @@ void moveToToken(float kP) {
         // Sleep for set time
         Sleep(LOOP_TIME);
 
-        if(leftTarget - leftEnc.Counts() < 20) {
-            leftDone = true;
-        }
-        if(rightTarget - rightEnc.Counts() < 20) {
-            rightDone = true;
-        }
-        if(leftDone && rightDone) {
+        if(leftTarget - leftEnc.Counts() < 10) {
             done = true;
         }
     }
 
-    lastOutR = 50;
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
 
-    rightBase.SetPercent(-50);
-    Sleep(250);
+    LCD.WriteLine(leftTarget - leftEnc.Counts());
+    LCD.WriteLine(rightTarget - rightEnc.Counts());
+}
 
-    timeDrive(-75, 400);
+void autoDriveBSlow(float target, float kP) {
+    PID basePID(kP, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+
+    bool done = false;
+    float driveOut, driftOut;
+    float outL, outR, lastOutL = 0, lastOutR = 0;
+    float avgEnc;
+
+    target *= TICKS_PER_INCH;
+
+    basePID.initialize();
+    driftPID.initialize();
+
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        avgEnc = rightEnc.Counts();
+
+        // Position PID
+        driveOut = basePID.calculate(target, avgEnc);
+
+        // Drift PID
+        driftOut = driftPID.calculate(0, leftEnc.Counts() - rightEnc.Counts());
+
+        // Calculate motor outputs
+        // Limit driveOut contribution so driftOut can have affect it?
+        outL = driveOut + driftOut;
+        outR = driveOut - driftOut;
+
+        // Slew rate limit
+        if(outL - lastOutL > MAX_STEP) {
+            outL = lastOutL + MAX_STEP;
+        }
+        else if(outL - lastOutL < -MAX_STEP) {
+            outL = lastOutL - MAX_STEP;
+        }
+
+        if(outR - lastOutR > MAX_STEP) {
+            outR = lastOutR + MAX_STEP;
+        }
+        else if(outR - lastOutR < -MAX_STEP) {
+            outR = lastOutR - MAX_STEP;
+        }
+
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED) {
+                outL = MIN_SPEED * outL / fabs(outL);
+            }
+            else if(fabs(outL) > 30) {
+                outL = 30 * outL / fabs(outL);
+            }
+        }
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED) {
+                outR = MIN_SPEED * outR / fabs(outR);
+            }
+            else if(fabs(outR) > 30) {
+                outR = 30 * outR / fabs(outR);
+            }
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(outL);
+        rightBase.SetPercent(-outR);
+
+        // Store output for slew rate
+        lastOutL = outL;
+        lastOutR = outR;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - avgEnc < 0) {
+            done = true;
+        }
+        LCD.WriteLine(target - leftEnc.Counts());
+        LCD.WriteLine(target - rightEnc.Counts());
+    }
 
     // Stop motors
     leftBase.SetPercent(0);
     rightBase.SetPercent(0);
+}
+
+void autoSweepLB(float target, float kP) {
+    PID basePID(kP, 0.01, 0, 0);
+
+    bool done = false;
+    float out, lastOut = 0;
+    float counts;
+
+    target *= TICKS_PER_INCH;
+
+    basePID.initialize();
+
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        counts = leftEnc.Counts();
+
+        // Position PID
+        out = basePID.calculate(target, counts);
+
+        // Slew rate limit
+        if(out - lastOut > MAX_STEP) {
+            out = lastOut + MAX_STEP;
+        }
+        else if(out - lastOut < -MAX_STEP) {
+            out = lastOut - MAX_STEP;
+        }
+
+        // Make sure output is at least minimum speed (prevent division by 0 too)
+        if(out != 0) {
+            if(fabs(out) < MIN_SPEED_SWEEP) {
+                out = MIN_SPEED_SWEEP * out / fabs(out);
+            }
+            else if(fabs(out) > 30) {
+                out = 30 * out / fabs(out);
+            }
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(out);
+
+        // Store output for slew rate
+        lastOut = out;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - counts < 0) {
+            done = true;
+        }
+    }
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+}
+
+void moveToToken2(float kP) {
+    autoDriveBSlow(5, kP);
+    autoSweepLB(5.5, kP);
+    autoDriveB(16, kP);
 }
 
 int main(void)
@@ -673,7 +881,12 @@ int main(void)
                         }
                     break;
                     case TOKEN:
-                        moveToToken(kP);
+                        if(distance > 0) {
+                            moveToToken(kP);
+                        }
+                        else {
+                            moveToToken2(kP);
+                        }
                     break;
                 }
             break;
