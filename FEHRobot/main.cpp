@@ -673,7 +673,7 @@ void upRamp() {
     }
     setBase(50);
     while(Accel.Y() > 0.25);
-    Sleep(250);
+    Sleep(750);
     setBase(0);
 }
 
@@ -690,7 +690,7 @@ int findColor() {
 }
 
 int main(void) {
-    armServo.SetMin(748);
+    armServo.SetMin(738);
     armServo.SetMax(2500);
 
     float x, y;
@@ -698,14 +698,33 @@ int main(void) {
     LCD.Clear(FEHLCD::Black);
     LCD.SetFontColor(FEHLCD::White);
 
+    armServo.SetDegree(10);
+
     // Wait for start light or for 30 seconds
     float startTime = TimeNow();
     while((TimeNow() - startTime < 30) && (cds.Value() > NO_LIGHT_THRESHOLD)) {
         Sleep(50);
     }
 
-    // Move to token and run into it
-    moveToToken();
+    // Move to blue button
+    autoDriveB(7);
+    autoTurnL(8.4);
+    autoDriveF(12);
+
+    // Hit blue button
+    autoSweepR(11.4);
+    timeDrive(-30, 1000);
+    autoDriveF(8);
+
+    // Move up ramp
+    upRamp();
+
+    // Line up with foosball
+    autoDriveF(10);
+    autoTurnL(5.6);
+    autoDriveF(3);
+
+    armServo.SetDegree(100);
 
     return 0;
 }
