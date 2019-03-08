@@ -13,8 +13,9 @@
  C:\fehqt\Proteus/EWL/EWL_C/include/limits_api.h \
  C:\fehqt\Proteus/EWL/EWL_C/include/ewl_lib_ext1.h Libraries/FEHUtility.h \
  Startup/derivative.h Libraries/LCDColors.h Libraries/FEHIO.h \
- Drivers/adc16.h Libraries/FEHMotor.h Libraries/FEHAccel.h Drivers/i2c.h \
- ..\/pidlib.h C:\fehqt\Proteus/EWL/EWL_C/include/cmath \
+ Drivers/adc16.h Libraries/FEHMotor.h Libraries/FEHServo.h \
+ Libraries/FEHAccel.h Drivers/i2c.h ..\/pidlib.h \
+ C:\fehqt\Proteus/EWL/EWL_C/include/cmath \
  C:\fehqt\Proteus/EWL/EWL_C/include/cfloat \
  C:\fehqt\Proteus/EWL/EWL_C/include/ewl_t.h \
  C:\fehqt\Proteus/EWL/EWL_C/include/arm/float.ARM.h \
@@ -69,6 +70,8 @@ Libraries/FEHIO.h:
 Drivers/adc16.h:
 
 Libraries/FEHMotor.h:
+
+Libraries/FEHServo.h:
 
 Libraries/FEHAccel.h:
 

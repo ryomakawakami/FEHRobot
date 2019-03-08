@@ -588,9 +588,8 @@ void moveToToken() {
     float outL, outR, lastOutL = 0, lastOutR = 0;
     float avgEnc;
 
-    float rightTarget = 4.5 * TICKS_PER_INCH;
-    float leftTarget = rightTarget + 7 * TICKS_PER_INCH;
-    float target = 12 * TICKS_PER_INCH;
+    float rightTarget = 6 * TICKS_PER_INCH;
+    float leftTarget = rightTarget + 14 * TICKS_PER_INCH;
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();

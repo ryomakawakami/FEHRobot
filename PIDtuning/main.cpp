@@ -2,6 +2,7 @@
 #include <FEHIO.h>
 #include <FEHUtility.h>
 #include <FEHMotor.h>
+#include <FEHServo.h>
 #include <FEHAccel.h>
 #include "pidlib.h"
 
@@ -20,7 +21,8 @@ enum {
     RUN,
     ADJUST,
     DISTANCE,
-    SETTING
+    SETTING,
+    SERVO
 };
 
 enum {
@@ -37,6 +39,9 @@ FEHMotor rightBase(FEHMotor::Motor1, 9);
 // Declare encoders
 DigitalEncoder rightEnc(FEHIO::P0_0);
 DigitalEncoder leftEnc(FEHIO::P1_0);
+
+// Declare servo
+FEHServo armServo(FEHServo::Servo0);
 
 // PID control loop
 // target is desired encoder count
@@ -523,8 +528,8 @@ void moveToToken(float kP) {
     float leftOut, rightOut;
     float lastOutL = 0, lastOutR = 0;
 
-    float rightTarget = 12 * TICKS_PER_INCH;
-    float leftTarget = 16 * TICKS_PER_INCH;
+    float rightTarget = 18 * TICKS_PER_INCH;
+    float leftTarget = 24 * TICKS_PER_INCH;
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -648,16 +653,16 @@ void autoDriveBSlow(float target, float kP) {
             if(fabs(outL) < MIN_SPEED) {
                 outL = MIN_SPEED * outL / fabs(outL);
             }
-            else if(fabs(outL) > 30) {
-                outL = 30 * outL / fabs(outL);
+            else if(fabs(outL) > 25) {
+                outL = 25 * outL / fabs(outL);
             }
         }
         if(outR != 0) {
             if(fabs(outR) < MIN_SPEED) {
                 outR = MIN_SPEED * outR / fabs(outR);
             }
-            else if(fabs(outR) > 30) {
-                outR = 30 * outR / fabs(outR);
+            else if(fabs(outR) > 20) {
+                outR = 20 * outR / fabs(outR);
             }
         }
 
@@ -718,8 +723,8 @@ void autoSweepLB(float target, float kP) {
             if(fabs(out) < MIN_SPEED_SWEEP) {
                 out = MIN_SPEED_SWEEP * out / fabs(out);
             }
-            else if(fabs(out) > 30) {
-                out = 30 * out / fabs(out);
+            else if(fabs(out) > 25) {
+                out = 25 * out / fabs(out);
             }
         }
 
@@ -745,7 +750,7 @@ void autoSweepLB(float target, float kP) {
 void moveToToken2(float kP) {
     autoDriveBSlow(5, kP);
     autoSweepLB(5.5, kP);
-    autoDriveB(16, kP);
+    autoDriveB(13, kP);
 }
 
 int main(void)
@@ -763,8 +768,13 @@ int main(void)
 
     int option = 0;
 
+    int angle = 0;
+
     bool statusDisplayed = false;
     int status = 0;
+
+    armServo.SetMin(738);
+    armServo.SetMax(2500);
 
     while(true)
     {
@@ -772,6 +782,12 @@ int main(void)
             if(status != SETTING) {
                 statusDisplayed = false;
                 status = SETTING;
+            }
+        }
+        else if(Accel.X() < -0.3) {
+            if(status != SERVO) {
+                statusDisplayed = false;
+                status = SERVO;
             }
         }
         else if(Accel.Y() < -0.3) {
@@ -826,6 +842,11 @@ int main(void)
                 LCD.Clear(FEHLCD::Black);
                 LCD.WriteLine("Adjusting kP");
                 LCD.WriteRC(kP, 2, 0);
+            break;
+            case SERVO:
+                LCD.Clear(FEHLCD::Black);
+               LCD.WriteLine("Servo");
+               LCD.WriteRC(angle, 2, 0);
             break;
             }
             statusDisplayed = true;
@@ -918,6 +939,29 @@ int main(void)
                 LCD.WriteRC(distance, 2, 0);
                 while(LCD.Touch(&x, &y));
                 Sleep(100);
+            break;
+            case SERVO:
+                if(x > 160) {
+                    angle += 10;
+                    if(angle > 180) {
+                        angle = 180;
+                    }
+                    LCD.WriteRC("    ", 2, 0);
+                    LCD.WriteRC(angle, 2, 0);
+                    while(LCD.Touch(&x, &y));
+                    Sleep(100);
+                }
+                else {
+                    angle -= 10;
+                    if(angle < 0) {
+                        angle = 0;
+                    }
+                    LCD.WriteRC("    ", 2, 0);
+                    LCD.WriteRC(angle, 2, 0);
+                    while(LCD.Touch(&x, &y));
+                    Sleep(100);
+                }
+                armServo.SetDegree(angle);
             break;
             }
         }
