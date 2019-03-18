@@ -524,7 +524,7 @@ void timeDrive(int power, int time) {
 }
 
 void moveToToken(float kP) {
-    PID leftPID(kP, 0.01, 0, 0), rightPID(kP, 0.01, 0, 0), driftPID(10, 0, 0, 0);
+    PID leftPID(kP, 0.01, 0, 0), rightPID(kP, 0.01, 0, 0), arcPID(2, 0, 0, 0), driftPID(2, 0, 0, 0);
 
     bool done = false;
     float leftOut, rightOut, driftOut, outL, outR;
@@ -542,6 +542,7 @@ void moveToToken(float kP) {
     // Initialize left and right PID
     leftPID.initialize();
     rightPID.initialize();
+    arcPID.initialize();
     driftPID.initialize();
 
     while(!done) {
@@ -553,12 +554,15 @@ void moveToToken(float kP) {
         errorTarget = left * 160 / 370;
         if (errorTarget > 160) {
             errorTarget = 160;
+            driftOut = driftPID.calculate(errorTarget, left - right);
+        }
+        else {
+            driftOut = arcPID.calculate(errorTarget, left - right);
         }
 
         // Position PID
         leftOut = leftPID.calculate(leftTarget, left);
         rightOut = rightPID.calculate(rightTarget, right);
-        driftOut = driftPID.calculate(errorTarget, left - right);
 
         outL = leftOut + driftOut;
         outR = rightOut - driftOut;
@@ -591,8 +595,8 @@ void moveToToken(float kP) {
             if(fabs(outR) < MIN_SPEED) {
                 outR = MIN_SPEED * outR / fabs(outR);
             }
-            else if(fabs(rightOut) > 60) {
-                outR = 60 * outR / fabs(outR);
+            else if(fabs(outR) > MAX_SPEED) {
+                outR = MAX_SPEED * outR / fabs(outR);
             }
         }
 
@@ -610,6 +614,12 @@ void moveToToken(float kP) {
         if(leftTarget - leftEnc.Counts() < 0) {
             done = true;
         }
+
+        LCD.Write(leftOut + driftOut);
+        LCD.Write("\t");
+        LCD.Write(rightOut - driftOut);
+        LCD.Write("\t");
+        LCD.WriteLine(driftOut);
     }
 
     // Stop motors
@@ -672,16 +682,16 @@ void autoDriveFSlow(float target, float kP) {
             if(fabs(outL) < MIN_SPEED) {
                 outL = MIN_SPEED * outL / fabs(outL);
             }
-            else if(fabs(outL) > 25) {
-                outL = 25 * outL / fabs(outL);
+            else if(fabs(outL) > 30) {
+                outL = 30 * outL / fabs(outL);
             }
         }
         if(outR != 0) {
             if(fabs(outR) < MIN_SPEED) {
                 outR = MIN_SPEED * outR / fabs(outR);
             }
-            else if(fabs(outR) > 20) {
-                outR = 20 * outR / fabs(outR);
+            else if(fabs(outR) > 30) {
+                outR = 30 * outR / fabs(outR);
             }
         }
 
@@ -768,8 +778,8 @@ void autoDriveBSlow(float target, float kP) {
             if(fabs(outR) < MIN_SPEED) {
                 outR = MIN_SPEED * outR / fabs(outR);
             }
-            else if(fabs(outR) > 20) {
-                outR = 20 * outR / fabs(outR);
+            else if(fabs(outR) > 25) {
+                outR = 25 * outR / fabs(outR);
             }
         }
 
