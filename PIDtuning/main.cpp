@@ -29,7 +29,9 @@ enum {
     AUTO_DRIVE,
     AUTO_TURN,
     AUTO_SWEEP,
-    TOKEN
+    TOKEN,
+    UP_RAMP,
+    AUTO_DRIVE_SLOW
 };
 
 // Declare motors
@@ -522,14 +524,16 @@ void timeDrive(int power, int time) {
 }
 
 void moveToToken(float kP) {
-    PID leftPID(kP, 0.01, 0, 0), rightPID(kP, 0.01, 0, 0);
+    PID leftPID(kP, 0.01, 0, 0), rightPID(kP, 0.01, 0, 0), driftPID(10, 0, 0, 0);
 
     bool done = false;
-    float leftOut, rightOut;
+    float leftOut, rightOut, driftOut, outL, outR;
     float lastOutL = 0, lastOutR = 0;
+    int left, right;
 
     float rightTarget = 18 * TICKS_PER_INCH;
     float leftTarget = 24 * TICKS_PER_INCH;
+    float errorTarget = 0;
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -538,57 +542,72 @@ void moveToToken(float kP) {
     // Initialize left and right PID
     leftPID.initialize();
     rightPID.initialize();
+    driftPID.initialize();
 
     while(!done) {
+        // Store encoder values
+        left = leftEnc.Counts();
+        right = rightEnc.Counts();
+
+        // Set drift target
+        errorTarget = left * 160 / 370;
+        if (errorTarget > 160) {
+            errorTarget = 160;
+        }
+
         // Position PID
-        leftOut = leftPID.calculate(leftTarget, leftEnc.Counts());
-        rightOut = rightPID.calculate(rightTarget, rightEnc.Counts());
+        leftOut = leftPID.calculate(leftTarget, left);
+        rightOut = rightPID.calculate(rightTarget, right);
+        driftOut = driftPID.calculate(errorTarget, left - right);
+
+        outL = leftOut + driftOut;
+        outR = rightOut - driftOut;
 
         // Slew rate limit
-        if(leftOut - lastOutL > MAX_STEP) {
-            leftOut = lastOutL + MAX_STEP;
+        if(outL - lastOutL > MAX_STEP) {
+            outL = lastOutL + MAX_STEP;
         }
-        else if(leftOut - lastOutL < -MAX_STEP) {
-            leftOut = lastOutL - MAX_STEP;
+        else if(outL - lastOutL < -MAX_STEP) {
+            outL = lastOutL - MAX_STEP;
         }
 
-        if(rightOut - lastOutR > MAX_STEP) {
-            rightOut = lastOutR + MAX_STEP;
+        if(outR - lastOutR > MAX_STEP) {
+            outR = lastOutR + MAX_STEP;
         }
-        else if(rightOut - lastOutR < -MAX_STEP) {
-            rightOut = lastOutR - MAX_STEP;
+        else if(outR - lastOutR < -MAX_STEP) {
+            outR = lastOutR - MAX_STEP;
         }
 
         // Make sure output is between minimum and maximum speed (prevent division by 0 too)
-        if(leftOut != 0) {
-            if(fabs(leftOut) < MIN_SPEED) {
-                leftOut = MIN_SPEED * leftOut / fabs(leftOut);
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED) {
+                outL = MIN_SPEED * outL / fabs(outL);
             }
-            else if(fabs(leftOut) > MAX_SPEED) {
-                leftOut = MAX_SPEED * leftOut / fabs(leftOut);
+            else if(fabs(outL) > MAX_SPEED) {
+                outL = MAX_SPEED * outL / fabs(outL);
             }
         }
-        if(rightOut != 0) {
-            if(fabs(rightOut) < MIN_SPEED) {
-                rightOut = MIN_SPEED * rightOut / fabs(rightOut);
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED) {
+                outR = MIN_SPEED * outR / fabs(outR);
             }
             else if(fabs(rightOut) > 60) {
-                rightOut = 60 * rightOut / fabs(rightOut);
+                outR = 60 * outR / fabs(outR);
             }
         }
 
         // Set motors to output
-        leftBase.SetPercent(leftOut);
-        rightBase.SetPercent(-rightOut);
+        leftBase.SetPercent(outL);
+        rightBase.SetPercent(-outR);
 
         // Store output for slew rate
-        lastOutL = leftOut;
-        lastOutR = rightOut;
+        lastOutL = outL;
+        lastOutR = outR;
 
         // Sleep for set time
         Sleep(LOOP_TIME);
 
-        if(leftTarget - leftEnc.Counts() < 10) {
+        if(leftTarget - leftEnc.Counts() < 0) {
             done = true;
         }
     }
@@ -599,6 +618,94 @@ void moveToToken(float kP) {
 
     LCD.WriteLine(leftTarget - leftEnc.Counts());
     LCD.WriteLine(rightTarget - rightEnc.Counts());
+}
+
+void autoDriveFSlow(float target, float kP) {
+    PID basePID(kP, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+
+    bool done = false;
+    float driveOut, driftOut;
+    float outL, outR, lastOutL = 0, lastOutR = 0;
+    float avgEnc;
+
+    target *= TICKS_PER_INCH;
+
+    basePID.initialize();
+    driftPID.initialize();
+
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        avgEnc = rightEnc.Counts();
+
+        // Position PID
+        driveOut = basePID.calculate(target, avgEnc);
+
+        // Drift PID
+        driftOut = driftPID.calculate(0, leftEnc.Counts() - rightEnc.Counts());
+
+        // Calculate motor outputs
+        // Limit driveOut contribution so driftOut can have affect it?
+        outL = driveOut + driftOut;
+        outR = driveOut - driftOut;
+
+        // Slew rate limit
+        if(outL - lastOutL > MAX_STEP) {
+            outL = lastOutL + MAX_STEP;
+        }
+        else if(outL - lastOutL < -MAX_STEP) {
+            outL = lastOutL - MAX_STEP;
+        }
+
+        if(outR - lastOutR > MAX_STEP) {
+            outR = lastOutR + MAX_STEP;
+        }
+        else if(outR - lastOutR < -MAX_STEP) {
+            outR = lastOutR - MAX_STEP;
+        }
+
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED) {
+                outL = MIN_SPEED * outL / fabs(outL);
+            }
+            else if(fabs(outL) > 25) {
+                outL = 25 * outL / fabs(outL);
+            }
+        }
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED) {
+                outR = MIN_SPEED * outR / fabs(outR);
+            }
+            else if(fabs(outR) > 20) {
+                outR = 20 * outR / fabs(outR);
+            }
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(-outL);
+        rightBase.SetPercent(outR);
+
+        // Store output for slew rate
+        lastOutL = outL;
+        lastOutR = outR;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - avgEnc < 0) {
+            done = true;
+        }
+        LCD.WriteLine(target - leftEnc.Counts());
+        LCD.WriteLine(target - rightEnc.Counts());
+    }
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
 }
 
 void autoDriveBSlow(float target, float kP) {
@@ -748,9 +855,19 @@ void autoSweepLB(float target, float kP) {
 }
 
 void moveToToken2(float kP) {
-    autoDriveBSlow(5, kP);
+    autoDriveBSlow(4.7, kP);
     autoSweepLB(5.5, kP);
     autoDriveB(13, kP);
+}
+
+void upRamp() {
+    setBase(50);
+    while(Accel.Y() < 0.25) {
+        Sleep(100);
+    }
+    while(Accel.Y() > 0.25);
+    Sleep(500);
+    setBase(0);
 }
 
 int main(void)
@@ -825,8 +942,13 @@ int main(void)
                         LCD.WriteRC("autoSweep", 2, 0);
                     break;
                     case TOKEN:
-                        LCD.WriteRC("Token", 2, 0);
+                        LCD.WriteRC("Token    ", 2, 0);
                     break;
+                    case UP_RAMP:
+                        LCD.WriteRC("Ramp     ", 2, 0);
+                    break;
+                    case AUTO_DRIVE_SLOW:
+                        LCD.WriteRC("Slow     ", 2, 0);
                 }
             break;
             case RUN:
@@ -856,7 +978,7 @@ int main(void)
             switch(status) {
             case SETTING:
                 option++;
-                if(option > 3) {
+                if(option > 5) {
                     option = 0;
                 }
                 switch(option) {
@@ -871,6 +993,12 @@ int main(void)
                     break;
                     case TOKEN:
                         LCD.WriteRC("Token    ", 2, 0);
+                    break;
+                    case UP_RAMP:
+                        LCD.WriteRC("Ramp     ", 2, 0);
+                    break;
+                    case AUTO_DRIVE_SLOW:
+                        LCD.WriteRC("Slow     ", 2, 0);
                     break;
                 }
                 while(LCD.Touch(&x, &y));
@@ -907,6 +1035,17 @@ int main(void)
                         }
                         else {
                             moveToToken2(kP);
+                        }
+                    break;
+                    case UP_RAMP:
+                        upRamp();
+                    break;
+                    case AUTO_DRIVE_SLOW:
+                        if(distance > 0) {
+                            autoDriveFSlow(distance, kP);
+                        }
+                        else {
+                            autoDriveBSlow(-distance, kP);
                         }
                     break;
                 }
@@ -968,6 +1107,10 @@ int main(void)
 
         LCD.WriteRC("        ", 4, 0);
         LCD.WriteRC(cds.Value(), 4, 0);
+        LCD.WriteRC("        ", 6, 0);
+        LCD.WriteRC(leftEnc.Counts(), 6, 0);
+        LCD.WriteRC("        ", 8, 0);
+        LCD.WriteRC(rightEnc.Counts(), 8, 0);
 
         Sleep(100);
     }
