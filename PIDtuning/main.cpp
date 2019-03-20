@@ -889,7 +889,7 @@ int main(void)
 
     AnalogInputPin cds(FEHIO::P0_7);
 
-    float kP = 0.5;
+    float kP = 0.4;
 
     int distance = 12;
 

@@ -12,7 +12,7 @@
 
 #define MAX_SPEED 80
 
-#define MAX_STEP 10  // Max change per iteration
+#define MAX_STEP 7  // Max change per iteration
 #define LOOP_TIME 0.020   // 20 ms, 50 Hz
 
 #define KP_DRIVE 0.4
@@ -49,10 +49,10 @@ AnalogInputPin cds(FEHIO::P0_7);
 // Position PID when some distance away
 // Drift PID and slew rate are constantly active
 // Ends function once at location
-// MAX_STEP is slew rate limit (10%)
+// MAX_STEP is slew rate limit (7%)
 // LOOP_TIME is time per update (20 ms)
 void autoDriveF(float target) {
-    PID basePID(KP_DRIVE, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+    PID basePID(KP_DRIVE, 0.01, 0, 0), driftPID(1, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -138,7 +138,7 @@ void autoDriveF(float target) {
 }
 
 void autoDriveB(float target) {
-    PID basePID(KP_DRIVE, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+    PID basePID(KP_DRIVE, 0.01, 0, 0), driftPID(1, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -224,7 +224,7 @@ void autoDriveB(float target) {
 }
 
 void autoTurnL(float target) {
-    PID basePID(KP_TURN, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+    PID basePID(KP_TURN, 0.01, 0, 0), driftPID(1, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -310,7 +310,7 @@ void autoTurnL(float target) {
 }
 
 void autoTurnR(float target) {
-    PID basePID(KP_TURN, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+    PID basePID(KP_TURN, 0.01, 0, 0), driftPID(1, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -581,7 +581,7 @@ void timeDrive(int power, int time) {
 }
 
 void moveToToken() {
-    PID basePID(0.5, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+    PID basePID(0.5, 0.01, 0, 0), driftPID(1, 0, 0, 0);
 
     bool leftDone = false, rightDone = false, done = false;
     float leftOut, rightOut, driveOut, driftOut;
@@ -669,11 +669,14 @@ void moveToToken() {
 void upRamp() {
     setBase(30);
     while(Accel.Y() < 0.25) {
-        Sleep(100);
+        Sleep(10);
     }
     setBase(50);
-    while(Accel.Y() > 0.25);
-    Sleep(750);
+    while(Accel.Y() > 0.25) {
+        LCD.WriteLine(Accel.Y());
+        Sleep(10);
+    }
+    Sleep(600);
     setBase(0);
 }
 
@@ -698,7 +701,7 @@ int main(void) {
     LCD.Clear(FEHLCD::Black);
     LCD.SetFontColor(FEHLCD::White);
 
-    armServo.SetDegree(10);
+    armServo.SetDegree(90);
 
     // Wait for start light or for 30 seconds
     float startTime = TimeNow();
@@ -714,17 +717,21 @@ int main(void) {
     // Hit blue button
     autoSweepR(11.4);
     timeDrive(-30, 1000);
-    autoDriveF(8);
+    autoDriveF(7.5);
 
     // Move up ramp
     upRamp();
 
     // Line up with foosball
+    autoTurnL(2);
     autoDriveF(10);
-    autoTurnL(5.6);
+    autoTurnL(4.5);
     autoDriveF(3);
 
-    armServo.SetDegree(100);
+    armServo.SetDegree(180);
+    Sleep(250);
+
+    autoDriveF(9);
 
     return 0;
 }
