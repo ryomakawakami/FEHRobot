@@ -4,6 +4,7 @@
 #include <FEHMotor.h>
 #include <FEHServo.h>
 #include <FEHAccel.h>
+#include <FEHRPS.h>
 #include "pidlib.h"
 
 #define MIN_SPEED 8
@@ -569,9 +570,102 @@ void autoSweepLB(float target) {
     rightBase.SetPercent(0);
 }
 
+void autoDriveFSlow(float target) {
+    PID basePID(0.5, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+
+    bool done = false;
+    float driveOut, driftOut;
+    float outL, outR, lastOutL = 0, lastOutR = 0;
+    float avgEnc;
+
+    target *= TICKS_PER_INCH;
+
+    basePID.initialize();
+    driftPID.initialize();
+
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        avgEnc = rightEnc.Counts();
+
+        // Position PID
+        driveOut = basePID.calculate(target, avgEnc);
+
+        // Drift PID
+        driftOut = driftPID.calculate(0, leftEnc.Counts() - rightEnc.Counts());
+
+        // Calculate motor outputs
+        // Limit driveOut contribution so driftOut can have affect it?
+        outL = driveOut + driftOut;
+        outR = driveOut - driftOut;
+
+        // Slew rate limit
+        if(outL - lastOutL > MAX_STEP) {
+            outL = lastOutL + MAX_STEP;
+        }
+        else if(outL - lastOutL < -MAX_STEP) {
+            outL = lastOutL - MAX_STEP;
+        }
+
+        if(outR - lastOutR > MAX_STEP) {
+            outR = lastOutR + MAX_STEP;
+        }
+        else if(outR - lastOutR < -MAX_STEP) {
+            outR = lastOutR - MAX_STEP;
+        }
+
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED) {
+                outL = MIN_SPEED * outL / fabs(outL);
+            }
+            else if(fabs(outL) > 40) {
+                outL = 30 * outL / fabs(outL);
+            }
+        }
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED) {
+                outR = MIN_SPEED * outR / fabs(outR);
+            }
+            else if(fabs(outR) > 40) {
+                outR = 30 * outR / fabs(outR);
+            }
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(-outL);
+        rightBase.SetPercent(outR);
+
+        // Store output for slew rate
+        lastOutL = outL;
+        lastOutR = outR;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - avgEnc < 0) {
+            done = true;
+        }
+        LCD.WriteLine(target - leftEnc.Counts());
+        LCD.WriteLine(target - rightEnc.Counts());
+    }
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+}
+
 void setBase(int power) {
     leftBase.SetPercent(-power);
     rightBase.SetPercent(power);
+}
+
+void setTurn(int power) {
+    leftBase.SetPercent(-power);
+    rightBase.SetPercent(-power);
 }
 
 void timeDrive(int power, int time) {
@@ -680,6 +774,43 @@ void upRamp() {
     Sleep(250);
 }
 
+void alignRobot() {
+    setBase(-20);
+    Sleep(250);
+    setBase(0);
+    while (RPS.Y() == -2) {
+        setBase(-20);
+        Sleep(100);
+        setBase(0);
+        Sleep(100);
+    }
+    while (RPS.Y() > 52) {
+        setBase(-20);
+        Sleep(100);
+        setBase(0);
+        Sleep(100);
+    }
+    bool good = false;
+    while (!good) {
+        float heading = RPS.Heading();
+        if (heading > 180) {
+            heading -= 360;
+        }
+        if (fabs(heading) < 0.5) {
+            good = true;
+        } else {
+            if (heading > 0) {
+                setTurn(20);
+            } else {
+                setTurn(-20);
+            }
+            Sleep(50);
+            setTurn(0);
+            Sleep(50);
+        }
+    }
+}
+
 int findColor() {
     if(cds.Value() > NO_LIGHT_THRESHOLD) {
         return NO_LIGHT;
@@ -693,6 +824,8 @@ int findColor() {
 }
 
 int main(void) {
+    RPS.InitializeTouchMenu();
+
     armServo.SetMin(738);
     armServo.SetMax(2500);
 
@@ -721,16 +854,19 @@ int main(void) {
 
     // Move up ramp
     upRamp();
+    alignRobot();
 
     // Line up with foosball
-    autoTurnL(1.5);
-    autoDriveF(9.7);
-    autoTurnL(3.75);
+    autoDriveF(6);
+    autoTurnL(1.55);
+    autoDriveF(8.2);
+    autoTurnL(3.8);
+    autoDriveF(2);
 
-    armServo.SetDegree(180);
+    armServo.SetDegree(178);
     Sleep(250);
 
-    autoDriveF(9);
+    autoDriveFSlow(9);
 
     return 0;
 }
