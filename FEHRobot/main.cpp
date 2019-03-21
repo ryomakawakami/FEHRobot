@@ -7,10 +7,10 @@
 #include "pidlib.h"
 
 #define MIN_SPEED 8
-#define MIN_SPEED_TURNING 12
-#define MIN_SPEED_SWEEP 12
+#define MIN_SPEED_TURNING 13
+#define MIN_SPEED_SWEEP 13
 
-#define MAX_SPEED 80
+#define MAX_SPEED 60
 
 #define MAX_STEP 7  // Max change per iteration
 #define LOOP_TIME 0.020   // 20 ms, 50 Hz
@@ -671,13 +671,13 @@ void upRamp() {
     while(Accel.Y() < 0.25) {
         Sleep(10);
     }
-    setBase(50);
+    setBase(40);
     while(Accel.Y() > 0.25) {
-        LCD.WriteLine(Accel.Y());
         Sleep(10);
     }
-    Sleep(600);
+    Sleep(750);
     setBase(0);
+    Sleep(250);
 }
 
 int findColor() {
@@ -711,22 +711,21 @@ int main(void) {
 
     // Move to blue button
     autoDriveB(7);
-    autoTurnL(8.4);
+    autoTurnL(8.45);
     autoDriveF(12);
 
     // Hit blue button
-    autoSweepR(11.4);
+    autoSweepR(11.15);
     timeDrive(-30, 1000);
-    autoDriveF(7.5);
+    autoDriveF(7.4);
 
     // Move up ramp
     upRamp();
 
     // Line up with foosball
-    autoTurnL(2);
-    autoDriveF(10);
-    autoTurnL(4.5);
-    autoDriveF(3);
+    autoTurnL(1.5);
+    autoDriveF(9.7);
+    autoTurnL(3.75);
 
     armServo.SetDegree(180);
     Sleep(250);

@@ -1,2 +1,2 @@
    text	   data	    bss	    dec	    hex	filename
-  41392	   3424	   5592	  50408	   c4e8	../FEHRobot.elf
+  40640	   3424	   5592	  49656	   c1f8	../FEHRobot.elf
