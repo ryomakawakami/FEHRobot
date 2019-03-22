@@ -25,6 +25,8 @@
 #define NO_LIGHT_THRESHOLD 1.9 // 1.5+ is no light
 #define BLUE_LIGHT_THRESHOLD 0.8 // 0.8 to 1.5 is blue light
 
+#define PI 3.1415926536
+
 enum {
     NO_LIGHT,
     BLUE_LIGHT,
@@ -623,7 +625,7 @@ void autoDriveFSlow(float target) {
                 outL = MIN_SPEED * outL / fabs(outL);
             }
             else if(fabs(outL) > 40) {
-                outL = 30 * outL / fabs(outL);
+                outL = 40 * outL / fabs(outL);
             }
         }
         if(outR != 0) {
@@ -631,13 +633,101 @@ void autoDriveFSlow(float target) {
                 outR = MIN_SPEED * outR / fabs(outR);
             }
             else if(fabs(outR) > 40) {
-                outR = 30 * outR / fabs(outR);
+                outR = 40 * outR / fabs(outR);
             }
         }
 
         // Set motors to output
         leftBase.SetPercent(-outL);
         rightBase.SetPercent(outR);
+
+        // Store output for slew rate
+        lastOutL = outL;
+        lastOutR = outR;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - avgEnc < 0) {
+            done = true;
+        }
+        LCD.WriteLine(target - leftEnc.Counts());
+        LCD.WriteLine(target - rightEnc.Counts());
+    }
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+}
+
+void autoDriveBSlow(float target) {
+    PID basePID(0.5, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+
+    bool done = false;
+    float driveOut, driftOut;
+    float outL, outR, lastOutL = 0, lastOutR = 0;
+    float avgEnc;
+
+    target *= TICKS_PER_INCH;
+
+    basePID.initialize();
+    driftPID.initialize();
+
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        avgEnc = rightEnc.Counts();
+
+        // Position PID
+        driveOut = basePID.calculate(target, avgEnc);
+
+        // Drift PID
+        driftOut = driftPID.calculate(0, leftEnc.Counts() - rightEnc.Counts());
+
+        // Calculate motor outputs
+        // Limit driveOut contribution so driftOut can have affect it?
+        outL = driveOut + driftOut;
+        outR = driveOut - driftOut;
+
+        // Slew rate limit
+        if(outL - lastOutL > MAX_STEP) {
+            outL = lastOutL + MAX_STEP;
+        }
+        else if(outL - lastOutL < -MAX_STEP) {
+            outL = lastOutL - MAX_STEP;
+        }
+
+        if(outR - lastOutR > MAX_STEP) {
+            outR = lastOutR + MAX_STEP;
+        }
+        else if(outR - lastOutR < -MAX_STEP) {
+            outR = lastOutR - MAX_STEP;
+        }
+
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED) {
+                outL = MIN_SPEED * outL / fabs(outL);
+            }
+            else if(fabs(outL) > 40) {
+                outL = 40 * outL / fabs(outL);
+            }
+        }
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED) {
+                outR = MIN_SPEED * outR / fabs(outR);
+            }
+            else if(fabs(outR) > 40) {
+                outR = 40 * outR / fabs(outR);
+            }
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(outL);
+        rightBase.SetPercent(-outR);
 
         // Store output for slew rate
         lastOutL = outL;
@@ -769,27 +859,75 @@ void upRamp() {
     while(Accel.Y() > 0.25) {
         Sleep(10);
     }
-    Sleep(750);
+    Sleep(900);
     setBase(0);
     Sleep(250);
+}
+
+void setAngle(float theta) {
+    bool good = false;
+    while (!good) {
+        float heading = RPS.Heading();
+        if (heading > 180) {
+            heading -= 360;
+        }
+        if (fabs(heading) < 0.5) {
+            good = true;
+        } else {
+            if (heading > 0) {
+                setTurn(15);
+            } else {
+                setTurn(-15);
+            }
+            Sleep(50);
+            setTurn(0);
+            Sleep(50);
+        }
+        Sleep(100);
+    }
 }
 
 void alignRobot() {
     setBase(-20);
     Sleep(250);
     setBase(0);
-    while (RPS.Y() == -2) {
+
+    while (RPS.Y() < 0) {
         setBase(-20);
         Sleep(100);
         setBase(0);
         Sleep(100);
     }
+
+    float xCoord = RPS.X() - 31, yCoord = RPS.Y() - 52, theta;
+
+    if(yCoord == 0) {
+        theta = -1 * atanf(xCoord / (yCoord + 0.001)) * 180 / PI;
+    }
+    else {
+        theta = -1 * atanf(xCoord / yCoord) * 180 / PI;
+    }
+
+    setAngle(theta);
+
+    //autoDriveBSlow(pow(xCoord, 2) + pow(yCoord, 2));
     while (RPS.Y() > 52) {
         setBase(-20);
         Sleep(100);
         setBase(0);
         Sleep(100);
     }
+
+    setAngle(0);
+
+    /*
+    while (RPS.Y() > 52) {
+        setBase(-20);
+        Sleep(100);
+        setBase(0);
+        Sleep(100);
+    }
+
     bool good = false;
     while (!good) {
         float heading = RPS.Heading();
@@ -809,6 +947,7 @@ void alignRobot() {
             Sleep(50);
         }
     }
+    */
 }
 
 int findColor() {
@@ -860,13 +999,22 @@ int main(void) {
     autoDriveF(6);
     autoTurnL(1.55);
     autoDriveF(8.2);
-    autoTurnL(3.8);
-    autoDriveF(2);
+    autoTurnL(4);
+    autoDriveF(1.5);
 
     armServo.SetDegree(178);
     Sleep(250);
 
-    autoDriveFSlow(9);
+    autoDriveFSlow(9.5);
+
+    armServo.SetDegree(90);
+    Sleep(250);
+
+    autoDriveF(6);
+    autoTurnL(2.8);
+    autoDriveF(5);
+    autoTurnL(2.8);
+    autoDriveF(60);
 
     return 0;
 }
