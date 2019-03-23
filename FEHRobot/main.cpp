@@ -867,21 +867,21 @@ void upRamp() {
 void setAngle(float theta) {
     bool good = false;
     while (!good) {
-        float heading = RPS.Heading();
-        if (heading > 180) {
-            heading -= 360;
+        float error = RPS.Heading() - theta;
+        if (error > 180) {
+            error -= 360;
         }
-        if (fabs(heading) < 0.5) {
+        if (fabs(error) < 0.5) {
             good = true;
         } else {
-            if (heading > 0) {
+            if (error > 0) {
                 setTurn(15);
             } else {
                 setTurn(-15);
             }
-            Sleep(50);
+            //Sleep(50);
+            Sleep(error * 5);
             setTurn(0);
-            Sleep(50);
         }
         Sleep(100);
     }
