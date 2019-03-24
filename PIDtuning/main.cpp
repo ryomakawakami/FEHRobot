@@ -524,15 +524,15 @@ void timeDrive(int power, int time) {
 }
 
 void moveToToken(float kP) {
-    PID leftPID(kP, 0.01, 0, 0), rightPID(kP, 0.01, 0, 0), arcPID(2, 0, 0, 0), driftPID(2, 0, 0, 0);
+    PID leftPID(kP, 0.01, 0, 0), rightPID(kP, 0.01, 0, 0), arcPID(1, 0, 0, 0), driftPID(1, 0, 0, 0);
 
     bool done = false;
     float leftOut, rightOut, driftOut, outL, outR;
     float lastOutL = 0, lastOutR = 0;
     int left, right;
 
-    float rightTarget = 18 * TICKS_PER_INCH;
-    float leftTarget = 24 * TICKS_PER_INCH;
+    float rightTarget = 15.5 * TICKS_PER_INCH;
+    float leftTarget = 21.5 * TICKS_PER_INCH;
     float errorTarget = 0;
 
     // Consider allowing for accumulating error
@@ -615,11 +615,7 @@ void moveToToken(float kP) {
             done = true;
         }
 
-        LCD.Write(leftOut + driftOut);
-        LCD.Write("\t");
-        LCD.Write(rightOut - driftOut);
-        LCD.Write("\t");
-        LCD.WriteLine(driftOut);
+        LCD.Write(left-right);
     }
 
     // Stop motors
@@ -880,6 +876,14 @@ void upRamp() {
     setBase(0);
 }
 
+void downRamp() {
+    timeDrive(50, 1000);
+    timeDrive(15, 1000);
+    Sleep(250);
+    timeDrive(50, 500);
+    timeDrive(100, 3000);
+}
+
 int main(void)
 {
     float x,y;
@@ -1048,7 +1052,12 @@ int main(void)
                         }
                     break;
                     case UP_RAMP:
-                        upRamp();
+                        if(distance > 0) {
+                            upRamp();
+                        }
+                        else {
+                            downRamp();
+                        }
                     break;
                     case AUTO_DRIVE_SLOW:
                         if(distance > 0) {

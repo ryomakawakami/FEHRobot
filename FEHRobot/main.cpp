@@ -579,6 +579,7 @@ void autoDriveFSlow(float target) {
     float driveOut, driftOut;
     float outL, outR, lastOutL = 0, lastOutR = 0;
     float avgEnc;
+    float startTime = TimeNow();
 
     target *= TICKS_PER_INCH;
 
@@ -621,16 +622,16 @@ void autoDriveFSlow(float target) {
 
         // Make sure output is between minimum and maximum speed (prevent division by 0 too)
         if(outL != 0) {
-            if(fabs(outL) < MIN_SPEED) {
-                outL = MIN_SPEED * outL / fabs(outL);
+            if(fabs(outL) < 20) {
+                outL = 20 * outL / fabs(outL);
             }
             else if(fabs(outL) > 40) {
                 outL = 40 * outL / fabs(outL);
             }
         }
         if(outR != 0) {
-            if(fabs(outR) < MIN_SPEED) {
-                outR = MIN_SPEED * outR / fabs(outR);
+            if(fabs(outR) < 20) {
+                outR = 20 * outR / fabs(outR);
             }
             else if(fabs(outR) > 40) {
                 outR = 40 * outR / fabs(outR);
@@ -648,7 +649,7 @@ void autoDriveFSlow(float target) {
         // Sleep for set time
         Sleep(LOOP_TIME);
 
-        if(target - avgEnc < 0) {
+        if((target - avgEnc < 0) || (TimeNow() - startTime) > 1.5) {
             done = true;
         }
         LCD.WriteLine(target - leftEnc.Counts());
@@ -879,8 +880,8 @@ void setAngle(float theta) {
             } else {
                 setTurn(-15);
             }
-            //Sleep(50);
-            Sleep(error * 5);
+            Sleep(25);
+            //Sleep(error * 5);
             setTurn(0);
         }
         Sleep(100);
@@ -899,16 +900,19 @@ void alignRobot() {
         Sleep(100);
     }
 
-    float xCoord = RPS.X() - 31, yCoord = RPS.Y() - 52, theta;
+    /*
+    float xCoord = RPS.X() - 32.5, yCoord = RPS.Y() - 52, theta;
 
     if(yCoord == 0) {
-        theta = -1 * atanf(xCoord / (yCoord + 0.001)) * 180 / PI;
+        theta = -1 * atan(xCoord / (yCoord + 0.001)) * 180 / PI;
     }
     else {
-        theta = -1 * atanf(xCoord / yCoord) * 180 / PI;
+        theta = -1 * atan(xCoord / yCoord) * 180 / PI;
     }
 
     setAngle(theta);
+    */
+    setAngle(0);
 
     //autoDriveBSlow(pow(xCoord, 2) + pow(yCoord, 2));
     while (RPS.Y() > 52) {
@@ -963,6 +967,8 @@ int findColor() {
 }
 
 int main(void) {
+    armServo.SetDegree(90);
+
     RPS.InitializeTouchMenu();
 
     armServo.SetMin(738);
@@ -972,8 +978,6 @@ int main(void) {
 
     LCD.Clear(FEHLCD::Black);
     LCD.SetFontColor(FEHLCD::White);
-
-    armServo.SetDegree(90);
 
     // Wait for start light or for 30 seconds
     float startTime = TimeNow();
@@ -996,11 +1000,11 @@ int main(void) {
     alignRobot();
 
     // Line up with foosball
-    autoDriveF(6);
+    autoDriveF(6.1);
     autoTurnL(1.55);
     autoDriveF(8.2);
     autoTurnL(4);
-    autoDriveF(1.5);
+    //autoDriveF(1.5);
 
     armServo.SetDegree(178);
     Sleep(250);
@@ -1010,11 +1014,16 @@ int main(void) {
     armServo.SetDegree(90);
     Sleep(250);
 
-    autoDriveF(6);
+    autoDriveF(3.75);
     autoTurnL(2.8);
-    autoDriveF(5);
-    autoTurnL(2.8);
-    autoDriveF(60);
+    autoDriveF(6.25);
+    autoTurnL(2.3);
+    //autoDriveF(60);
+    timeDrive(50, 1000);
+    timeDrive(15, 1000);
+    Sleep(250);
+    timeDrive(50, 500);
+    timeDrive(100, 3000);
 
     return 0;
 }
