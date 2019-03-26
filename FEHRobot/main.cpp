@@ -6,6 +6,7 @@
 #include <FEHAccel.h>
 #include <FEHRPS.h>
 #include "pidlib.h"
+#include "patrick.h"
 
 #define MIN_SPEED 8
 #define MIN_SPEED_TURNING 13
@@ -22,7 +23,7 @@
 
 #define TICKS_PER_INCH 28 // Conversion from encoder ticks to in
 
-#define NO_LIGHT_THRESHOLD 1.9 // 1.5+ is no light
+#define NO_LIGHT_THRESHOLD 1.7 // 1.5+ is no light
 #define BLUE_LIGHT_THRESHOLD 0.8 // 0.8 to 1.5 is blue light
 
 #define PI 3.1415926536
@@ -548,8 +549,8 @@ void autoSweepLB(float target) {
             if(fabs(out) < MIN_SPEED_SWEEP) {
                 out = MIN_SPEED_SWEEP * out / fabs(out);
             }
-            else if(fabs(out) > MAX_SPEED) {
-                out = MAX_SPEED * out / fabs(out);
+            else if(fabs(out) > 25) {
+                out = 25 * out / fabs(out);
             }
         }
 
@@ -652,8 +653,6 @@ void autoDriveFSlow(float target) {
         if((target - avgEnc < 0) || (TimeNow() - startTime) > 1.5) {
             done = true;
         }
-        LCD.WriteLine(target - leftEnc.Counts());
-        LCD.WriteLine(target - rightEnc.Counts());
     }
 
     // Stop motors
@@ -713,16 +712,16 @@ void autoDriveBSlow(float target) {
             if(fabs(outL) < MIN_SPEED) {
                 outL = MIN_SPEED * outL / fabs(outL);
             }
-            else if(fabs(outL) > 40) {
-                outL = 40 * outL / fabs(outL);
+            else if(fabs(outL) > 25) {
+                outL = 25 * outL / fabs(outL);
             }
         }
         if(outR != 0) {
             if(fabs(outR) < MIN_SPEED) {
                 outR = MIN_SPEED * outR / fabs(outR);
             }
-            else if(fabs(outR) > 40) {
-                outR = 40 * outR / fabs(outR);
+            else if(fabs(outR) > 25) {
+                outR = 25 * outR / fabs(outR);
             }
         }
 
@@ -740,8 +739,6 @@ void autoDriveBSlow(float target) {
         if(target - avgEnc < 0) {
             done = true;
         }
-        LCD.WriteLine(target - leftEnc.Counts());
-        LCD.WriteLine(target - rightEnc.Counts());
     }
 
     // Stop motors
@@ -752,6 +749,11 @@ void autoDriveBSlow(float target) {
 void setBase(int power) {
     leftBase.SetPercent(-power);
     rightBase.SetPercent(power);
+}
+
+void setBaseOff(int powerL, int powerR) {
+    leftBase.SetPercent(-powerL);
+    rightBase.SetPercent(powerR);
 }
 
 void setTurn(int power) {
@@ -765,7 +767,20 @@ void timeDrive(int power, int time) {
     setBase(0);
 }
 
+void timeDriveOff(int power, int time) {
+    setBaseOff(power + 10, power);
+    Sleep(time);
+    setBase(0);
+}
+
 void moveToToken() {
+    autoDriveBSlow(4.7);
+    autoSweepLB(5.45);
+    autoDriveB(11.75);
+    //timeDrive(-60, 750);
+}
+
+void moveToToken2() {
     PID basePID(0.5, 0.01, 0, 0), driftPID(1, 0, 0, 0);
 
     bool leftDone = false, rightDone = false, done = false;
@@ -851,20 +866,6 @@ void moveToToken() {
     rightBase.SetPercent(0);
 }
 
-void upRamp() {
-    setBase(30);
-    while(Accel.Y() < 0.25) {
-        Sleep(10);
-    }
-    setBase(40);
-    while(Accel.Y() > 0.25) {
-        Sleep(10);
-    }
-    Sleep(900);
-    setBase(0);
-    Sleep(250);
-}
-
 void setAngle(float theta) {
     bool good = false;
     while (!good) {
@@ -888,70 +889,53 @@ void setAngle(float theta) {
     }
 }
 
-void alignRobot() {
-    setBase(-20);
-    Sleep(250);
-    setBase(0);
-
-    while (RPS.Y() < 0) {
-        setBase(-20);
-        Sleep(100);
-        setBase(0);
-        Sleep(100);
-    }
-
-    /*
-    float xCoord = RPS.X() - 32.5, yCoord = RPS.Y() - 52, theta;
-
-    if(yCoord == 0) {
-        theta = -1 * atan(xCoord / (yCoord + 0.001)) * 180 / PI;
-    }
-    else {
-        theta = -1 * atan(xCoord / yCoord) * 180 / PI;
-    }
-
-    setAngle(theta);
-    */
-    setAngle(0);
-
-    //autoDriveBSlow(pow(xCoord, 2) + pow(yCoord, 2));
-    while (RPS.Y() > 52) {
-        setBase(-20);
-        Sleep(100);
-        setBase(0);
-        Sleep(100);
-    }
-
-    setAngle(0);
-
-    /*
-    while (RPS.Y() > 52) {
-        setBase(-20);
-        Sleep(100);
-        setBase(0);
-        Sleep(100);
-    }
-
+void setAngle180() {
     bool good = false;
     while (!good) {
-        float heading = RPS.Heading();
-        if (heading > 180) {
-            heading -= 360;
-        }
-        if (fabs(heading) < 0.5) {
+        float error = RPS.Heading() - 180;
+        if (fabs(error) < 0.5) {
             good = true;
         } else {
-            if (heading > 0) {
-                setTurn(20);
+            if (error > 0) {
+                setTurn(15);
             } else {
-                setTurn(-20);
+                setTurn(-15);
             }
-            Sleep(50);
+            Sleep(25);
             setTurn(0);
-            Sleep(50);
         }
+        Sleep(100);
     }
-    */
+}
+
+void upRamp() {
+    setAngle(-4);
+    Sleep(250);
+    setBase(50);
+    Sleep(1750);
+    setBase(0);
+    setAngle(0);
+
+    while (RPS.Y() < 46) {
+        setBase(20);
+        Sleep(100);
+        setBase(0);
+        Sleep(100);
+    }
+
+    setAngle(0);
+
+    timeDrive(50, 250);
+
+    float position = RPS.Y();
+    while (position > 52 || position < 0) {
+        setBase(-20);
+        Sleep(100);
+        setBase(0);
+        Sleep(100);
+    }
+
+    setAngle(0);
 }
 
 int findColor() {
@@ -967,17 +951,20 @@ int findColor() {
 }
 
 int main(void) {
+    armServo.SetMin(738);
+    armServo.SetMax(2500);
     armServo.SetDegree(90);
 
     RPS.InitializeTouchMenu();
-
-    armServo.SetMin(738);
-    armServo.SetMax(2500);
 
     float x, y;
 
     LCD.Clear(FEHLCD::Black);
     LCD.SetFontColor(FEHLCD::White);
+
+    LCD.WriteRC("FEH students walking", 2, 3);
+    LCD.WriteRC("around campus", 4, 3);
+    drawPicture(patrickPic, 133, 100, 94, 110);
 
     // Wait for start light or for 30 seconds
     float startTime = TimeNow();
@@ -985,45 +972,41 @@ int main(void) {
         Sleep(50);
     }
 
-    // Move to blue button
-    autoDriveB(7);
-    autoTurnL(8.45);
-    autoDriveF(12);
+    // Move to token and score
+    moveToToken();
 
-    // Hit blue button
-    autoSweepR(11.15);
-    timeDrive(-30, 1000);
-    autoDriveF(7.4);
+    // Move to DDR light
+    autoDriveF(12.5);
+    setAngle180();
+    autoTurnL(5.7);
+    autoDriveF(14);
 
-    // Move up ramp
+    // Read DDR light (default blue)
+    switch(findColor()) {
+        case BLUE_LIGHT:
+            autoDriveB(2);
+            autoSweepR(11.4);
+            timeDrive(-30, 7000);
+            autoDriveF(7.5);
+        break;
+        case RED_LIGHT:
+            autoDriveB(6);
+            autoSweepR(11.4);
+            timeDrive(-30, 7000);
+            autoDriveF(1);
+            autoTurnR(2.8);
+            autoDriveF(6);
+            autoTurnL(2.85);
+        break;
+        default:
+            autoDriveB(2);
+            autoSweepR(11.4);
+            timeDrive(-30, 7000);
+            autoDriveF(7.5);
+        break;
+    }
+
+    // Move to ramp and go up
+    setAngle(0);
     upRamp();
-    alignRobot();
-
-    // Line up with foosball
-    autoDriveF(6.1);
-    autoTurnL(1.55);
-    autoDriveF(8.2);
-    autoTurnL(4);
-    //autoDriveF(1.5);
-
-    armServo.SetDegree(178);
-    Sleep(250);
-
-    autoDriveFSlow(9.5);
-
-    armServo.SetDegree(90);
-    Sleep(250);
-
-    autoDriveF(3.75);
-    autoTurnL(2.8);
-    autoDriveF(6.25);
-    autoTurnL(2.3);
-    //autoDriveF(60);
-    timeDrive(50, 1000);
-    timeDrive(15, 1000);
-    Sleep(250);
-    timeDrive(50, 500);
-    timeDrive(100, 3000);
-
-    return 0;
 }
