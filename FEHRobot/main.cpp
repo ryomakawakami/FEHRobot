@@ -909,33 +909,22 @@ void setAngle180() {
 }
 
 void upRamp() {
-    setAngle(-4);
-    Sleep(250);
     setBase(50);
     Sleep(1750);
     setBase(0);
-    setAngle(0);
+    setAngle(-2);
 
-    while (RPS.Y() < 46) {
+    timeDrive(25, 500);
+    timeDrive(15, 500);
+
+    while (RPS.Y() < 52) {
         setBase(20);
         Sleep(100);
         setBase(0);
         Sleep(100);
     }
 
-    setAngle(0);
-
-    timeDrive(50, 250);
-
-    float position = RPS.Y();
-    while (position > 52 || position < 0) {
-        setBase(-20);
-        Sleep(100);
-        setBase(0);
-        Sleep(100);
-    }
-
-    setAngle(0);
+    setAngle(-2);
 }
 
 int findColor() {
@@ -976,37 +965,52 @@ int main(void) {
     moveToToken();
 
     // Move to DDR light
-    autoDriveF(12.5);
+    autoDriveF(11.5);
     setAngle180();
-    autoTurnL(5.7);
+    autoTurnL(5.25);
     autoDriveF(14);
 
     // Read DDR light (default blue)
     switch(findColor()) {
         case BLUE_LIGHT:
-            autoDriveB(2);
-            autoSweepR(11.4);
-            timeDrive(-30, 7000);
+            autoDriveB(1);
+            autoSweepR(11.2);
+            timeDrive(-30, 6000);
             autoDriveF(7.5);
         break;
         case RED_LIGHT:
             autoDriveB(6);
-            autoSweepR(11.4);
-            timeDrive(-30, 7000);
+            autoSweepR(11.2);
+            timeDrive(-30, 6000);
             autoDriveF(1);
             autoTurnR(2.8);
             autoDriveF(6);
             autoTurnL(2.85);
         break;
         default:
-            autoDriveB(2);
-            autoSweepR(11.4);
-            timeDrive(-30, 7000);
+            autoDriveB(1);
+            autoSweepR(11.2);
+            timeDrive(-30, 6000);
             autoDriveF(7.5);
         break;
     }
 
     // Move to ramp and go up
-    setAngle(0);
+    setAngle(-4);
     upRamp();
+
+    // Move to foosball
+    autoDriveF(4.5);
+    autoTurnL(1.85);
+    autoDriveF(8.2);
+    autoTurnL(4);
+
+    // Score foosball
+    armServo.SetDegree(178);
+    Sleep(250);
+    autoDriveFSlow(9.5);
+    armServo.SetDegree(90);
+    Sleep(250);
+
+    autoDriveF(4);
 }
