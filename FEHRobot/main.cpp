@@ -573,6 +573,92 @@ void autoSweepLB(float target) {
     rightBase.SetPercent(0);
 }
 
+void autoDriveBFast(float target) {
+    PID basePID(KP_DRIVE, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+
+    bool done = false;
+    float driveOut, driftOut;
+    float outL, outR, lastOutL = 0, lastOutR = 0;
+    float avgEnc;
+
+    target *= TICKS_PER_INCH;
+
+    basePID.initialize();
+    driftPID.initialize();
+
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        avgEnc = rightEnc.Counts();
+
+        // Position PID
+        driveOut = basePID.calculate(target, avgEnc);
+
+        // Drift PID
+        driftOut = driftPID.calculate(0, leftEnc.Counts() - rightEnc.Counts());
+
+        // Calculate motor outputs
+        // Limit driveOut contribution so driftOut can have affect it?
+        outL = driveOut + driftOut;
+        outR = driveOut - driftOut;
+
+        // Slew rate limit
+        if(outL - lastOutL > MAX_STEP) {
+            outL = lastOutL + MAX_STEP;
+        }
+        else if(outL - lastOutL < -MAX_STEP) {
+            outL = lastOutL - MAX_STEP;
+        }
+
+        if(outR - lastOutR > MAX_STEP) {
+            outR = lastOutR + MAX_STEP;
+        }
+        else if(outR - lastOutR < -MAX_STEP) {
+            outR = lastOutR - MAX_STEP;
+        }
+
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED) {
+                outL = MIN_SPEED * outL / fabs(outL);
+            }
+            else if(fabs(outL) > 80) {
+                outL = 80 * outL / fabs(outL);
+            }
+        }
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED) {
+                outR = MIN_SPEED * outR / fabs(outR);
+            }
+            else if(fabs(outR) > 80) {
+                outR = 80 * outR / fabs(outR);
+            }
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(outL);
+        rightBase.SetPercent(-outR);
+
+        // Store output for slew rate
+        lastOutL = outL;
+        lastOutR = outR;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - avgEnc < 0) {
+            done = true;
+        }
+    }
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+}
+
 void autoDriveFSlow(float target) {
     PID basePID(0.5, 0.01, 0, 0), driftPID(1, 0, 0, 0);
 
@@ -776,8 +862,8 @@ void timeDriveOff(int power, int time) {
 void moveToToken() {
     autoDriveBSlow(4.7);
     autoSweepLB(5.45);
-    autoDriveB(11.75);
-    //timeDrive(-60, 750);
+    autoDriveBFast(11.6);
+    //autoDriveB(11.75);
 }
 
 void moveToToken2() {
@@ -967,43 +1053,38 @@ int main(void) {
     // Move to DDR light
     autoDriveF(11.5);
     setAngle180();
-    autoTurnL(5.25);
+    autoTurnL(5.35);
     autoDriveF(14);
 
     // Read DDR light (default blue)
     switch(findColor()) {
-        case BLUE_LIGHT:
-            autoDriveB(1);
-            autoSweepR(11.2);
-            timeDrive(-30, 6000);
-            autoDriveF(7.5);
-        break;
         case RED_LIGHT:
             autoDriveB(6);
             autoSweepR(11.2);
-            timeDrive(-30, 6000);
+            timeDrive(-30, 5750);
             autoDriveF(1);
-            autoTurnR(2.8);
+            autoTurnR(2.9);
             autoDriveF(6);
-            autoTurnL(2.85);
+            autoTurnL(2.8);
         break;
+        case BLUE_LIGHT:
         default:
-            autoDriveB(1);
+            autoDriveB(1.5);
             autoSweepR(11.2);
-            timeDrive(-30, 6000);
-            autoDriveF(7.5);
+            timeDrive(-30, 5750);
+            autoDriveF(7.3);
         break;
     }
 
     // Move to ramp and go up
-    setAngle(-4);
+    setAngle(-2);
     upRamp();
 
     // Move to foosball
-    autoDriveF(4.5);
+    autoDriveF(4.6);
     autoTurnL(1.85);
     autoDriveF(8.2);
-    autoTurnL(4);
+    autoTurnL(3.9);
 
     // Score foosball
     armServo.SetDegree(178);
@@ -1013,4 +1094,6 @@ int main(void) {
     Sleep(250);
 
     autoDriveF(4);
+    autoTurnL(2.75);
+    autoDriveF(6);
 }
