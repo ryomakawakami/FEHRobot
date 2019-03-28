@@ -996,12 +996,12 @@ void setAngle180() {
 
 void upRamp() {
     setBase(50);
-    Sleep(1750);
+    Sleep(1650);
     setBase(0);
     setAngle(-2);
 
-    timeDrive(25, 500);
-    timeDrive(15, 500);
+    timeDrive(25, 400);
+    timeDrive(15, 750);
 
     Sleep(250);
 
