@@ -6,7 +6,7 @@
 #include <FEHAccel.h>
 #include <FEHRPS.h>
 #include "pidlib.h"
-#include "patrick.h"
+//#include "patrick.h"
 
 #define MIN_SPEED 8
 #define MIN_SPEED_TURNING 13
@@ -712,16 +712,16 @@ void autoDriveFSlow(float target) {
             if(fabs(outL) < 20) {
                 outL = 20 * outL / fabs(outL);
             }
-            else if(fabs(outL) > 40) {
-                outL = 40 * outL / fabs(outL);
+            else if(fabs(outL) > 30) {
+                outL = 30 * outL / fabs(outL);
             }
         }
         if(outR != 0) {
             if(fabs(outR) < 20) {
                 outR = 20 * outR / fabs(outR);
             }
-            else if(fabs(outR) > 40) {
-                outR = 40 * outR / fabs(outR);
+            else if(fabs(outR) > 30) {
+                outR = 30 * outR / fabs(outR);
             }
         }
 
@@ -1010,7 +1010,36 @@ void upRamp() {
         Sleep(100);
     }
 
-    setAngle(-2);
+    timeDrive(-20, 500);
+    Sleep(250);
+
+    /*
+    bool done = false;
+    float position, epsilon = 0.25;
+    while (!done) {
+        position = RPS.Y() - 52;
+        if (fabs(position) < epsilon) {
+            done = true;
+        }
+        else {
+            if (position < -52) {
+                setBase(-20);
+            }
+            else if (position > 0) {
+                setBase(-20);
+            }
+            else if (position < 0) {
+                    setBase(20);
+            }
+            Sleep(50);
+            setBase(0);
+            Sleep(50);
+        }
+        LCD.WriteRC(position, 13, 0);
+    }
+    */
+
+    setAngle(0);
 }
 
 int findColor() {
@@ -1039,7 +1068,28 @@ int main(void) {
 
     LCD.WriteRC("FEH students walking", 2, 3);
     LCD.WriteRC("around campus", 4, 3);
-    drawPicture(patrickPic, 133, 100, 94, 110);
+    //drawPicture(patrickPic, 133, 100, 94, 110);
+    LCD.WriteRC("PICTURE REMOVED", 8, 3);
+
+    // Starting action
+    /*
+    bool moveOn = false;
+    while (!moveOn) {
+        if (LCD.Touch(&x, &y)) {
+            if (x > 160) {
+                moveToToken();
+            }
+            else {
+                moveOn = true;
+            }
+        }
+        while (LCD.Touch(&x, &y)) {
+            Sleep(10);
+        }
+    }
+    */
+    LCD.SetFontColor(FEHLCD::Blue);
+    LCD.WriteRC("Ready :P", 13, 0);
 
     // Wait for start light or for 30 seconds
     float startTime = TimeNow();
@@ -1081,10 +1131,11 @@ int main(void) {
     upRamp();
 
     // Move to foosball
-    autoDriveF(4.6);
+    autoDriveF(6);
     autoTurnL(1.85);
-    autoDriveF(8.2);
-    autoTurnL(3.9);
+    autoDriveF(8.6);
+    autoTurnL(3.6);
+    autoDriveF(2);
 
     // Score foosball
     armServo.SetDegree(178);
@@ -1093,7 +1144,9 @@ int main(void) {
     armServo.SetDegree(90);
     Sleep(250);
 
-    autoDriveF(4);
-    autoTurnL(2.75);
+    autoDriveF(2);
+    autoSweepR(5.5);
     autoDriveF(6);
+
+    armServo.SetDegree(90);
 }
