@@ -10,7 +10,7 @@
 
 #define MIN_SPEED 8
 #define MIN_SPEED_TURNING 13
-#define MIN_SPEED_SWEEP 13
+#define MIN_SPEED_SWEEP 15
 
 #define MAX_SPEED 60
 
@@ -23,7 +23,7 @@
 
 #define TICKS_PER_INCH 28 // Conversion from encoder ticks to in
 
-#define NO_LIGHT_THRESHOLD 1.7 // 1.5+ is no light
+#define NO_LIGHT_THRESHOLD 1.6 // 1.5+ is no light
 #define BLUE_LIGHT_THRESHOLD 0.8 // 0.8 to 1.5 is blue light
 
 #define PI 3.1415926536
@@ -1003,15 +1003,26 @@ void upRamp() {
     timeDrive(25, 500);
     timeDrive(15, 500);
 
+    Sleep(250);
+
     while (RPS.Y() < 52) {
-        setBase(20);
-        Sleep(100);
+        setBase(15);
+        Sleep(75);
         setBase(0);
-        Sleep(100);
+        Sleep(75);
     }
 
-    timeDrive(-20, 500);
+    Sleep(400);
+
+    while (RPS.Y() < 52) {
+        setBase(15);
+        Sleep(75);
+        setBase(0);
+        Sleep(75);
+    }
+
     Sleep(250);
+    timeDrive(-15, 750);
 
     /*
     bool done = false;
@@ -1066,13 +1077,15 @@ int main(void) {
     LCD.Clear(FEHLCD::Black);
     LCD.SetFontColor(FEHLCD::White);
 
+    /*
     LCD.WriteRC("FEH students walking", 2, 3);
     LCD.WriteRC("around campus", 4, 3);
     //drawPicture(patrickPic, 133, 100, 94, 110);
     LCD.WriteRC("PICTURE REMOVED", 8, 3);
+    */
 
     // Starting action
-    /*
+    Sleep(250);
     bool moveOn = false;
     while (!moveOn) {
         if (LCD.Touch(&x, &y)) {
@@ -1086,9 +1099,22 @@ int main(void) {
         while (LCD.Touch(&x, &y)) {
             Sleep(10);
         }
+        LCD.WriteRC("X:        ", 0, 0);
+        LCD.WriteRC(RPS.X(), 0, 2);
+        LCD.WriteRC("Y:        ", 2, 0);
+        LCD.WriteRC(RPS.Y(), 2, 2);
+        LCD.WriteRC("T:        ", 4, 0);
+        LCD.WriteRC(RPS.Heading(), 4, 2);
+        LCD.WriteRC("L:        ", 8, 0);
+        LCD.WriteRC(leftEnc.Counts(), 8, 2);
+        LCD.WriteRC("R:        ", 10, 0);
+        LCD.WriteRC(rightEnc.Counts(), 10, 2);
+        LCD.WriteRC("C:        ", 12, 0);
+        LCD.WriteRC(cds.Value(), 12, 2);
+        Sleep(50);
     }
-    */
-    LCD.SetFontColor(FEHLCD::Blue);
+    LCD.Clear(FEHLCD::Black);
+    LCD.SetFontColor(FEHLCD::White);
     LCD.WriteRC("Ready :P", 13, 0);
 
     // Wait for start light or for 30 seconds
@@ -1111,7 +1137,7 @@ int main(void) {
         case RED_LIGHT:
             autoDriveB(6);
             autoSweepR(11.2);
-            timeDrive(-30, 5750);
+            timeDrive(-20, 6500);
             autoDriveF(1);
             autoTurnR(2.9);
             autoDriveF(6);
@@ -1121,7 +1147,7 @@ int main(void) {
         default:
             autoDriveB(1.5);
             autoSweepR(11.2);
-            timeDrive(-30, 5750);
+            timeDrive(-20, 6500);
             autoDriveF(7.3);
         break;
     }
@@ -1133,9 +1159,9 @@ int main(void) {
     // Move to foosball
     autoDriveF(6);
     autoTurnL(1.85);
-    autoDriveF(8.6);
-    autoTurnL(3.6);
-    autoDriveF(2);
+    autoDriveF(8.75);
+    autoTurnL(3.65);
+    //autoDriveF(2);
 
     // Score foosball
     armServo.SetDegree(178);
@@ -1144,9 +1170,24 @@ int main(void) {
     armServo.SetDegree(90);
     Sleep(250);
 
-    autoDriveF(2);
+    // Move to lever
+    autoDriveF(1);
     autoSweepR(5.5);
-    autoDriveF(6);
+    autoDriveF(6.5);
 
+    // Score lever
+    armServo.SetDegree(178);
+    Sleep(250);
     armServo.SetDegree(90);
+
+    // Move to ramp
+    autoSweepR(6.3);
+    autoDriveF(12);
+    setAngle180();
+    timeDrive(15, 1000);
+    Sleep(250);
+
+    // Move down ramp to final button
+    timeDrive(50, 500);
+    timeDriveOff(80, 3000);
 }
