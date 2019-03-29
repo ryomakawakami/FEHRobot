@@ -1179,6 +1179,14 @@ int main(void) {
     armServo.SetDegree(178);
     Sleep(250);
     armServo.SetDegree(90);
+    Sleep(250);
+    armServo.SetDegree(178);
+    Sleep(250);
+    armServo.SetDegree(90);
+    Sleep(250);
+    armServo.SetDegree(178);
+    Sleep(250);
+    armServo.SetDegree(90);
 
     // Move to ramp
     autoSweepR(6.3);
