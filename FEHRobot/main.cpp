@@ -1130,14 +1130,14 @@ int main(void) {
     autoDriveF(11.5);
     setAngle180();
     autoTurnL(5.35);
-    autoDriveF(14);
+    autoDriveF(14.5);
 
     // Read DDR light (default blue)
     switch(findColor()) {
         case RED_LIGHT:
-            autoDriveB(6);
+            autoDriveB(6.5);
             autoSweepR(11.2);
-            timeDrive(-20, 6500);
+            timeDrive(-20, 6250);
             autoDriveF(1);
             autoTurnR(2.9);
             autoDriveF(6);
@@ -1145,9 +1145,9 @@ int main(void) {
         break;
         case BLUE_LIGHT:
         default:
-            autoDriveB(1.5);
+            autoDriveB(2);
             autoSweepR(11.2);
-            timeDrive(-20, 6500);
+            timeDrive(-20, 6250);
             autoDriveF(7.3);
         break;
     }
@@ -1184,7 +1184,7 @@ int main(void) {
     autoSweepR(6.3);
     autoDriveF(12);
     setAngle180();
-    timeDrive(15, 1000);
+    timeDrive(15, 1250);
     Sleep(250);
 
     // Move down ramp to final button
