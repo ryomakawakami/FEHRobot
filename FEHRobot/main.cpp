@@ -56,7 +56,7 @@ AnalogInputPin cds(FEHIO::P0_7);
 // MAX_STEP is slew rate limit (7%)
 // LOOP_TIME is time per update (20 ms)
 void autoDriveF(float target) {
-    PID basePID(KP_DRIVE, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_DRIVE, 0, 0, 0), driftPID(1, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -142,7 +142,7 @@ void autoDriveF(float target) {
 }
 
 void autoDriveB(float target) {
-    PID basePID(KP_DRIVE, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_DRIVE, 0, 0, 0), driftPID(1, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -228,7 +228,7 @@ void autoDriveB(float target) {
 }
 
 void autoTurnL(float target) {
-    PID basePID(KP_TURN, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_TURN, 0, 0, 0), driftPID(1, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -314,7 +314,7 @@ void autoTurnL(float target) {
 }
 
 void autoTurnR(float target) {
-    PID basePID(KP_TURN, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_TURN, 0, 0, 0), driftPID(1, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -400,7 +400,7 @@ void autoTurnR(float target) {
 }
 
 void autoSweepR(float target) {
-    PID basePID(KP_SWEEP, 0.01, 0, 0);
+    PID basePID(KP_SWEEP, 0, 0, 0);
 
     bool done = false;
     float out, lastOut = 0;
@@ -458,7 +458,7 @@ void autoSweepR(float target) {
 }
 
 void autoSweepL(float target) {
-    PID basePID(KP_SWEEP, 0.01, 0, 0);
+    PID basePID(KP_SWEEP, 0, 0, 0);
 
     bool done = false;
     float out, lastOut = 0;
@@ -516,7 +516,7 @@ void autoSweepL(float target) {
 }
 
 void autoSweepLB(float target) {
-    PID basePID(KP_SWEEP, 0.01, 0, 0);
+    PID basePID(KP_SWEEP, 0, 0, 0);
 
     bool done = false;
     float out, lastOut = 0;
@@ -574,7 +574,7 @@ void autoSweepLB(float target) {
 }
 
 void autoDriveBFast(float target) {
-    PID basePID(KP_DRIVE, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_DRIVE, 0, 0, 0), driftPID(1, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -660,7 +660,7 @@ void autoDriveBFast(float target) {
 }
 
 void autoDriveFSlow(float target) {
-    PID basePID(0.5, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(0.5, 0, 0, 0), driftPID(1, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -747,7 +747,7 @@ void autoDriveFSlow(float target) {
 }
 
 void autoDriveBSlow(float target) {
-    PID basePID(0.5, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(0.5, 0, 0, 0), driftPID(1, 0, 0, 0);
 
     bool done = false;
     float driveOut, driftOut;
@@ -867,7 +867,7 @@ void moveToToken() {
 }
 
 void moveToToken2() {
-    PID basePID(0.5, 0.01, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(0.5, 0, 0, 0), driftPID(1, 0, 0, 0);
 
     bool leftDone = false, rightDone = false, done = false;
     float leftOut, rightOut, driveOut, driftOut;
@@ -1141,7 +1141,7 @@ int main(void) {
             autoDriveF(1);
             autoTurnR(2.9);
             autoDriveF(6);
-            autoTurnL(2.8);
+            autoSweepR(5.6);
         break;
         case BLUE_LIGHT:
         default:
@@ -1166,7 +1166,7 @@ int main(void) {
     // Score foosball
     armServo.SetDegree(178);
     Sleep(250);
-    autoDriveFSlow(9.5);
+    autoDriveFSlow(9.25);
     armServo.SetDegree(90);
     Sleep(250);
 
@@ -1176,14 +1176,6 @@ int main(void) {
     autoDriveF(6.5);
 
     // Score lever
-    armServo.SetDegree(178);
-    Sleep(250);
-    armServo.SetDegree(90);
-    Sleep(250);
-    armServo.SetDegree(178);
-    Sleep(250);
-    armServo.SetDegree(90);
-    Sleep(250);
     armServo.SetDegree(178);
     Sleep(250);
     armServo.SetDegree(90);
