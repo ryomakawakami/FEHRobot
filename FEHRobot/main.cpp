@@ -8,9 +8,9 @@
 #include "pidlib.h"
 //#include "patrick.h"
 
-#define MIN_SPEED 8
-#define MIN_SPEED_TURNING 13
-#define MIN_SPEED_SWEEP 15
+#define MIN_SPEED 9
+#define MIN_SPEED_TURNING 14
+#define MIN_SPEED_SWEEP 16
 
 #define MAX_SPEED 60
 
@@ -47,6 +47,9 @@ DigitalEncoder leftEnc(FEHIO::P1_0);
 
 // Declare CdS cell
 AnalogInputPin cds(FEHIO::P0_7);
+
+// Needed for getting RPS x coordinate after climbing ramp
+float xPos = 0;
 
 // PID control loop
 // target is desired encoder count
@@ -625,16 +628,16 @@ void autoDriveBFast(float target) {
             if(fabs(outL) < MIN_SPEED) {
                 outL = MIN_SPEED * outL / fabs(outL);
             }
-            else if(fabs(outL) > 80) {
-                outL = 80 * outL / fabs(outL);
+            else if(fabs(outL) > 90) {
+                outL = 90 * outL / fabs(outL);
             }
         }
         if(outR != 0) {
             if(fabs(outR) < MIN_SPEED) {
                 outR = MIN_SPEED * outR / fabs(outR);
             }
-            else if(fabs(outR) > 80) {
-                outR = 80 * outR / fabs(outR);
+            else if(fabs(outR) > 90) {
+                outR = 90 * outR / fabs(outR);
             }
         }
 
@@ -709,16 +712,16 @@ void autoDriveFSlow(float target) {
 
         // Make sure output is between minimum and maximum speed (prevent division by 0 too)
         if(outL != 0) {
-            if(fabs(outL) < 20) {
-                outL = 20 * outL / fabs(outL);
+            if(fabs(outL) < 15) {
+                outL = 15 * outL / fabs(outL);
             }
             else if(fabs(outL) > 30) {
                 outL = 30 * outL / fabs(outL);
             }
         }
         if(outR != 0) {
-            if(fabs(outR) < 20) {
-                outR = 20 * outR / fabs(outR);
+            if(fabs(outR) < 15) {
+                outR = 15 * outR / fabs(outR);
             }
             else if(fabs(outR) > 30) {
                 outR = 30 * outR / fabs(outR);
@@ -860,96 +863,9 @@ void timeDriveOff(int power, int time) {
 }
 
 void moveToToken() {
-    autoDriveBSlow(4.7);
+    autoDriveBSlow(4.3);
     autoSweepLB(5.45);
-    autoDriveBFast(11.6);
-    //autoDriveB(11.75);
-}
-
-void moveToToken2() {
-    PID basePID(0.5, 0, 0, 0), driftPID(1, 0, 0, 0);
-
-    bool leftDone = false, rightDone = false, done = false;
-    float leftOut, rightOut, driveOut, driftOut;
-    float outL, outR, lastOutL = 0, lastOutR = 0;
-    float avgEnc;
-
-    float rightTarget = 6 * TICKS_PER_INCH;
-    float leftTarget = rightTarget + 14 * TICKS_PER_INCH;
-
-    // Consider allowing for accumulating error
-    leftEnc.ResetCounts();
-    rightEnc.ResetCounts();
-
-    while(!done) {
-        if(!leftDone) {
-            leftOut = 50;
-        }
-        if(!rightDone) {
-            rightOut = 50;
-        }
-        else {
-            rightOut = 0;
-        }
-
-        // Slew rate limit
-        if(leftOut - lastOutL > MAX_STEP) {
-            leftOut = lastOutL + MAX_STEP;
-        }
-        else if(leftOut - lastOutL < -MAX_STEP) {
-            leftOut = lastOutL - MAX_STEP;
-        }
-
-        if(rightOut - lastOutR > MAX_STEP) {
-            rightOut = lastOutR + MAX_STEP;
-        }
-        else if(rightOut - lastOutR < -MAX_STEP) {
-            rightOut = lastOutR - MAX_STEP;
-        }
-
-        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
-        if(outL != 0) {
-            if(fabs(outL) < MIN_SPEED) {
-                outL = MIN_SPEED * outL / fabs(outL);
-            }
-            else if(fabs(outL) > MAX_SPEED) {
-                outL = MAX_SPEED * outL / fabs(outL);
-            }
-        }
-        if(outR != 0) {
-            if(fabs(outR) < MIN_SPEED) {
-                outR = MIN_SPEED * outR / fabs(outR);
-            }
-            else if(fabs(outR) > 60) {
-                outR = 60 * outR / fabs(outR);
-            }
-        }
-
-        // Set motors to output
-        leftBase.SetPercent(leftOut);
-        rightBase.SetPercent(-rightOut);
-
-        // Store output for slew rate
-        lastOutL = leftOut;
-        lastOutR = rightOut;
-
-        // Sleep for set time
-        Sleep(LOOP_TIME);
-
-        if(leftTarget - leftEnc.Counts() < 20) {
-            leftDone = true;
-        }
-        if(rightTarget - rightEnc.Counts() < 20) {
-            rightDone = true;
-        }
-        if(leftDone && rightDone) {
-            done = true;
-        }
-    }
-
-    // Stop motors
-    leftBase.SetPercent(0);
-    rightBase.SetPercent(0);
+    autoDriveBFast(12);
 }
 
 void setAngle(float theta) {
@@ -1021,34 +937,9 @@ void upRamp() {
         Sleep(75);
     }
 
-    Sleep(250);
-    timeDrive(-15, 750);
+    xPos = RPS.X() - 29.9;
 
-    /*
-    bool done = false;
-    float position, epsilon = 0.25;
-    while (!done) {
-        position = RPS.Y() - 52;
-        if (fabs(position) < epsilon) {
-            done = true;
-        }
-        else {
-            if (position < -52) {
-                setBase(-20);
-            }
-            else if (position > 0) {
-                setBase(-20);
-            }
-            else if (position < 0) {
-                    setBase(20);
-            }
-            Sleep(50);
-            setBase(0);
-            Sleep(50);
-        }
-        LCD.WriteRC(position, 13, 0);
-    }
-    */
+    timeDrive(-15, 750);
 
     setAngle(0);
 }
@@ -1073,6 +964,7 @@ int main(void) {
     RPS.InitializeTouchMenu();
 
     float x, y;
+    float postRampPosition = 0;
 
     LCD.Clear(FEHLCD::Black);
     LCD.SetFontColor(FEHLCD::White);
@@ -1086,15 +978,32 @@ int main(void) {
 
     // Starting action
     Sleep(250);
-    bool moveOn = false;
+    bool moveOn = false, setupRPS = false;
     while (!moveOn) {
         if (LCD.Touch(&x, &y)) {
             if (x > 160) {
-                moveToToken();
+                setupRPS = true;
             }
             else {
                 moveOn = true;
             }
+        }
+        if (setupRPS) {
+            LCD.Clear(FEHLCD::Black);
+            LCD.WriteLine("RPS Setup");
+            bool done = false;
+            while(!done) {
+                LCD.WriteRC("X:        ", 4, 0);
+                LCD.WriteRC(RPS.X(), 0, 2);
+                LCD.WriteRC("Y:        ", 6, 0);
+                LCD.WriteRC(RPS.Y(), 2, 2);
+                if (LCD.Touch(&x, &y)) {
+                    done = true;
+                    postRampPosition = RPS.X() - 32.2;
+                }
+                Sleep(100);
+            }
+            setupRPS = false;
         }
         while (LCD.Touch(&x, &y)) {
             Sleep(10);
@@ -1111,6 +1020,8 @@ int main(void) {
         LCD.WriteRC(rightEnc.Counts(), 10, 2);
         LCD.WriteRC("C:        ", 12, 0);
         LCD.WriteRC(cds.Value(), 12, 2);
+        LCD.WriteRC("        ", 12, 12);
+        LCD.WriteRC(postRampPosition, 12, 12);
         Sleep(50);
     }
     LCD.Clear(FEHLCD::Black);
@@ -1127,7 +1038,7 @@ int main(void) {
     moveToToken();
 
     // Move to DDR light
-    autoDriveF(11.5);
+    autoDriveF(11.65);
     setAngle180();
     autoTurnL(5.35);
     autoDriveF(14.5);
@@ -1139,16 +1050,16 @@ int main(void) {
             autoSweepR(11.2);
             timeDrive(-20, 6250);
             autoDriveF(1);
-            autoTurnR(2.9);
-            autoDriveF(6);
-            autoSweepR(5.6);
+            autoTurnR(3.1);
+            autoDriveF(5);
+            autoSweepR(5.8);
         break;
         case BLUE_LIGHT:
         default:
             autoDriveB(2);
             autoSweepR(11.2);
             timeDrive(-20, 6250);
-            autoDriveF(7.3);
+            autoDriveF(7.2);
         break;
     }
 
@@ -1156,23 +1067,38 @@ int main(void) {
     setAngle(-2);
     upRamp();
 
-    // Move to foosball
+    // Move to foosball, adjusting if necessary
     autoDriveF(6);
     autoTurnL(1.85);
-    autoDriveF(8.75);
-    autoTurnL(3.65);
-    //autoDriveF(2);
+    autoDriveF(8.7);
+    autoTurnL(3.75);
+
+    // Figure out offset and correct
+    float offset = xPos - postRampPosition;
+    Sleep(25);
+    if (offset > 0) {
+        LCD.WriteLine("FORWARD");
+        LCD.WriteLine(offset);
+        autoDriveF(offset);
+        Sleep(25);
+    }
+    else {
+        LCD.WriteLine("BACKWARD");
+        LCD.WriteLine(offset);
+        autoDriveB(offset);
+        Sleep(25);
+    }
 
     // Score foosball
     armServo.SetDegree(178);
     Sleep(250);
-    autoDriveFSlow(9.25);
+    autoDriveFSlow(9.75);
     armServo.SetDegree(90);
     Sleep(250);
 
     // Move to lever
     autoDriveF(1);
-    autoSweepR(5.5);
+    autoSweepR(5.7);
     autoDriveF(6.5);
 
     // Score lever
