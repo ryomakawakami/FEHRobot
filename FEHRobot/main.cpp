@@ -26,6 +26,9 @@
 #define NO_LIGHT_THRESHOLD 1.6 // 1.5+ is no light
 #define BLUE_LIGHT_THRESHOLD 0.8 // 0.8 to 1.5 is blue light
 
+#define ARM_DOWN 178
+#define ARM_UP 90
+
 #define PI 3.1415926536
 
 enum {
@@ -959,7 +962,7 @@ int findColor() {
 int main(void) {
     armServo.SetMin(738);
     armServo.SetMax(2500);
-    armServo.SetDegree(90);
+    armServo.SetDegree(ARM_UP);
 
     RPS.InitializeTouchMenu();
 
@@ -968,13 +971,6 @@ int main(void) {
 
     LCD.Clear(FEHLCD::Black);
     LCD.SetFontColor(FEHLCD::White);
-
-    /*
-    LCD.WriteRC("FEH students walking", 2, 3);
-    LCD.WriteRC("around campus", 4, 3);
-    //drawPicture(patrickPic, 133, 100, 94, 110);
-    LCD.WriteRC("PICTURE REMOVED", 8, 3);
-    */
 
     // Starting action
     Sleep(250);
@@ -1071,7 +1067,7 @@ int main(void) {
     autoDriveF(6);
     autoTurnL(1.85);
     autoDriveF(8.7);
-    autoTurnL(3.75);
+    autoTurnL(3.6);
 
     // Figure out offset and correct
     float offset = xPos - postRampPosition;
@@ -1090,10 +1086,10 @@ int main(void) {
     }
 
     // Score foosball
-    armServo.SetDegree(178);
+    armServo.SetDegree(ARM_DOWN);
     Sleep(250);
     autoDriveFSlow(9.75);
-    armServo.SetDegree(90);
+    armServo.SetDegree(ARM_UP);
     Sleep(250);
 
     // Move to lever
@@ -1102,9 +1098,9 @@ int main(void) {
     autoDriveF(6.5);
 
     // Score lever
-    armServo.SetDegree(178);
+    armServo.SetDegree(ARM_DOWN);
     Sleep(250);
-    armServo.SetDegree(90);
+    armServo.SetDegree(ARM_UP);
 
     // Move to ramp
     autoSweepR(6.3);
