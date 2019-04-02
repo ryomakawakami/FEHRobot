@@ -5,14 +5,15 @@
 #include <FEHServo.h>
 #include <FEHAccel.h>
 #include <FEHRPS.h>
+#include <FEHBattery.h>
 #include "pidlib.h"
 //#include "patrick.h"
 
-#define MIN_SPEED 9
+#define MIN_SPEED 10
 #define MIN_SPEED_TURNING 14
 #define MIN_SPEED_SWEEP 16
 
-#define MAX_SPEED 60
+#define MAX_SPEED 80
 
 #define MAX_STEP 7  // Max change per iteration
 #define LOOP_TIME 0.020   // 20 ms, 50 Hz
@@ -24,7 +25,7 @@
 #define TICKS_PER_INCH 28 // Conversion from encoder ticks to in
 
 #define NO_LIGHT_THRESHOLD 1.6 // 1.5+ is no light
-#define BLUE_LIGHT_THRESHOLD 0.8 // 0.8 to 1.5 is blue light
+#define BLUE_LIGHT_THRESHOLD 0.95 // 0.8 to 1.5 is blue light
 
 #define ARM_DOWN 178
 #define ARM_UP 90
@@ -915,12 +916,25 @@ void setAngle180() {
 
 void upRamp() {
     setBase(50);
-    Sleep(1650);
+    Sleep(1750);
+
+    /*
+    setBase(50);
+    Sleep(250);
+
+    setBase(75);
+    Sleep(750);
+
+    setBase(50);
+    Sleep(250);
+    */
+
     setBase(0);
+
     setAngle(-2);
 
-    timeDrive(25, 400);
-    timeDrive(15, 750);
+    timeDrive(25, 750);
+    timeDrive(15, 500);
 
     Sleep(250);
 
@@ -968,6 +982,8 @@ int main(void) {
 
     float x, y;
     float postRampPosition = 0;
+
+    int endL = 0, endR = 0;
 
     LCD.Clear(FEHLCD::Black);
     LCD.SetFontColor(FEHLCD::White);
@@ -1018,6 +1034,8 @@ int main(void) {
         LCD.WriteRC(cds.Value(), 12, 2);
         LCD.WriteRC("        ", 12, 12);
         LCD.WriteRC(postRampPosition, 12, 12);
+        LCD.WriteRC("       ", 0, 12);
+        LCD.WriteRC(Battery.Voltage(), 0 , 12);
         Sleep(50);
     }
     LCD.Clear(FEHLCD::Black);
@@ -1034,15 +1052,16 @@ int main(void) {
     moveToToken();
 
     // Move to DDR light
-    autoDriveF(11.65);
+    autoDriveF(11.75);
     setAngle180();
-    autoTurnL(5.35);
-    autoDriveF(14.5);
+    autoTurnL(5.15);
+    autoDriveF(15);
 
     // Read DDR light (default blue)
     switch(findColor()) {
         case RED_LIGHT:
-            autoDriveB(6.5);
+            LCD.WriteLine("I READ RED");
+            autoDriveB(7.5);
             autoSweepR(11.2);
             timeDrive(-20, 6250);
             autoDriveF(1);
@@ -1051,6 +1070,7 @@ int main(void) {
             autoSweepR(5.8);
         break;
         case BLUE_LIGHT:
+            LCD.WriteLine("Boo blue");
         default:
             autoDriveB(2);
             autoSweepR(11.2);
@@ -1064,10 +1084,10 @@ int main(void) {
     upRamp();
 
     // Move to foosball, adjusting if necessary
-    autoDriveF(6);
+    autoDriveF(6.3);
     autoTurnL(1.85);
     autoDriveF(8.7);
-    autoTurnL(3.6);
+    autoTurnL(3.3);
 
     // Figure out offset and correct
     float offset = xPos - postRampPosition;
@@ -1081,7 +1101,7 @@ int main(void) {
     else {
         LCD.WriteLine("BACKWARD");
         LCD.WriteLine(offset);
-        autoDriveB(offset);
+        autoDriveB(-offset);
         Sleep(25);
     }
 
@@ -1089,13 +1109,38 @@ int main(void) {
     armServo.SetDegree(ARM_DOWN);
     Sleep(250);
     autoDriveFSlow(9.75);
+    endL = leftEnc.Counts();
+    endR = rightEnc.Counts();
+
+    LCD.WriteLine(endL);
+    LCD.WriteLine(endR);
+
     armServo.SetDegree(ARM_UP);
     Sleep(250);
 
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+    Sleep(25);
+
+    if (endL > endR) {
+        rightBase.SetPercent(MIN_SPEED_SWEEP);
+        while (rightEnc.Counts() < endL - endR) {
+            Sleep(10);
+        }
+        rightBase.SetPercent(0);
+    }
+    else {
+        leftBase.SetPercent(MIN_SPEED_SWEEP);
+        while (leftEnc.Counts() < endR - endL) {
+            Sleep(10);
+        }
+        leftBase.SetPercent(0);
+    }
+
     // Move to lever
-    autoDriveF(1);
+    autoDriveF(2);
     autoSweepR(5.7);
-    autoDriveF(6.5);
+    autoDriveF(5.6);
 
     // Score lever
     armServo.SetDegree(ARM_DOWN);
@@ -1103,11 +1148,10 @@ int main(void) {
     armServo.SetDegree(ARM_UP);
 
     // Move to ramp
-    autoSweepR(6.3);
+    autoSweepR(5.8);
     autoDriveF(12);
     setAngle180();
     timeDrive(15, 1250);
-    Sleep(250);
 
     // Move down ramp to final button
     timeDrive(50, 500);
