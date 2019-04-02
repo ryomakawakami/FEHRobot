@@ -15,7 +15,7 @@
  Startup/derivative.h Libraries/LCDColors.h Libraries/FEHIO.h \
  Drivers/adc16.h Libraries/FEHMotor.h Libraries/FEHServo.h \
  Libraries/FEHAccel.h Drivers/i2c.h Libraries/FEHRPS.h Drivers/FEHXBee.h \
- Libraries/FEHBattery.h Libraries/FEHIO.h ..\/pidlib.h \
+ Libraries/FEHBattery.h Libraries/FEHIO.h ..\/plib.h \
  C:\fehqt\Proteus/EWL/EWL_C/include/cmath \
  C:\fehqt\Proteus/EWL/EWL_C/include/cfloat \
  C:\fehqt\Proteus/EWL/EWL_C/include/ewl_t.h \
@@ -86,7 +86,7 @@ Libraries/FEHBattery.h:
 
 Libraries/FEHIO.h:
 
-..\/pidlib.h:
+..\/plib.h:
 
 C:\fehqt\Proteus/EWL/EWL_C/include/cmath:
 

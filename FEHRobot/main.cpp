@@ -6,8 +6,7 @@
 #include <FEHAccel.h>
 #include <FEHRPS.h>
 #include <FEHBattery.h>
-#include "pidlib.h"
-//#include "patrick.h"
+#include "plib.h"
 
 #define MIN_SPEED 10
 #define MIN_SPEED_TURNING 14
@@ -55,7 +54,7 @@ AnalogInputPin cds(FEHIO::P0_7);
 // Needed for getting RPS x coordinate after climbing ramp
 float xPos = 0;
 
-// PID control loop
+// Simple PID control loop
 // target is desired encoder count
 // Position PID when some distance away
 // Drift PID and slew rate are constantly active
@@ -63,7 +62,7 @@ float xPos = 0;
 // MAX_STEP is slew rate limit (7%)
 // LOOP_TIME is time per update (20 ms)
 void autoDriveF(float target) {
-    PID basePID(KP_DRIVE, 0, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_DRIVE), driftPID(1);
 
     bool done = false;
     float driveOut, driftOut;
@@ -71,9 +70,6 @@ void autoDriveF(float target) {
     float avgEnc;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-    driftPID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -149,7 +145,7 @@ void autoDriveF(float target) {
 }
 
 void autoDriveB(float target) {
-    PID basePID(KP_DRIVE, 0, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_DRIVE), driftPID(1);
 
     bool done = false;
     float driveOut, driftOut;
@@ -157,9 +153,6 @@ void autoDriveB(float target) {
     float avgEnc;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-    driftPID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -235,7 +228,7 @@ void autoDriveB(float target) {
 }
 
 void autoTurnL(float target) {
-    PID basePID(KP_TURN, 0, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_TURN), driftPID(1);
 
     bool done = false;
     float driveOut, driftOut;
@@ -243,9 +236,6 @@ void autoTurnL(float target) {
     float avgEnc;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-    driftPID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -321,7 +311,7 @@ void autoTurnL(float target) {
 }
 
 void autoTurnR(float target) {
-    PID basePID(KP_TURN, 0, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_TURN), driftPID(1);
 
     bool done = false;
     float driveOut, driftOut;
@@ -329,9 +319,6 @@ void autoTurnR(float target) {
     float avgEnc;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-    driftPID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -407,15 +394,13 @@ void autoTurnR(float target) {
 }
 
 void autoSweepR(float target) {
-    PID basePID(KP_SWEEP, 0, 0, 0);
+    PID basePID(KP_SWEEP);
 
     bool done = false;
     float out, lastOut = 0;
     float counts;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
 
     // Consider allowing for accumulating error
     rightEnc.ResetCounts();
@@ -465,15 +450,13 @@ void autoSweepR(float target) {
 }
 
 void autoSweepL(float target) {
-    PID basePID(KP_SWEEP, 0, 0, 0);
+    PID basePID(KP_SWEEP);
 
     bool done = false;
     float out, lastOut = 0;
     float counts;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -523,15 +506,13 @@ void autoSweepL(float target) {
 }
 
 void autoSweepLB(float target) {
-    PID basePID(KP_SWEEP, 0, 0, 0);
+    PID basePID(KP_SWEEP);
 
     bool done = false;
     float out, lastOut = 0;
     float counts;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -581,7 +562,7 @@ void autoSweepLB(float target) {
 }
 
 void autoDriveBFast(float target) {
-    PID basePID(KP_DRIVE, 0, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_DRIVE), driftPID(1);
 
     bool done = false;
     float driveOut, driftOut;
@@ -589,9 +570,6 @@ void autoDriveBFast(float target) {
     float avgEnc;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-    driftPID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -667,7 +645,7 @@ void autoDriveBFast(float target) {
 }
 
 void autoDriveFSlow(float target) {
-    PID basePID(0.5, 0, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_DRIVE), driftPID(1);
 
     bool done = false;
     float driveOut, driftOut;
@@ -676,9 +654,6 @@ void autoDriveFSlow(float target) {
     float startTime = TimeNow();
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-    driftPID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -754,7 +729,7 @@ void autoDriveFSlow(float target) {
 }
 
 void autoDriveBSlow(float target) {
-    PID basePID(0.5, 0, 0, 0), driftPID(1, 0, 0, 0);
+    PID basePID(KP_DRIVE), driftPID(1);
 
     bool done = false;
     float driveOut, driftOut;
@@ -762,9 +737,6 @@ void autoDriveBSlow(float target) {
     float avgEnc;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-    driftPID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
