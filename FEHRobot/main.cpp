@@ -51,8 +51,8 @@ DigitalEncoder leftEnc(FEHIO::P1_0);
 // Declare CdS cell
 AnalogInputPin cds(FEHIO::P0_7);
 
-// Needed for getting RPS x coordinate after climbing ramp
-float xPos = 0;
+// Needed for getting RPS coordinates after climbing ramp
+float xPos = 0, yPos = 0;
 
 // Simple PID control loop
 // target is desired encoder count
@@ -886,20 +886,10 @@ void setAngle180() {
     }
 }
 
+/*
 void upRamp() {
     setBase(50);
     Sleep(1750);
-
-    /*
-    setBase(50);
-    Sleep(250);
-
-    setBase(75);
-    Sleep(750);
-
-    setBase(50);
-    Sleep(250);
-    */
 
     setBase(0);
 
@@ -926,11 +916,52 @@ void upRamp() {
         Sleep(75);
     }
 
-    xPos = RPS.X() - 29.9;
+    xPos = RPS.X() - 29;
+
+    setAngle(0);
 
     timeDrive(-15, 750);
 
     setAngle(0);
+}
+*/
+
+void upRamp() {
+    leftBase.SetPercent(50);
+    rightBase.SetPercent(50);
+    Sleep(500);
+
+    int leftPower = 75, rightPower = 75;
+    float headingAdj = 0;
+    long startTime = TimeNowMSec(), onFlat = TimeNowMSec();
+    while ((TimeNowMSec() - startTime < 1500) && (onFlat - startTime < 500)) {
+        headingAdj = RPS.Heading() * 4;
+        leftPower = 75 + headingAdj;
+        rightPower = 75 - headingAdj;
+
+        if (Accel.Y() > 0.2) {
+            onFlat = TimeNowMSec();
+        }
+
+        Sleep(50);
+    }
+
+    setBase(25);
+    Sleep(500);
+
+    setBase(-25);
+
+    while (RPS.Y() < 0) {
+        Sleep(50);
+    }
+
+    setBase(0);
+
+    xPos = RPS.X() - 29;
+
+    setAngle(0);
+
+    yPos = RPS.Y() - 52;
 }
 
 int findColor() {
@@ -953,7 +984,7 @@ int main(void) {
     RPS.InitializeTouchMenu();
 
     float x, y;
-    float postRampPosition = 0;
+    float postRampX = 0, postRampY = 0;
 
     int endL = 0, endR = 0;
 
@@ -983,7 +1014,8 @@ int main(void) {
                 LCD.WriteRC(RPS.Y(), 2, 2);
                 if (LCD.Touch(&x, &y)) {
                     done = true;
-                    postRampPosition = RPS.X() - 32.2;
+                    postRampX = RPS.X() - 32.2;
+                    postRampY = RPS.Y() + 2;
                 }
                 Sleep(100);
             }
@@ -1004,8 +1036,10 @@ int main(void) {
         LCD.WriteRC(rightEnc.Counts(), 10, 2);
         LCD.WriteRC("C:        ", 12, 0);
         LCD.WriteRC(cds.Value(), 12, 2);
+        LCD.WriteRC("        ", 11, 12);
+        LCD.WriteRC(postRampX, 11, 12);
         LCD.WriteRC("        ", 12, 12);
-        LCD.WriteRC(postRampPosition, 12, 12);
+        LCD.WriteRC(postRampY, 12, 12);
         LCD.WriteRC("       ", 0, 12);
         LCD.WriteRC(Battery.Voltage(), 0 , 12);
         Sleep(50);
@@ -1056,24 +1090,25 @@ int main(void) {
     upRamp();
 
     // Move to foosball, adjusting if necessary
-    autoDriveF(6.3);
+    float offsetY = yPos - postRampY;
+    autoDriveF(6.3 - offsetY);
     autoTurnL(1.85);
     autoDriveF(8.7);
     autoTurnL(3.3);
 
-    // Figure out offset and correct
-    float offset = xPos - postRampPosition;
+    // Figure out x offset and correct
+    float offsetX = xPos - postRampX;
     Sleep(25);
     if (offset > 0) {
         LCD.WriteLine("FORWARD");
-        LCD.WriteLine(offset);
-        autoDriveF(offset);
+        LCD.WriteLine(offsetX);
+        autoDriveF(offsetX);
         Sleep(25);
     }
     else {
         LCD.WriteLine("BACKWARD");
-        LCD.WriteLine(offset);
-        autoDriveB(-offset);
+        LCD.WriteLine(offsetX);
+        autoDriveB(-offsetX);
         Sleep(25);
     }
 
@@ -1120,7 +1155,7 @@ int main(void) {
     armServo.SetDegree(ARM_UP);
 
     // Move to ramp
-    autoSweepR(5.8);
+    autoSweepR(5.6);
     autoDriveF(12);
     setAngle180();
     timeDrive(15, 1250);
