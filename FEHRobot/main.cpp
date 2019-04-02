@@ -54,6 +54,9 @@ AnalogInputPin cds(FEHIO::P0_7);
 // Needed for getting RPS coordinates after climbing ramp
 float xPos = 0, yPos = 0;
 
+// Stores ideal 0 degree position for course
+float zeroDegrees = 0;
+
 // Simple PID control loop
 // target is desired encoder count
 // Position PID when some distance away
@@ -860,7 +863,6 @@ void setAngle(float theta) {
                 setTurn(-15);
             }
             Sleep(25);
-            //Sleep(error * 5);
             setTurn(0);
         }
         Sleep(100);
@@ -869,8 +871,9 @@ void setAngle(float theta) {
 
 void setAngle180() {
     bool good = false;
+    float target = 180 - zeroDegrees;
     while (!good) {
-        float error = RPS.Heading() - 180;
+        float error = RPS.Heading() - target;
         if (fabs(error) < 0.5) {
             good = true;
         } else {
@@ -886,46 +889,6 @@ void setAngle180() {
     }
 }
 
-/*
-void upRamp() {
-    setBase(50);
-    Sleep(1750);
-
-    setBase(0);
-
-    setAngle(-2);
-
-    timeDrive(25, 750);
-    timeDrive(15, 500);
-
-    Sleep(250);
-
-    while (RPS.Y() < 52) {
-        setBase(15);
-        Sleep(75);
-        setBase(0);
-        Sleep(75);
-    }
-
-    Sleep(400);
-
-    while (RPS.Y() < 52) {
-        setBase(15);
-        Sleep(75);
-        setBase(0);
-        Sleep(75);
-    }
-
-    xPos = RPS.X() - 29;
-
-    setAngle(0);
-
-    timeDrive(-15, 750);
-
-    setAngle(0);
-}
-*/
-
 void upRamp() {
     leftBase.SetPercent(50);
     rightBase.SetPercent(50);
@@ -934,7 +897,7 @@ void upRamp() {
     int leftPower = 75, rightPower = 75;
     float headingAdj = 0;
     long startTime = TimeNowMSec(), onFlat = TimeNowMSec();
-    while ((TimeNowMSec() - startTime < 1500) && (onFlat - startTime < 500)) {
+    while ((TimeNowMSec() - startTime < 1500) && (onFlat - startTime < 750)) {
         headingAdj = RPS.Heading() * 4;
         leftPower = 75 + headingAdj;
         rightPower = 75 - headingAdj;
@@ -959,7 +922,7 @@ void upRamp() {
 
     xPos = RPS.X() - 29;
 
-    setAngle(0);
+    setAngle(zeroDegrees);
 
     yPos = RPS.Y() - 52;
 }
@@ -1008,14 +971,17 @@ int main(void) {
             LCD.WriteLine("RPS Setup");
             bool done = false;
             while(!done) {
-                LCD.WriteRC("X:        ", 4, 0);
-                LCD.WriteRC(RPS.X(), 0, 2);
+                LCD.WriteRC("X:        ", 2, 0);
+                LCD.WriteRC(RPS.X(), 2, 2);
+                LCD.WriteRC("Y:        ", 4, 0);
+                LCD.WriteRC(RPS.Y(), 4, 2);
                 LCD.WriteRC("Y:        ", 6, 0);
-                LCD.WriteRC(RPS.Y(), 2, 2);
+                LCD.WriteRC(RPS.Y(), 6, 2);
                 if (LCD.Touch(&x, &y)) {
                     done = true;
                     postRampX = RPS.X() - 32.2;
                     postRampY = RPS.Y() + 2;
+                    zeroDegrees = RPS.Heading();
                 }
                 Sleep(100);
             }
@@ -1086,7 +1052,7 @@ int main(void) {
     }
 
     // Move to ramp and go up
-    setAngle(-2);
+    setAngle(zeroDegrees);
     upRamp();
 
     // Move to foosball, adjusting if necessary
@@ -1099,7 +1065,7 @@ int main(void) {
     // Figure out x offset and correct
     float offsetX = xPos - postRampX;
     Sleep(25);
-    if (offset > 0) {
+    if (offsetX > 0) {
         LCD.WriteLine("FORWARD");
         LCD.WriteLine(offsetX);
         autoDriveF(offsetX);
