@@ -4,18 +4,23 @@
 #include <FEHMotor.h>
 #include <FEHServo.h>
 #include <FEHAccel.h>
-#include "pidlib.h"
+#include "plib.h"
 
-#define MIN_SPEED 8
-#define MIN_SPEED_TURNING 12
-#define MIN_SPEED_SWEEP 12
+#define MIN_SPEED 10
+#define MIN_SPEED_TURNING 16
+#define MIN_SPEED_SWEEP 18
 
-#define MAX_SPEED 80
+#define MAX_SPEED 60
 
 #define MAX_STEP 7  // Max change per iteration
 #define LOOP_TIME 0.020   // 20 ms, 50 Hz
 
 #define TICKS_PER_INCH 28 // Conversion from encoder ticks to in
+
+#define KP_DRIVE 0.4
+#define KP_TURN 0.4
+#define KP_SWEEP 0.6
+#define KP_DRIFT 0.5
 
 enum {
     RUN,
@@ -52,8 +57,15 @@ FEHServo armServo(FEHServo::Servo0);
 // Ends function once at location
 // MAX_STEP is slew rate limit (10%)
 // LOOP_TIME is time per update (20 ms)
+// Simple PID control loop
+// target is desired encoder count
+// Position PID when some distance away
+// Drift PID and slew rate are constantly active
+// Ends function once at location
+// MAX_STEP is slew rate limit (7%)
+// LOOP_TIME is time per update (20 ms)
 void autoDriveF(float target, float kP) {
-    PID basePID(kP, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+    PID basePID(kP), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -61,9 +73,6 @@ void autoDriveF(float target, float kP) {
     float avgEnc;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-    driftPID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -118,7 +127,7 @@ void autoDriveF(float target, float kP) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(-outL);
+        leftBase.SetPercent(-outL*0.95);
         rightBase.SetPercent(outR);
 
         // Store output for slew rate
@@ -139,7 +148,7 @@ void autoDriveF(float target, float kP) {
 }
 
 void autoDriveB(float target, float kP) {
-    PID basePID(kP, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+    PID basePID(kP), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -147,9 +156,6 @@ void autoDriveB(float target, float kP) {
     float avgEnc;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-    driftPID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -204,7 +210,7 @@ void autoDriveB(float target, float kP) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL);
+        leftBase.SetPercent(outL*0.95);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -225,7 +231,7 @@ void autoDriveB(float target, float kP) {
 }
 
 void autoTurnL(float target, float kP) {
-    PID basePID(kP, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+    PID basePID(kP), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -233,9 +239,6 @@ void autoTurnL(float target, float kP) {
     float avgEnc;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-    driftPID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -290,7 +293,7 @@ void autoTurnL(float target, float kP) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL);
+        leftBase.SetPercent(outL*0.95);
         rightBase.SetPercent(outR);
 
         // Store output for slew rate
@@ -311,7 +314,7 @@ void autoTurnL(float target, float kP) {
 }
 
 void autoTurnR(float target, float kP) {
-    PID basePID(kP, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+    PID basePID(kP), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -319,9 +322,6 @@ void autoTurnR(float target, float kP) {
     float avgEnc;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-    driftPID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -376,7 +376,7 @@ void autoTurnR(float target, float kP) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(-outL);
+        leftBase.SetPercent(-outL*0.95);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -396,74 +396,14 @@ void autoTurnR(float target, float kP) {
     rightBase.SetPercent(0);
 }
 
-void autoSweepL(float target, float kP) {
-    PID basePID(kP, 0.01, 0, 0);
-
-    bool done = false;
-    float out, lastOut = 0;
-    float counts;
-
-    target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-
-    // Consider allowing for accumulating error
-    leftEnc.ResetCounts();
-
-    while(!done) {
-        // Update average distance
-        counts = leftEnc.Counts();
-
-        // Position PID
-        out = basePID.calculate(target, counts);
-
-        // Slew rate limit
-        if(out - lastOut > MAX_STEP) {
-            out = lastOut + MAX_STEP;
-        }
-        else if(out - lastOut < -MAX_STEP) {
-            out = lastOut - MAX_STEP;
-        }
-
-        // Make sure output is at least minimum speed (prevent division by 0 too)
-        if(out != 0) {
-            if(fabs(out) < MIN_SPEED_SWEEP) {
-                out = MIN_SPEED_SWEEP * out / fabs(out);
-            }
-            else if(fabs(out) > MAX_SPEED) {
-                out = MAX_SPEED * out / fabs(out);
-            }
-        }
-
-        // Set motors to output
-        leftBase.SetPercent(-out);
-
-        // Store output for slew rate
-        lastOut = out;
-
-        // Sleep for set time
-        Sleep(LOOP_TIME);
-
-        if(target - counts < 0) {
-            done = true;
-        }
-    }
-
-    // Stop motors
-    leftBase.SetPercent(0);
-    rightBase.SetPercent(0);
-}
-
 void autoSweepR(float target, float kP) {
-    PID basePID(kP, 0.01, 0, 0);
+    PID basePID(kP);
 
     bool done = false;
     float out, lastOut = 0;
     float counts;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
 
     // Consider allowing for accumulating error
     rightEnc.ResetCounts();
@@ -512,60 +452,146 @@ void autoSweepR(float target, float kP) {
     rightBase.SetPercent(0);
 }
 
-void setBase(int power) {
-    leftBase.SetPercent(-power);
-    rightBase.SetPercent(power);
-}
-
-void timeDrive(int power, int time) {
-    setBase(power);
-    Sleep(time);
-    setBase(0);
-}
-
-void moveToToken(float kP) {
-    PID leftPID(kP, 0.01, 0, 0), rightPID(kP, 0.01, 0, 0), arcPID(1, 0, 0, 0), driftPID(1, 0, 0, 0);
+void autoSweepL(float target, float kP) {
+    PID basePID(kP);
 
     bool done = false;
-    float leftOut, rightOut, driftOut, outL, outR;
-    float lastOutL = 0, lastOutR = 0;
-    int left, right;
+    float out, lastOut = 0;
+    float counts;
 
-    float rightTarget = 15.5 * TICKS_PER_INCH;
-    float leftTarget = 21.5 * TICKS_PER_INCH;
-    float errorTarget = 0;
+    target *= TICKS_PER_INCH;
+
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        counts = leftEnc.Counts();
+
+        // Position PID
+        out = basePID.calculate(target, counts);
+
+        // Slew rate limit
+        if(out - lastOut > MAX_STEP) {
+            out = lastOut + MAX_STEP;
+        }
+        else if(out - lastOut < -MAX_STEP) {
+            out = lastOut - MAX_STEP;
+        }
+
+        // Make sure output is at least minimum speed (prevent division by 0 too)
+        if(out != 0) {
+            if(fabs(out) < MIN_SPEED_SWEEP) {
+                out = MIN_SPEED_SWEEP * out / fabs(out);
+            }
+            else if(fabs(out) > MAX_SPEED) {
+                out = MAX_SPEED * out / fabs(out);
+            }
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(-out);
+
+        // Store output for slew rate
+        lastOut = out;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - counts < 0) {
+            done = true;
+        }
+    }
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+}
+
+void autoSweepLB(float target) {
+    PID basePID(KP_SWEEP);
+
+    bool done = false;
+    float out, lastOut = 0;
+    float counts;
+
+    target *= TICKS_PER_INCH;
+
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        counts = leftEnc.Counts();
+
+        // Position PID
+        out = basePID.calculate(target, counts);
+
+        // Slew rate limit
+        if(out - lastOut > MAX_STEP) {
+            out = lastOut + MAX_STEP;
+        }
+        else if(out - lastOut < -MAX_STEP) {
+            out = lastOut - MAX_STEP;
+        }
+
+        // Make sure output is at least minimum speed (prevent division by 0 too)
+        if(out != 0) {
+            if(fabs(out) < MIN_SPEED_SWEEP) {
+                out = MIN_SPEED_SWEEP * out / fabs(out);
+            }
+            else if(fabs(out) > 25) {
+                out = 25 * out / fabs(out);
+            }
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(out);
+
+        // Store output for slew rate
+        lastOut = out;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - counts < 0) {
+            done = true;
+        }
+    }
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+}
+
+void autoDriveBFast(float target) {
+    PID basePID(KP_DRIVE), driftPID(KP_DRIFT);
+
+    bool done = false;
+    float driveOut, driftOut;
+    float outL, outR, lastOutL = 0, lastOutR = 0;
+    float avgEnc;
+
+    target *= TICKS_PER_INCH;
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
     rightEnc.ResetCounts();
 
-    // Initialize left and right PID
-    leftPID.initialize();
-    rightPID.initialize();
-    arcPID.initialize();
-    driftPID.initialize();
-
     while(!done) {
-        // Store encoder values
-        left = leftEnc.Counts();
-        right = rightEnc.Counts();
-
-        // Set drift target
-        errorTarget = left * 160 / 370;
-        if (errorTarget > 160) {
-            errorTarget = 160;
-            driftOut = driftPID.calculate(errorTarget, left - right);
-        }
-        else {
-            driftOut = arcPID.calculate(errorTarget, left - right);
-        }
+        // Update average distance
+        avgEnc = rightEnc.Counts();
 
         // Position PID
-        leftOut = leftPID.calculate(leftTarget, left);
-        rightOut = rightPID.calculate(rightTarget, right);
+        driveOut = basePID.calculate(target, avgEnc);
 
-        outL = leftOut + driftOut;
-        outR = rightOut - driftOut;
+        // Drift PID
+        driftOut = driftPID.calculate(0, leftEnc.Counts() - rightEnc.Counts());
+
+        // Calculate motor outputs
+        // Limit driveOut contribution so driftOut can have affect it?
+        outL = driveOut + driftOut;
+        outR = driveOut - driftOut;
 
         // Slew rate limit
         if(outL - lastOutL > MAX_STEP) {
@@ -587,21 +613,21 @@ void moveToToken(float kP) {
             if(fabs(outL) < MIN_SPEED) {
                 outL = MIN_SPEED * outL / fabs(outL);
             }
-            else if(fabs(outL) > MAX_SPEED) {
-                outL = MAX_SPEED * outL / fabs(outL);
+            else if(fabs(outL) > 90) {
+                outL = 90 * outL / fabs(outL);
             }
         }
         if(outR != 0) {
             if(fabs(outR) < MIN_SPEED) {
                 outR = MIN_SPEED * outR / fabs(outR);
             }
-            else if(fabs(outR) > MAX_SPEED) {
-                outR = MAX_SPEED * outR / fabs(outR);
+            else if(fabs(outR) > 90) {
+                outR = 90 * outR / fabs(outR);
             }
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL);
+        leftBase.SetPercent(outL*0.95);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -611,23 +637,18 @@ void moveToToken(float kP) {
         // Sleep for set time
         Sleep(LOOP_TIME);
 
-        if(leftTarget - leftEnc.Counts() < 0) {
+        if(target - avgEnc < 0) {
             done = true;
         }
-
-        LCD.Write(left-right);
     }
 
     // Stop motors
     leftBase.SetPercent(0);
     rightBase.SetPercent(0);
-
-    LCD.WriteLine(leftTarget - leftEnc.Counts());
-    LCD.WriteLine(rightTarget - rightEnc.Counts());
 }
 
-void autoDriveFSlow(float target, float kP) {
-    PID basePID(kP, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+void autoDriveBSlow(float target) {
+    PID basePID(KP_DRIVE), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -636,8 +657,105 @@ void autoDriveFSlow(float target, float kP) {
 
     target *= TICKS_PER_INCH;
 
-    basePID.initialize();
-    driftPID.initialize();
+    // Consider allowing for accumulating error
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+
+    while(!done) {
+        // Update average distance
+        avgEnc = rightEnc.Counts();
+
+        // Position PID
+        driveOut = basePID.calculate(target, avgEnc);
+
+        // Drift PID
+        driftOut = driftPID.calculate(0, leftEnc.Counts() - rightEnc.Counts());
+
+        // Calculate motor outputs
+        // Limit driveOut contribution so driftOut can have affect it?
+        outL = driveOut + driftOut;
+        outR = driveOut - driftOut;
+
+        // Slew rate limit
+        if(outL - lastOutL > MAX_STEP) {
+            outL = lastOutL + MAX_STEP;
+        }
+        else if(outL - lastOutL < -MAX_STEP) {
+            outL = lastOutL - MAX_STEP;
+        }
+
+        if(outR - lastOutR > MAX_STEP) {
+            outR = lastOutR + MAX_STEP;
+        }
+        else if(outR - lastOutR < -MAX_STEP) {
+            outR = lastOutR - MAX_STEP;
+        }
+
+        // Make sure output is between minimum and maximum speed (prevent division by 0 too)
+        if(outL != 0) {
+            if(fabs(outL) < MIN_SPEED) {
+                outL = MIN_SPEED * outL / fabs(outL);
+            }
+            else if(fabs(outL) > 25) {
+                outL = 25 * outL / fabs(outL);
+            }
+        }
+        if(outR != 0) {
+            if(fabs(outR) < MIN_SPEED) {
+                outR = MIN_SPEED * outR / fabs(outR);
+            }
+            else if(fabs(outR) > 25) {
+                outR = 25 * outR / fabs(outR);
+            }
+        }
+
+        // Set motors to output
+        leftBase.SetPercent(outL*0.95);
+        rightBase.SetPercent(-outR);
+
+        // Store output for slew rate
+        lastOutL = outL;
+        lastOutR = outR;
+
+        // Sleep for set time
+        Sleep(LOOP_TIME);
+
+        if(target - avgEnc < 0) {
+            done = true;
+        }
+    }
+
+    // Stop motors
+    leftBase.SetPercent(0);
+    rightBase.SetPercent(0);
+}
+
+void setBase(int power) {
+    leftBase.SetPercent(-power);
+    rightBase.SetPercent(power);
+}
+
+void timeDrive(int power, int time) {
+    setBase(power);
+    Sleep(time);
+    setBase(0);
+}
+
+void moveToToken(float kP) {
+    autoDriveBSlow(4.3);
+    autoSweepLB(5.45);
+    autoDriveBFast(12);
+}
+
+void autoDriveFSlow(float target, float kP) {
+    PID basePID(kP), driftPID(KP_DRIFT);
+
+    bool done = false;
+    float driveOut, driftOut;
+    float outL, outR, lastOutL = 0, lastOutR = 0;
+    float avgEnc;
+
+    target *= TICKS_PER_INCH;
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -715,7 +833,7 @@ void autoDriveFSlow(float target, float kP) {
 }
 
 void autoDriveBSlow(float target, float kP) {
-    PID basePID(kP, 0.01, 0, 0), driftPID(2, 0, 0, 0);
+    PID basePID(kP), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -723,9 +841,6 @@ void autoDriveBSlow(float target, float kP) {
     float avgEnc;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
-    driftPID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -803,15 +918,13 @@ void autoDriveBSlow(float target, float kP) {
 }
 
 void autoSweepLB(float target, float kP) {
-    PID basePID(kP, 0.01, 0, 0);
+    PID basePID(kP);
 
     bool done = false;
     float out, lastOut = 0;
     float counts;
 
     target *= TICKS_PER_INCH;
-
-    basePID.initialize();
 
     // Consider allowing for accumulating error
     leftEnc.ResetCounts();
@@ -893,7 +1006,7 @@ int main(void)
 
     AnalogInputPin cds(FEHIO::P0_7);
 
-    float kP = 0.4;
+    float kP = 0.5;
 
     int distance = 12;
 

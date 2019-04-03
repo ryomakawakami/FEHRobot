@@ -14,7 +14,7 @@
  C:\fehqt\Proteus/EWL/EWL_C/include/ewl_lib_ext1.h Libraries/FEHUtility.h \
  Startup/derivative.h Libraries/LCDColors.h Libraries/FEHIO.h \
  Drivers/adc16.h Libraries/FEHMotor.h Libraries/FEHServo.h \
- Libraries/FEHAccel.h Drivers/i2c.h ..\/pidlib.h \
+ Libraries/FEHAccel.h Drivers/i2c.h ..\/plib.h \
  C:\fehqt\Proteus/EWL/EWL_C/include/cmath \
  C:\fehqt\Proteus/EWL/EWL_C/include/cfloat \
  C:\fehqt\Proteus/EWL/EWL_C/include/ewl_t.h \
@@ -77,7 +77,7 @@ Libraries/FEHAccel.h:
 
 Drivers/i2c.h:
 
-..\/pidlib.h:
+..\/plib.h:
 
 C:\fehqt\Proteus/EWL/EWL_C/include/cmath:
 
