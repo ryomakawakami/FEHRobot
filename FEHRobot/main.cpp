@@ -9,10 +9,10 @@
 #include "plib.h"
 
 #define MIN_SPEED 10
-#define MIN_SPEED_TURNING 14
-#define MIN_SPEED_SWEEP 16
+#define MIN_SPEED_TURNING 16
+#define MIN_SPEED_SWEEP 18
 
-#define MAX_SPEED 80
+#define MAX_SPEED 70
 
 #define MAX_STEP 7  // Max change per iteration
 #define LOOP_TIME 0.020   // 20 ms, 50 Hz
@@ -20,6 +20,7 @@
 #define KP_DRIVE 0.4
 #define KP_TURN 0.4
 #define KP_SWEEP 0.6
+#define KP_DRIFT 0.5
 
 #define TICKS_PER_INCH 28 // Conversion from encoder ticks to in
 
@@ -65,7 +66,7 @@ float zeroDegrees = 0;
 // MAX_STEP is slew rate limit (7%)
 // LOOP_TIME is time per update (20 ms)
 void autoDriveF(float target) {
-    PID basePID(KP_DRIVE), driftPID(1);
+    PID basePID(KP_DRIVE), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -148,7 +149,7 @@ void autoDriveF(float target) {
 }
 
 void autoDriveB(float target) {
-    PID basePID(KP_DRIVE), driftPID(1);
+    PID basePID(KP_DRIVE), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -231,7 +232,7 @@ void autoDriveB(float target) {
 }
 
 void autoTurnL(float target) {
-    PID basePID(KP_TURN), driftPID(1);
+    PID basePID(KP_TURN), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -314,7 +315,7 @@ void autoTurnL(float target) {
 }
 
 void autoTurnR(float target) {
-    PID basePID(KP_TURN), driftPID(1);
+    PID basePID(KP_TURN), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -565,7 +566,7 @@ void autoSweepLB(float target) {
 }
 
 void autoDriveBFast(float target) {
-    PID basePID(KP_DRIVE), driftPID(1);
+    PID basePID(KP_DRIVE), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -648,7 +649,7 @@ void autoDriveBFast(float target) {
 }
 
 void autoDriveFSlow(float target) {
-    PID basePID(KP_DRIVE), driftPID(1);
+    PID basePID(KP_DRIVE), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -732,7 +733,7 @@ void autoDriveFSlow(float target) {
 }
 
 void autoDriveBSlow(float target) {
-    PID basePID(KP_DRIVE), driftPID(1);
+    PID basePID(KP_DRIVE), driftPID(KP_DRIFT);
 
     bool done = false;
     float driveOut, driftOut;
@@ -858,9 +859,9 @@ void setAngle(float theta) {
             good = true;
         } else {
             if (error > 0) {
-                setTurn(15);
+                setTurn(20);
             } else {
-                setTurn(-15);
+                setTurn(-20);
             }
             Sleep(25);
             setTurn(0);
@@ -890,16 +891,16 @@ void setAngle180() {
 }
 
 void upRamp() {
-    leftBase.SetPercent(50);
+    leftBase.SetPercent(-50);
     rightBase.SetPercent(50);
     Sleep(500);
 
-    int leftPower = 75, rightPower = 75;
+    int leftPower = -75, rightPower = 75;
     float headingAdj = 0;
     long startTime = TimeNowMSec(), onFlat = TimeNowMSec();
-    while ((TimeNowMSec() - startTime < 1500) && (onFlat - startTime < 750)) {
+    while (TimeNowMSec() - startTime < 2000) {
         headingAdj = RPS.Heading() * 4;
-        leftPower = 75 + headingAdj;
+        leftPower = -75 - headingAdj;
         rightPower = 75 - headingAdj;
 
         if (Accel.Y() > 0.2) {
@@ -920,7 +921,7 @@ void upRamp() {
 
     setBase(0);
 
-    xPos = RPS.X() - 29;
+    xPos = RPS.X() - 29.5;
 
     setAngle(zeroDegrees);
 
@@ -981,7 +982,7 @@ int main(void) {
                     done = true;
                     postRampX = RPS.X() - 32.2;
                     postRampY = RPS.Y() + 2;
-                    zeroDegrees = RPS.Heading();
+                    zeroDegrees = RPS.Heading() - 180;
                 }
                 Sleep(100);
             }
@@ -1034,7 +1035,7 @@ int main(void) {
         case RED_LIGHT:
             LCD.WriteLine("I READ RED");
             autoDriveB(7.5);
-            autoSweepR(11.2);
+            autoSweepR(11);
             timeDrive(-20, 6250);
             autoDriveF(1);
             autoTurnR(3.1);
@@ -1044,8 +1045,7 @@ int main(void) {
         case BLUE_LIGHT:
             LCD.WriteLine("Boo blue");
         default:
-            autoDriveB(2);
-            autoSweepR(11.2);
+            autoSweepR(11);
             timeDrive(-20, 6250);
             autoDriveF(7.2);
         break;
@@ -1057,7 +1057,7 @@ int main(void) {
 
     // Move to foosball, adjusting if necessary
     float offsetY = yPos - postRampY;
-    autoDriveF(6.3 - offsetY);
+    autoDriveF(6.0 - offsetY);
     autoTurnL(1.85);
     autoDriveF(8.7);
     autoTurnL(3.3);
