@@ -12,7 +12,7 @@
 #define MIN_SPEED_TURNING 16
 #define MIN_SPEED_SWEEP 18
 
-#define MAX_SPEED 70
+#define MAX_SPEED 60
 
 #define MAX_STEP 7  // Max change per iteration
 #define LOOP_TIME 0.020   // 20 ms, 50 Hz
@@ -27,8 +27,8 @@
 #define NO_LIGHT_THRESHOLD 1.6 // 1.5+ is no light
 #define BLUE_LIGHT_THRESHOLD 0.95 // 0.8 to 1.5 is blue light
 
-#define ARM_DOWN 178
-#define ARM_UP 90
+#define ARM_DOWN 171
+#define ARM_UP 84
 
 #define PI 3.1415926536
 
@@ -57,6 +57,9 @@ float xPos = 0, yPos = 0;
 
 // Stores ideal 0 degree position for course
 float zeroDegrees = 0;
+
+// Arm positions
+int armUp = ARM_UP, armDown = ARM_DOWN;
 
 // Simple PID control loop
 // target is desired encoder count
@@ -128,7 +131,7 @@ void autoDriveF(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(-outL);
+        leftBase.SetPercent(-outL*0.95);
         rightBase.SetPercent(outR);
 
         // Store output for slew rate
@@ -211,7 +214,7 @@ void autoDriveB(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL);
+        leftBase.SetPercent(outL*0.95);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -294,7 +297,7 @@ void autoTurnL(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL);
+        leftBase.SetPercent(outL*0.95);
         rightBase.SetPercent(outR);
 
         // Store output for slew rate
@@ -377,7 +380,7 @@ void autoTurnR(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(-outL);
+        leftBase.SetPercent(-outL*0.95);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -628,7 +631,7 @@ void autoDriveBFast(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL);
+        leftBase.SetPercent(outL*0.95);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -712,7 +715,7 @@ void autoDriveFSlow(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(-outL);
+        leftBase.SetPercent(-outL*0.95);
         rightBase.SetPercent(outR);
 
         // Store output for slew rate
@@ -795,7 +798,7 @@ void autoDriveBSlow(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL);
+        leftBase.SetPercent(outL*0.95);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -919,13 +922,38 @@ void upRamp() {
         Sleep(50);
     }
 
-    setBase(0);
+    while (RPS.Y() < 0) {
+        Sleep(50);
+    }
 
-    xPos = RPS.X() - 29.5;
+    setBase(0);
 
     setAngle(zeroDegrees);
 
+    setBase(-15);
+
+    xPos = RPS.X() - 29.5;
+
+    while (xPos < -52) {
+        setBase(-15);
+        Sleep(50);
+        setBase(0);
+        Sleep(50);
+        xPos = RPS.X();
+    }
+
+    Sleep(500);
+    setBase(0);
+
     yPos = RPS.Y() - 52;
+
+    while (yPos < -52) {
+        setBase(-15);
+        Sleep(50);
+        setBase(0);
+        Sleep(50);
+        yPos = RPS.Y();
+    }
 }
 
 int findColor() {
@@ -940,6 +968,42 @@ int findColor() {
     }
 }
 
+void scoreFoosball() {
+    int endL = 0, endR = 0;
+
+    // Score foosball
+    armServo.SetDegree(armDown);
+    Sleep(250);
+    autoDriveFSlow(9.75);
+    endL = leftEnc.Counts();
+    endR = rightEnc.Counts();
+
+    LCD.WriteLine(endL);
+    LCD.WriteLine(endR);
+
+    armServo.SetDegree(armUp);
+    Sleep(250);
+
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+    Sleep(25);
+
+    if (endL > endR) {
+        rightBase.SetPercent(MIN_SPEED_SWEEP);
+        while (rightEnc.Counts() < endL - endR) {
+            Sleep(10);
+        }
+        rightBase.SetPercent(0);
+    }
+    else {
+        leftBase.SetPercent(MIN_SPEED_SWEEP);
+        while (leftEnc.Counts() < endR - endL) {
+            Sleep(10);
+        }
+        leftBase.SetPercent(0);
+    }
+}
+
 int main(void) {
     armServo.SetMin(738);
     armServo.SetMax(2500);
@@ -950,8 +1014,6 @@ int main(void) {
     float x, y;
     float postRampX = 0, postRampY = 0;
 
-    int endL = 0, endR = 0;
-
     LCD.Clear(FEHLCD::Black);
     LCD.SetFontColor(FEHLCD::White);
 
@@ -961,7 +1023,8 @@ int main(void) {
     while (!moveOn) {
         if (LCD.Touch(&x, &y)) {
             if (x > 160) {
-                setupRPS = true;
+                //setupRPS = true;
+                scoreFoosball();
             }
             else {
                 moveOn = true;
@@ -981,7 +1044,7 @@ int main(void) {
                 if (LCD.Touch(&x, &y)) {
                     done = true;
                     postRampX = RPS.X() - 32.2;
-                    postRampY = RPS.Y() + 2;
+                    postRampY = RPS.Y() - 52;
                     zeroDegrees = RPS.Heading() - 180;
                 }
                 Sleep(100);
@@ -1027,25 +1090,26 @@ int main(void) {
     // Move to DDR light
     autoDriveF(11.75);
     setAngle180();
-    autoTurnL(5.15);
+    autoTurnL(5.1);
     autoDriveF(15);
 
     // Read DDR light (default blue)
     switch(findColor()) {
         case RED_LIGHT:
             LCD.WriteLine("I READ RED");
-            autoDriveB(7.5);
-            autoSweepR(11);
+            autoDriveB(6.5);
+            autoSweepR(10.8);
             timeDrive(-20, 6250);
             autoDriveF(1);
-            autoTurnR(3.1);
-            autoDriveF(5);
-            autoSweepR(5.8);
+            autoTurnR(3.2);
+            autoDriveF(5.2);
+            autoSweepR(5.9);
         break;
         case BLUE_LIGHT:
             LCD.WriteLine("Boo blue");
         default:
-            autoSweepR(11);
+            autoDriveB(1.5);
+            autoSweepR(10.8);
             timeDrive(-20, 6250);
             autoDriveF(7.2);
         break;
@@ -1057,8 +1121,8 @@ int main(void) {
 
     // Move to foosball, adjusting if necessary
     float offsetY = yPos - postRampY;
-    autoDriveF(6.0 - offsetY);
-    autoTurnL(1.85);
+    autoDriveF(5.75 - offsetY);
+    autoTurnL(1.8);
     autoDriveF(8.7);
     autoTurnL(3.3);
 
@@ -1079,36 +1143,7 @@ int main(void) {
     }
 
     // Score foosball
-    armServo.SetDegree(ARM_DOWN);
-    Sleep(250);
-    autoDriveFSlow(9.75);
-    endL = leftEnc.Counts();
-    endR = rightEnc.Counts();
-
-    LCD.WriteLine(endL);
-    LCD.WriteLine(endR);
-
-    armServo.SetDegree(ARM_UP);
-    Sleep(250);
-
-    leftEnc.ResetCounts();
-    rightEnc.ResetCounts();
-    Sleep(25);
-
-    if (endL > endR) {
-        rightBase.SetPercent(MIN_SPEED_SWEEP);
-        while (rightEnc.Counts() < endL - endR) {
-            Sleep(10);
-        }
-        rightBase.SetPercent(0);
-    }
-    else {
-        leftBase.SetPercent(MIN_SPEED_SWEEP);
-        while (leftEnc.Counts() < endR - endL) {
-            Sleep(10);
-        }
-        leftBase.SetPercent(0);
-    }
+    scoreFoosball();
 
     // Move to lever
     autoDriveF(2);
