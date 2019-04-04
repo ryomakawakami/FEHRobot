@@ -22,6 +22,8 @@
 #define KP_SWEEP 0.6
 #define KP_DRIFT 0.5
 
+#define LEFT_ADJUSTMENT 0.97
+
 enum {
     RUN,
     ADJUST,
@@ -127,7 +129,7 @@ void autoDriveF(float target, float kP) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(-outL*0.95);
+        leftBase.SetPercent(-outL * LEFT_ADJUSTMENT);
         rightBase.SetPercent(outR);
 
         // Store output for slew rate
@@ -210,7 +212,7 @@ void autoDriveB(float target, float kP) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL*0.95);
+        leftBase.SetPercent(outL * LEFT_ADJUSTMENT);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -293,7 +295,7 @@ void autoTurnL(float target, float kP) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL*0.95);
+        leftBase.SetPercent(outL * LEFT_ADJUSTMENT);
         rightBase.SetPercent(outR);
 
         // Store output for slew rate
@@ -376,7 +378,7 @@ void autoTurnR(float target, float kP) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(-outL*0.95);
+        leftBase.SetPercent(-outL * LEFT_ADJUSTMENT);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -627,7 +629,7 @@ void autoDriveBFast(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL*0.95);
+        leftBase.SetPercent(outL * LEFT_ADJUSTMENT);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -710,7 +712,7 @@ void autoDriveBSlow(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL*0.95);
+        leftBase.SetPercent(outL * LEFT_ADJUSTMENT);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate

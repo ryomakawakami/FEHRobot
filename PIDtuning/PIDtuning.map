@@ -3395,55 +3395,55 @@ OUTPUT(../PIDtuning.elf elf32-littlearm)
  .debug_line    0x00007f15       0xc0 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(ROMCopy.o)
  .debug_line    0x00007fd5      0x119 C:\fehqt\Proteus/EWL/lib/armv7e-m\librt.a(__arm_eabi_init.o)
 
-.debug_macinfo  0x00000000   0x89d3dd
+.debug_macinfo  0x00000000   0x89d3f4
  .debug_macinfo
-                0x00000000    0x66373 ..\main.o
+                0x00000000    0x6638a ..\main.o
  .debug_macinfo
-                0x00066373    0x647fb Startup\__arm_start.o
+                0x0006638a    0x647fb Startup\__arm_start.o
  .debug_macinfo
-                0x000cab6e     0x3464 Startup\__arm_end.o
+                0x000cab85     0x3464 Startup\__arm_end.o
  .debug_macinfo
-                0x000cdfd2    0x64cce Startup\kinetis_sysinit.o
+                0x000cdfe9    0x64cce Startup\kinetis_sysinit.o
  .debug_macinfo
-                0x00132ca0    0x6305c Libraries\FEHMotor.o
+                0x00132cb7    0x6305c Libraries\FEHMotor.o
  .debug_macinfo
-                0x00195cfc    0x6318f Drivers\i2c.o
+                0x00195d13    0x6318f Drivers\i2c.o
  .debug_macinfo
-                0x001f8e8b    0x62fd6 Drivers\spi.o
+                0x001f8ea2    0x62fd6 Drivers\spi.o
  .debug_macinfo
-                0x0025be61    0x62fc7 Drivers\uart.o
+                0x0025be78    0x62fc7 Drivers\uart.o
  .debug_macinfo
-                0x002bee28     0x4396 Drivers\ff.o
+                0x002bee3f     0x4396 Drivers\ff.o
  .debug_macinfo
-                0x002c31be    0x6452b Drivers\SDHC.o
+                0x002c31d5    0x6452b Drivers\SDHC.o
  .debug_macinfo
-                0x003276e9    0x63036 Drivers\lptmr.o
+                0x00327700    0x63036 Drivers\lptmr.o
  .debug_macinfo
-                0x0038a71f    0x62fdc FEHProteus.o
+                0x0038a736    0x62fdc FEHProteus.o
  .debug_macinfo
-                0x003ed6fb    0x63085 Drivers\FEHPropeller.o
+                0x003ed712    0x63085 Drivers\FEHPropeller.o
  .debug_macinfo
-                0x00450780    0x62ff1 Libraries\FEHUtility.o
+                0x00450797    0x62ff1 Libraries\FEHUtility.o
  .debug_macinfo
-                0x004b3771    0x64348 Libraries\FEHIO.o
+                0x004b3788    0x64348 Libraries\FEHIO.o
  .debug_macinfo
-                0x00517ab9    0x63678 Drivers\adc16.o
+                0x00517ad0    0x63678 Drivers\adc16.o
  .debug_macinfo
-                0x0057b131    0x6301e Libraries\FEHBuzzer.o
+                0x0057b148    0x6301e Libraries\FEHBuzzer.o
  .debug_macinfo
-                0x005de14f    0x64476 Libraries\FEHServo.o
+                0x005de166    0x64476 Libraries\FEHServo.o
  .debug_macinfo
-                0x006425c5    0x649ab Libraries\FEHLCD.o
+                0x006425dc    0x649ab Libraries\FEHLCD.o
  .debug_macinfo
-                0x006a6f70    0x631be Libraries\FEHAccel.o
+                0x006a6f87    0x631be Libraries\FEHAccel.o
  .debug_macinfo
-                0x0070a12e    0x636a3 Libraries\FEHBattery.o
+                0x0070a145    0x636a3 Libraries\FEHBattery.o
  .debug_macinfo
-                0x0076d7d1    0x63d5d Drivers\FEHXBee.o
+                0x0076d7e8    0x63d5d Drivers\FEHXBee.o
  .debug_macinfo
-                0x007d152e    0x66196 Libraries\FEHRPS.o
+                0x007d1545    0x66196 Libraries\FEHRPS.o
  .debug_macinfo
-                0x008376c4    0x65d19 Libraries\FEHSD.o
+                0x008376db    0x65d19 Libraries\FEHSD.o
 
 .debug_str      0x00000000     0x503e
  .debug_str     0x00000000     0x13ba ..\main.o

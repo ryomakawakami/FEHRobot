@@ -27,8 +27,8 @@
 #define NO_LIGHT_THRESHOLD 1.6 // 1.5+ is no light
 #define BLUE_LIGHT_THRESHOLD 0.95 // 0.8 to 1.5 is blue light
 
-#define ARM_DOWN 171
-#define ARM_UP 84
+#define ARM_DOWN 158
+#define ARM_UP 71
 
 #define PI 3.1415926536
 
@@ -131,7 +131,7 @@ void autoDriveF(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(-outL*0.95);
+        leftBase.SetPercent(-outL);
         rightBase.SetPercent(outR);
 
         // Store output for slew rate
@@ -214,7 +214,7 @@ void autoDriveB(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL*0.95);
+        leftBase.SetPercent(outL);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -297,7 +297,7 @@ void autoTurnL(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL*0.95);
+        leftBase.SetPercent(outL);
         rightBase.SetPercent(outR);
 
         // Store output for slew rate
@@ -380,7 +380,7 @@ void autoTurnR(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(-outL*0.95);
+        leftBase.SetPercent(-outL);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -631,7 +631,7 @@ void autoDriveBFast(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL*0.95);
+        leftBase.SetPercent(outL);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -715,7 +715,7 @@ void autoDriveFSlow(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(-outL*0.95);
+        leftBase.SetPercent(-outL);
         rightBase.SetPercent(outR);
 
         // Store output for slew rate
@@ -798,7 +798,7 @@ void autoDriveBSlow(float target) {
         }
 
         // Set motors to output
-        leftBase.SetPercent(outL*0.95);
+        leftBase.SetPercent(outL);
         rightBase.SetPercent(-outR);
 
         // Store output for slew rate
@@ -898,13 +898,13 @@ void upRamp() {
     rightBase.SetPercent(50);
     Sleep(500);
 
-    int leftPower = -75, rightPower = 75;
+    int leftPower = -70, rightPower = 85;
     float headingAdj = 0;
     long startTime = TimeNowMSec(), onFlat = TimeNowMSec();
     while (TimeNowMSec() - startTime < 2000) {
         headingAdj = RPS.Heading() * 4;
-        leftPower = -75 - headingAdj;
-        rightPower = 75 - headingAdj;
+        leftPower = -70 - headingAdj;
+        rightPower = 85 - headingAdj;
 
         if (Accel.Y() > 0.2) {
             onFlat = TimeNowMSec();
@@ -1099,10 +1099,10 @@ int main(void) {
             LCD.WriteLine("I READ RED");
             autoDriveB(6.5);
             autoSweepR(10.8);
-            timeDrive(-20, 6250);
+            timeDrive(-20, 5750);
             autoDriveF(1);
-            autoTurnR(3.2);
-            autoDriveF(5.2);
+            autoTurnR(3);
+            autoDriveF(5);
             autoSweepR(5.9);
         break;
         case BLUE_LIGHT:
@@ -1110,7 +1110,7 @@ int main(void) {
         default:
             autoDriveB(1.5);
             autoSweepR(10.8);
-            timeDrive(-20, 6250);
+            timeDrive(-20, 5750);
             autoDriveF(7.2);
         break;
     }
@@ -1121,10 +1121,11 @@ int main(void) {
 
     // Move to foosball, adjusting if necessary
     float offsetY = yPos - postRampY;
+    Sleep(50);
     autoDriveF(5.75 - offsetY);
     autoTurnL(1.8);
-    autoDriveF(8.7);
-    autoTurnL(3.3);
+    autoDriveF(8.8);
+    autoTurnL(3.15);
 
     // Figure out x offset and correct
     float offsetX = xPos - postRampX;
@@ -1156,7 +1157,7 @@ int main(void) {
     armServo.SetDegree(ARM_UP);
 
     // Move to ramp
-    autoSweepR(5.6);
+    autoSweepR(5.4);
     autoDriveF(12);
     setAngle180();
     timeDrive(15, 1250);
