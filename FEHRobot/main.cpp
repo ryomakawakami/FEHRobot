@@ -939,12 +939,12 @@ void upRamp() {
 
     xPos = RPS.X() - 29.8;
 
-    while (xPos < -52) {
+    while (xPos < -30) {
         setBase(-15);
         Sleep(50);
         setBase(0);
         Sleep(50);
-        xPos = RPS.X();
+        xPos = RPS.X() - 29.8;
     }
 
     Sleep(500);
@@ -957,7 +957,7 @@ void upRamp() {
         Sleep(50);
         setBase(0);
         Sleep(50);
-        yPos = RPS.Y();
+        yPos = RPS.Y() - 52;
     }
 }
 
@@ -989,6 +989,43 @@ void scoreFoosball() {
     armServo.SetDegree(armUp);
     Sleep(250);
 
+    bool done = false;
+    rightBase.SetPercent(15);
+    while (!done) {
+        if (fabs(rightEnc.Counts() - 273) > 5) {
+            if (rightEnc.Counts() > 273) {
+                rightBase.SetPercent(-15);
+            }
+            else {
+                rightBase.SetPercent(15);
+            }
+        }
+        else {
+            rightBase.SetPercent(0);
+            done = true;
+        }
+        Sleep(10);
+    }
+
+    done = false;
+        leftBase.SetPercent(15);
+        while (!done) {
+            if (fabs(leftEnc.Counts() - 273) > 5) {
+                if (leftEnc.Counts() > 273) {
+                    leftBase.SetPercent(-15);
+                }
+                else {
+                    leftBase.SetPercent(15);
+                }
+            }
+            else {
+                leftBase.SetPercent(0);
+                done = true;
+            }
+            Sleep(10);
+        }
+
+    /*
     leftEnc.ResetCounts();
     rightEnc.ResetCounts();
     Sleep(25);
@@ -1007,6 +1044,7 @@ void scoreFoosball() {
         }
         leftBase.SetPercent(0);
     }
+    */
 }
 
 int main(void) {
@@ -1101,7 +1139,7 @@ int main(void) {
     // Move to DDR light
     autoDriveF(11.75);
     setAngle180(176);
-    autoTurnL(5.3);
+    autoTurnL(5.2);
     autoDriveF(15);
 
     // Read DDR light (default blue)
@@ -1179,7 +1217,7 @@ int main(void) {
     Sleep(50);
 
     autoDriveF(8.9);
-    autoTurnL(3);
+    autoTurnL(2.8);
 
     // Figure out x offset and correct
     float offsetX = xPos - postRampX;
