@@ -27,13 +27,19 @@
 #define NO_LIGHT_THRESHOLD 1.6 // 1.5+ is no light
 #define BLUE_LIGHT_THRESHOLD 0.95 // 0.8 to 1.5 is blue light
 
-#define ARM_DOWN 158
+#define ARM_DOWN 156
 #define ARM_UP 71
 
-//#define ARM_DOWN 171
+//#define ARM_DOWN 169
 //#define ARM_UP 84
 
 //#define ARM_DOWN 150
+
+#define rpsSetupX 31.9
+#define rpsSetupY 52
+
+#define rpsTargetX 29.8
+#define rpsTargetY 52
 
 #define PI 3.1415926536
 
@@ -850,6 +856,48 @@ void timeDriveOff(int power, int time) {
     setBase(0);
 }
 
+// CCW is positive
+void timeTurn(int power, int time) {
+    setBaseOff(-power, power);
+    Sleep(time);
+    setBase(0);
+}
+
+void alignWheels(int target) {
+    int leftTarget = target - leftEnc.Counts(), rightTarget = target - rightEnc.Counts();
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+    Sleep(25);
+
+    if (rightTarget > 0) {
+        rightBase.SetPercent(15);
+        while (rightTarget - rightEnc.Counts() > 0) {
+            Sleep(10);
+        }
+    }
+    else {
+        rightBase.SetPercent(-15);
+        while (-rightTarget - rightEnc.Counts() > 0) {
+            Sleep(10);
+        }
+    }
+    rightBase.SetPercent(0);
+
+    if (leftTarget > 0) {
+        leftBase.SetPercent(-15);
+        while (leftTarget - leftEnc.Counts() > 0) {
+            Sleep(10);
+        }
+    }
+    else {
+        leftBase.SetPercent(15);
+        while (-leftTarget - leftEnc.Counts() > 0) {
+            Sleep(10);
+        }
+    }
+    leftBase.SetPercent(0);
+}
+
 void moveToToken() {
     autoDriveBSlow(4.3);
     autoSweepLB(5.4);
@@ -989,43 +1037,8 @@ void scoreFoosball() {
     armServo.SetDegree(armUp);
     Sleep(250);
 
-    bool done = false;
-    rightBase.SetPercent(15);
-    while (!done) {
-        if (fabs(rightEnc.Counts() - 273) > 5) {
-            if (rightEnc.Counts() > 273) {
-                rightBase.SetPercent(-15);
-            }
-            else {
-                rightBase.SetPercent(15);
-            }
-        }
-        else {
-            rightBase.SetPercent(0);
-            done = true;
-        }
-        Sleep(10);
-    }
+    //alignWheels(273);
 
-    done = false;
-        leftBase.SetPercent(15);
-        while (!done) {
-            if (fabs(leftEnc.Counts() - 273) > 5) {
-                if (leftEnc.Counts() > 273) {
-                    leftBase.SetPercent(-15);
-                }
-                else {
-                    leftBase.SetPercent(15);
-                }
-            }
-            else {
-                leftBase.SetPercent(0);
-                done = true;
-            }
-            Sleep(10);
-        }
-
-    /*
     leftEnc.ResetCounts();
     rightEnc.ResetCounts();
     Sleep(25);
@@ -1044,10 +1057,10 @@ void scoreFoosball() {
         }
         leftBase.SetPercent(0);
     }
-    */
 }
 
 int main(void) {
+    LCD.Clear(FEHLCD::Black);
     armServo.SetMin(738);
     armServo.SetMax(2500);
     armServo.SetDegree(ARM_UP);
@@ -1147,18 +1160,18 @@ int main(void) {
         case RED_LIGHT:
             LCD.WriteLine("I READ RED");
             autoDriveB(6.5);
-            autoSweepR(10.8);
+            autoSweepR(11.1);
             timeDrive(-20, 5750);
             autoDriveF(1);
             autoTurnR(3);
             autoDriveF(5);
-            autoSweepR(5.9);
+            autoSweepR(6.1);
         break;
         case BLUE_LIGHT:
             LCD.WriteLine("Boo blue");
         default:
             autoDriveB(1.5);
-            autoSweepR(10.8);
+            autoSweepR(11.1);
             timeDrive(-20, 5750);
             autoDriveF(7.2);
         break;
@@ -1172,28 +1185,31 @@ int main(void) {
     float offsetY = yPos - postRampY;
     Sleep(50);
 
-    int leftCounts, rightCounts;
     //autoDriveFSlow(5.48 - offsetY);
 
     bool leftDone = false, rightDone = false;
+    float target = (5.45 - offsetY) * TICKS_PER_INCH;
     leftEnc.ResetCounts();
     rightEnc.ResetCounts();
     Sleep(25);
-    leftBase.SetPercent(-30);
-    rightBase.SetPercent(30);
+    leftBase.SetPercent(-20);
+    rightBase.SetPercent(20);
     while (!(leftDone || rightDone)) {
-        if (leftEnc.Counts() > 5.15 * TICKS_PER_INCH) {
+        if (leftEnc.Counts() > target) {
             leftBase.SetPercent(0);
             leftDone = true;
-        }
-        if (rightEnc.Counts() > 5.15 * TICKS_PER_INCH) {
+        //}
+        //if (rightEnc.Counts() > target) {
             rightBase.SetPercent(0);
             rightDone = true;
         }
-        Sleep(50);
+        Sleep(10);
     }
-    Sleep(100);
+    Sleep(250);
 
+    //alignWheels(target);
+
+    int leftCounts, rightCounts;
     leftCounts = leftEnc.Counts();
     rightCounts = rightEnc.Counts();
     Sleep(50);
@@ -1216,8 +1232,29 @@ int main(void) {
     autoTurnL(1.8);
     Sleep(50);
 
-    autoDriveF(8.9);
-    autoTurnL(2.8);
+    //autoDriveF(8.9);
+
+    leftDone = false, rightDone = false;
+    target = 8.45 * TICKS_PER_INCH;
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+    Sleep(25);
+    leftBase.SetPercent(-20);
+    rightBase.SetPercent(20);
+    while (!(leftDone || rightDone)) {
+        if (leftEnc.Counts() > target) {
+            leftBase.SetPercent(0);
+            leftDone = true;
+        //}
+        //if (rightEnc.Counts() > target) {
+            rightBase.SetPercent(0);
+            rightDone = true;
+        }
+        Sleep(10);
+    }
+    Sleep(250);
+
+    autoTurnL(2.98);
 
     // Figure out x offset and correct
     float offsetX = xPos - postRampX;
@@ -1239,22 +1276,32 @@ int main(void) {
     scoreFoosball();
 
     // Move to lever
-    autoDriveF(2);
-    autoSweepR(6.2);
-    autoDriveF(5.2);
+    autoDriveF(2.5);
+    autoSweepR(6.5);
+    autoDriveF(1);
+    //autoDriveF(5.2);
 
     // Score lever
     armServo.SetDegree(ARM_DOWN);
     Sleep(250);
     armServo.SetDegree(ARM_UP);
 
+    autoDriveF(3);
+
     // Move to ramp
-    autoSweepR(4.9);
+    autoSweepR(4.1);
     autoDriveF(12);
     setAngle180(180);
     timeDrive(15, 1250);
 
     // Move down ramp to final button
     timeDrive(50, 500);
-    timeDrive(80, 3000);
+    timeDrive(80, 2000);
+
+    // Repeatedly back up and ram something
+    while (1) {
+        timeDrive(-50, 500);
+        timeTurn(-20, 250);
+        timeDrive(50, 1000);
+    }
 }
