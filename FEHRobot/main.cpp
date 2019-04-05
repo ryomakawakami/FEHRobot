@@ -30,6 +30,11 @@
 #define ARM_DOWN 158
 #define ARM_UP 71
 
+//#define ARM_DOWN 171
+//#define ARM_UP 84
+
+//#define ARM_DOWN 150
+
 #define PI 3.1415926536
 
 enum {
@@ -847,7 +852,7 @@ void timeDriveOff(int power, int time) {
 
 void moveToToken() {
     autoDriveBSlow(4.3);
-    autoSweepLB(5.45);
+    autoSweepLB(5.4);
     autoDriveBFast(12);
 }
 
@@ -873,9 +878,9 @@ void setAngle(float theta) {
     }
 }
 
-void setAngle180() {
+void setAngle180(float theta) {
     bool good = false;
-    float target = 180 - zeroDegrees;
+    float target = theta - zeroDegrees;
     while (!good) {
         float error = RPS.Heading() - target;
         if (fabs(error) < 0.5) {
@@ -898,13 +903,13 @@ void upRamp() {
     rightBase.SetPercent(50);
     Sleep(500);
 
-    int leftPower = -70, rightPower = 85;
+    int leftPower = -70, rightPower = 90;
     float headingAdj = 0;
     long startTime = TimeNowMSec(), onFlat = TimeNowMSec();
     while (TimeNowMSec() - startTime < 2000) {
         headingAdj = RPS.Heading() * 4;
         leftPower = -70 - headingAdj;
-        rightPower = 85 - headingAdj;
+        rightPower = 90 - headingAdj;
 
         if (Accel.Y() > 0.2) {
             onFlat = TimeNowMSec();
@@ -932,7 +937,7 @@ void upRamp() {
 
     setBase(-15);
 
-    xPos = RPS.X() - 29.5;
+    xPos = RPS.X() - 29.8;
 
     while (xPos < -52) {
         setBase(-15);
@@ -1022,9 +1027,15 @@ int main(void) {
     bool moveOn = false, setupRPS = false;
     while (!moveOn) {
         if (LCD.Touch(&x, &y)) {
+            /*
+            if (Accel.Y() > 0.25) {
+                bool servoAdjustment = true;
+                if ()
+            }
+            */
             if (x > 160) {
-                //setupRPS = true;
-                scoreFoosball();
+                setupRPS = true;
+                //scoreFoosball();
             }
             else {
                 moveOn = true;
@@ -1043,7 +1054,7 @@ int main(void) {
                 LCD.WriteRC(RPS.Y(), 6, 2);
                 if (LCD.Touch(&x, &y)) {
                     done = true;
-                    postRampX = RPS.X() - 32.2;
+                    postRampX = RPS.X() - 31.9;
                     postRampY = RPS.Y() - 52;
                     zeroDegrees = RPS.Heading() - 180;
                 }
@@ -1089,8 +1100,8 @@ int main(void) {
 
     // Move to DDR light
     autoDriveF(11.75);
-    setAngle180();
-    autoTurnL(5.1);
+    setAngle180(176);
+    autoTurnL(5.3);
     autoDriveF(15);
 
     // Read DDR light (default blue)
@@ -1122,10 +1133,53 @@ int main(void) {
     // Move to foosball, adjusting if necessary
     float offsetY = yPos - postRampY;
     Sleep(50);
-    autoDriveF(5.75 - offsetY);
+
+    int leftCounts, rightCounts;
+    //autoDriveFSlow(5.48 - offsetY);
+
+    bool leftDone = false, rightDone = false;
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+    Sleep(25);
+    leftBase.SetPercent(-30);
+    rightBase.SetPercent(30);
+    while (!(leftDone || rightDone)) {
+        if (leftEnc.Counts() > 5.15 * TICKS_PER_INCH) {
+            leftBase.SetPercent(0);
+            leftDone = true;
+        }
+        if (rightEnc.Counts() > 5.15 * TICKS_PER_INCH) {
+            rightBase.SetPercent(0);
+            rightDone = true;
+        }
+        Sleep(50);
+    }
+    Sleep(100);
+
+    leftCounts = leftEnc.Counts();
+    rightCounts = rightEnc.Counts();
+    Sleep(50);
+
+    if (leftCounts > rightCounts) {
+        rightBase.SetPercent(MIN_SPEED_SWEEP);
+        while (rightEnc.Counts() < leftCounts - rightCounts) {
+            Sleep(10);
+        }
+        rightBase.SetPercent(0);
+    }
+    else {
+        leftBase.SetPercent(MIN_SPEED_SWEEP);
+        while (leftEnc.Counts() < rightCounts - leftCounts) {
+            Sleep(10);
+        }
+        leftBase.SetPercent(0);
+    }
+
     autoTurnL(1.8);
-    autoDriveF(8.8);
-    autoTurnL(3.15);
+    Sleep(50);
+
+    autoDriveF(8.9);
+    autoTurnL(3);
 
     // Figure out x offset and correct
     float offsetX = xPos - postRampX;
@@ -1148,8 +1202,8 @@ int main(void) {
 
     // Move to lever
     autoDriveF(2);
-    autoSweepR(5.7);
-    autoDriveF(5.6);
+    autoSweepR(6.2);
+    autoDriveF(5.2);
 
     // Score lever
     armServo.SetDegree(ARM_DOWN);
@@ -1157,12 +1211,12 @@ int main(void) {
     armServo.SetDegree(ARM_UP);
 
     // Move to ramp
-    autoSweepR(5.4);
+    autoSweepR(4.9);
     autoDriveF(12);
-    setAngle180();
+    setAngle180(180);
     timeDrive(15, 1250);
 
     // Move down ramp to final button
     timeDrive(50, 500);
-    timeDriveOff(80, 3000);
+    timeDrive(80, 3000);
 }
