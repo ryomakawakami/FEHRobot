@@ -33,8 +33,6 @@
 //#define ARM_DOWN 169
 //#define ARM_UP 84
 
-//#define ARM_DOWN 150
-
 #define rpsSetupX 31.9
 #define rpsSetupY 52
 
@@ -1042,13 +1040,31 @@ int main(void) {
     bool moveOn = false, setupRPS = false;
     while (!moveOn) {
         if (LCD.Touch(&x, &y)) {
-            /*
-            if (Accel.Y() > 0.25) {
-                bool servoAdjustment = true;
-                if ()
+            if (Accel.Y() > 0.25 || Accel.Y() < -0.25) {
+                while (Accel.Y() > 0.25) {
+                    LCD.Clear(FEHLCD::Black);
+                    LCD.WriteRC("        ", 2, 0);
+                    LCD.WriteRC(armUp, 2, 0);
+                    LCD.WriteRC("        ", 4, 0);
+                    LCD.WriteRC(armDown, 4, 0);
+                    while (!LCD.Touch(&x, &y)) {
+                        Sleep(10);
+                    }
+                    if (x < 160) {
+                        armUp--;
+                        armDown--;
+                    }
+                    else {
+                        armUp++;
+                        armDown++;
+                    }
+                    armServo.SetDegree(armUp);
+                    while (LCD.Touch(&x, &y)) {
+                        Sleep(10);
+                    }
+                }
             }
-            */
-            if (x > 160) {
+            else if (x > 160) {
                 setupRPS = true;
                 //scoreFoosball();
             }

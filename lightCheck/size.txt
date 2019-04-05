@@ -1,2 +1,2 @@
    text	   data	    bss	    dec	    hex	filename
-  56768	   3432	   6184	  66384	  10350	../lightCheck.elf
+  65412	   3432	   6184	  75028	  12514	../lightCheck.elf
