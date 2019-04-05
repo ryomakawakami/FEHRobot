@@ -863,41 +863,6 @@ void timeTurn(int power, int time) {
     setBase(0);
 }
 
-void alignWheels(int target) {
-    int leftTarget = target - leftEnc.Counts(), rightTarget = target - rightEnc.Counts();
-    leftEnc.ResetCounts();
-    rightEnc.ResetCounts();
-    Sleep(25);
-
-    if (rightTarget > 0) {
-        rightBase.SetPercent(15);
-        while (rightTarget - rightEnc.Counts() > 0) {
-            Sleep(10);
-        }
-    }
-    else {
-        rightBase.SetPercent(-15);
-        while (-rightTarget - rightEnc.Counts() > 0) {
-            Sleep(10);
-        }
-    }
-    rightBase.SetPercent(0);
-
-    if (leftTarget > 0) {
-        leftBase.SetPercent(-15);
-        while (leftTarget - leftEnc.Counts() > 0) {
-            Sleep(10);
-        }
-    }
-    else {
-        leftBase.SetPercent(15);
-        while (-leftTarget - leftEnc.Counts() > 0) {
-            Sleep(10);
-        }
-    }
-    leftBase.SetPercent(0);
-}
-
 void moveToToken() {
     autoDriveBSlow(4.3);
     autoSweepLB(5.4);
@@ -1060,10 +1025,9 @@ void scoreFoosball() {
 }
 
 int main(void) {
-    LCD.Clear(FEHLCD::Black);
     armServo.SetMin(738);
     armServo.SetMax(2500);
-    armServo.SetDegree(ARM_UP);
+    armServo.SetDegree(armUp);
 
     RPS.InitializeTouchMenu();
 
@@ -1282,9 +1246,9 @@ int main(void) {
     //autoDriveF(5.2);
 
     // Score lever
-    armServo.SetDegree(ARM_DOWN);
+    armServo.SetDegree(armDown);
     Sleep(250);
-    armServo.SetDegree(ARM_UP);
+    armServo.SetDegree(armUp);
 
     autoDriveF(3);
 
