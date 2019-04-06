@@ -962,6 +962,7 @@ void upRamp() {
     setBase(0);
 
     yPos = RPS.Y() - 52;
+    LCD.WriteLine(yPos);
 
     while (yPos < -52) {
         setBase(-15);
@@ -990,7 +991,7 @@ void scoreFoosball() {
     // Score foosball
     armServo.SetDegree(armDown);
     Sleep(250);
-    autoDriveFSlow(9.75);
+    autoDriveFSlow(9.85);
     endL = leftEnc.Counts();
     endR = rightEnc.Counts();
 
@@ -1007,19 +1008,34 @@ void scoreFoosball() {
     Sleep(25);
 
     if (endL > endR) {
-        rightBase.SetPercent(MIN_SPEED_SWEEP);
-        while (rightEnc.Counts() < endL - endR) {
-            Sleep(10);
-        }
-        rightBase.SetPercent(0);
-    }
-    else {
         leftBase.SetPercent(MIN_SPEED_SWEEP);
-        while (leftEnc.Counts() < endR - endL) {
+        while (leftEnc.Counts() < endL - endR) {
             Sleep(10);
         }
         leftBase.SetPercent(0);
+        endL -= leftEnc.Counts();
     }
+    else {
+        rightBase.SetPercent(-MIN_SPEED_SWEEP);
+        while (rightEnc.Counts() < endR - endL) {
+            Sleep(10);
+        }
+        rightBase.SetPercent(0);
+        endR -= rightEnc.Counts();
+    }
+
+    /*
+    if (endL < 250) {
+        setBase(20);
+        while (leftEnc.Counts() < 273) {
+            Sleep(10);
+        }
+        setBase(0);
+    }
+    */
+
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
 }
 
 int main(void) {
@@ -1085,9 +1101,9 @@ int main(void) {
                 LCD.WriteRC(RPS.Y(), 6, 2);
                 if (LCD.Touch(&x, &y)) {
                     done = true;
-                    postRampX = RPS.X() - 31.9;
+                    //postRampX = RPS.X() - 31.9;
                     postRampY = RPS.Y() - 52;
-                    zeroDegrees = RPS.Heading() - 180;
+                    //zeroDegrees = RPS.Heading() - 180;
                 }
                 Sleep(100);
             }
@@ -1164,11 +1180,12 @@ int main(void) {
     // Move to foosball, adjusting if necessary
     float offsetY = yPos - postRampY;
     Sleep(50);
+    LCD.WriteLine(offsetY);
 
     //autoDriveFSlow(5.48 - offsetY);
 
     bool leftDone = false, rightDone = false;
-    float target = (5.45 - offsetY) * TICKS_PER_INCH;
+    float target = (5.5 - offsetY) * TICKS_PER_INCH;
     leftEnc.ResetCounts();
     rightEnc.ResetCounts();
     Sleep(25);
@@ -1258,7 +1275,7 @@ int main(void) {
     // Move to lever
     autoDriveF(2.5);
     autoSweepR(6.5);
-    autoDriveF(2);
+    autoDriveF(1.9);
     //autoDriveF(5.2);
 
     // Score lever
