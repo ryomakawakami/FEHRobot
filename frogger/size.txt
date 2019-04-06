@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+  34912	   3420	   5552	  43884	   ab6c	../frogger.elf

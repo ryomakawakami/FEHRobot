@@ -24,8 +24,8 @@
 
 #define TICKS_PER_INCH 28 // Conversion from encoder ticks to in
 
-#define NO_LIGHT_THRESHOLD 1.6 // 1.5+ is no light
-#define BLUE_LIGHT_THRESHOLD 0.95 // 0.8 to 1.5 is blue light
+#define NO_LIGHT_THRESHOLD 1.7 // 1.7+ is no light
+#define BLUE_LIGHT_THRESHOLD 0.95 // 0.95 to 1.7 is blue light
 
 #define ARM_DOWN 156
 #define ARM_UP 71
@@ -1258,7 +1258,7 @@ int main(void) {
     // Move to lever
     autoDriveF(2.5);
     autoSweepR(6.5);
-    autoDriveF(1);
+    autoDriveF(2);
     //autoDriveF(5.2);
 
     // Score lever
@@ -1269,7 +1269,7 @@ int main(void) {
     autoDriveF(3);
 
     // Move to ramp
-    autoSweepR(4.1);
+    autoSweepR(4);
     autoDriveF(12);
     setAngle180(180);
     timeDrive(15, 1250);

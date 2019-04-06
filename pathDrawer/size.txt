@@ -1,0 +1,2 @@
+   text	   data	    bss	    dec	    hex	filename
+  33436	   3420	   5552	  42408	   a5a8	../pathDrawer.elf
