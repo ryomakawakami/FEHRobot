@@ -80,6 +80,65 @@ float zeroDegrees = 0;
 // Arm positions
 int armUp = ARM_UP, armDown = ARM_DOWN;
 
+// Servo angle adjustment
+void adjustServo() {
+    float x, y;
+
+    LCD.Clear(FEHLCD::Black);
+    LCD.WriteRC("        ", 2, 0);
+    LCD.WriteRC(armUp, 2, 0);
+    LCD.WriteRC("        ", 4, 0);
+    LCD.WriteRC(armDown, 4, 0);
+
+    // Wait for touch
+    while (!LCD.Touch(&x, &y)) {
+        Sleep(10);
+    }
+
+    // Lower by 1 degree if left side of screen
+    if (x < 160) {
+        armUp--;
+        armDown--;
+    }
+    // Raise by 1 degree if right side
+    else {
+        armUp++;
+        armDown++;
+    }
+
+    armServo.SetDegree(armUp);
+
+    while (LCD.Touch(&x, &y)) {
+        Sleep(10);
+    }
+}
+
+// Displays RPS coordinates
+void displayRPS() {
+    LCD.WriteRC("X:        ", 0, 0);
+    LCD.WriteRC(RPS.X(), 0, 2);
+    LCD.WriteRC("Y:        ", 2, 0);
+    LCD.WriteRC(RPS.Y(), 2, 2);
+    LCD.WriteRC("T:        ", 4, 0);
+    LCD.WriteRC(RPS.Heading(), 4, 2);
+}
+
+// Displays encoder values, CdS cell value, RPS offset, and voltage
+void displayOther(float postRampX, float postRampY) {
+    LCD.WriteRC("L:        ", 8, 0);
+    LCD.WriteRC(leftEnc.Counts(), 8, 2);
+    LCD.WriteRC("R:        ", 10, 0);
+    LCD.WriteRC(rightEnc.Counts(), 10, 2);
+    LCD.WriteRC("C:        ", 12, 0);
+    LCD.WriteRC(cds.Value(), 12, 2);
+    LCD.WriteRC("        ", 11, 12);
+    LCD.WriteRC(postRampX, 11, 12);
+    LCD.WriteRC("        ", 12, 12);
+    LCD.WriteRC(postRampY, 12, 12);
+    LCD.WriteRC("       ", 0, 12);
+    LCD.WriteRC(Battery.Voltage(), 0 , 12);
+}
+
 // Simple PID control loop
 // target is desired encoder count
 // Position PID when some distance away
@@ -878,6 +937,31 @@ void timeTurn(int power, int time) {
     setBase(0);
 }
 
+// Slow forward with no P
+void slowForward(float target) {
+    // Convert target to ticks
+    target *= TICKS_PER_INCH;
+
+    // Reset encoder counts
+    leftEnc.ResetCounts();
+    rightEnc.ResetCounts();
+    Sleep(25);
+
+    // Set base to low forward speed
+    setBase(20);
+
+    // Continue until left encoder goes over target value
+    while (leftEnc.Counts() < target) {
+        Sleep(10);
+    }
+
+    // Stop base
+    setBase(0);
+
+    // Sleep for .25 seconds
+    Sleep(250);
+}
+
 // RPS heading correction (270 to 90 degrees)
 void setAngle(float theta) {
     bool done = false;
@@ -1076,6 +1160,26 @@ void upRamp() {
     }
 }
 
+// Move to foosball
+void moveToFoosball(float offsetY) {
+    slowForward(5.5 - offsetY);
+    autoTurnL(1.8);
+    slowForward(8.45);
+    autoTurnL(2.98);
+}
+
+// Correct x offset
+void correctOffsetX(float offsetX) {
+    if (offsetX > 0) {
+        autoDriveF(offsetX);
+        Sleep(25);
+    }
+    else {
+        autoDriveB(-offsetX);
+        Sleep(25);
+    }
+}
+
 // Score foosball
 void scoreFoosball() {
     int endL = 0, endR = 0;
@@ -1121,6 +1225,43 @@ void scoreFoosball() {
     rightEnc.ResetCounts();
 }
 
+// Move to lever
+void moveToLever() {
+    autoDriveF(2.5);
+    autoSweepR(6.5);
+    autoDriveF(1.9);
+}
+
+// Score lever
+void scoreLever() {
+    armServo.SetDegree(armDown);
+    Sleep(250);
+    armServo.SetDegree(armUp);
+}
+
+// Move to ramp with bump
+void moveToRamp() {
+    autoDriveF(3);
+    autoSweepR(4);
+    autoDriveF(12);
+    setAngle180(180);
+    timeDrive(15, 1250);
+}
+
+// Move down ramp and hit final button
+void downRamp() {
+    // Move down ramp to final button
+    timeDrive(50, 500);
+    timeDrive(80, 2000);
+
+    // Repeatedly back up and ram something
+    while (1) {
+        timeDrive(-50, 500);
+        timeTurn(-20, 250);
+        timeDrive(50, 1000);
+    }
+}
+
 int main(void) {
     // Servo positions
     armServo.SetMin(738);
@@ -1149,36 +1290,9 @@ int main(void) {
 
             // Servo calibration (robot tilted)
             if (Accel.Y() > 0.25 || Accel.Y() < -0.25) {
-
                 // Until untilted
                 while (Accel.Y() > 0.25) {
-                    LCD.Clear(FEHLCD::Black);
-                    LCD.WriteRC("        ", 2, 0);
-                    LCD.WriteRC(armUp, 2, 0);
-                    LCD.WriteRC("        ", 4, 0);
-                    LCD.WriteRC(armDown, 4, 0);
-
-                    // Wait for touch
-                    while (!LCD.Touch(&x, &y)) {
-                        Sleep(10);
-                    }
-
-                    // Lower by 1 degree if left side of screen
-                    if (x < 160) {
-                        armUp--;
-                        armDown--;
-                    }
-                    // Raise by 1 degree if right side
-                    else {
-                        armUp++;
-                        armDown++;
-                    }
-
-                    armServo.SetDegree(armUp);
-
-                    while (LCD.Touch(&x, &y)) {
-                        Sleep(10);
-                    }
+                    adjustServo();
                 }
             }
 
@@ -1202,12 +1316,7 @@ int main(void) {
             bool done = false;
             while(!done) {
                 // Display RPS coordinates
-                LCD.WriteRC("X:        ", 2, 0);
-                LCD.WriteRC(RPS.X(), 2, 2);
-                LCD.WriteRC("Y:        ", 4, 0);
-                LCD.WriteRC(RPS.Y(), 4, 2);
-                LCD.WriteRC("T:        ", 6, 0);
-                LCD.WriteRC(RPS.Heading(), 6, 2);
+                displayRPS();
 
                 // If touched, store position and end calibration
                 if (LCD.Touch(&x, &y)) {
@@ -1228,24 +1337,8 @@ int main(void) {
         }
 
         // Update screen
-        LCD.WriteRC("X:        ", 0, 0);
-        LCD.WriteRC(RPS.X(), 0, 2);
-        LCD.WriteRC("Y:        ", 2, 0);
-        LCD.WriteRC(RPS.Y(), 2, 2);
-        LCD.WriteRC("T:        ", 4, 0);
-        LCD.WriteRC(RPS.Heading(), 4, 2);
-        LCD.WriteRC("L:        ", 8, 0);
-        LCD.WriteRC(leftEnc.Counts(), 8, 2);
-        LCD.WriteRC("R:        ", 10, 0);
-        LCD.WriteRC(rightEnc.Counts(), 10, 2);
-        LCD.WriteRC("C:        ", 12, 0);
-        LCD.WriteRC(cds.Value(), 12, 2);
-        LCD.WriteRC("        ", 11, 12);
-        LCD.WriteRC(postRampX, 11, 12);
-        LCD.WriteRC("        ", 12, 12);
-        LCD.WriteRC(postRampY, 12, 12);
-        LCD.WriteRC("       ", 0, 12);
-        LCD.WriteRC(Battery.Voltage(), 0 , 12);
+        displayRPS();
+        displayOther(postRampX, postRampY);
         Sleep(50);
     }
 
@@ -1272,117 +1365,21 @@ int main(void) {
     // Move to ramp and go up
     upRamp();
 
-    // Move to foosball, adjusting if necessary
-    float offsetY = yPos - postRampY;
-    Sleep(50);
-    LCD.WriteLine(offsetY);
-
-    bool leftDone = false, rightDone = false;
-    float target = (5.5 - offsetY) * TICKS_PER_INCH;
-    leftEnc.ResetCounts();
-    rightEnc.ResetCounts();
-    Sleep(25);
-    leftBase.SetPercent(-20);
-    rightBase.SetPercent(20);
-    while (!(leftDone || rightDone)) {
-        if (leftEnc.Counts() > target) {
-            leftBase.SetPercent(0);
-            rightBase.SetPercent(0);
-            leftDone = true;
-            rightDone = true;
-        }
-        Sleep(10);
-    }
-    Sleep(250);
-
-    int leftCounts, rightCounts;
-    leftCounts = leftEnc.Counts();
-    rightCounts = rightEnc.Counts();
-    Sleep(50);
-
-    if (leftCounts > rightCounts) {
-        rightBase.SetPercent(MIN_SPEED_SWEEP);
-        while (rightEnc.Counts() < leftCounts - rightCounts) {
-            Sleep(10);
-        }
-        rightBase.SetPercent(0);
-    }
-    else {
-        leftBase.SetPercent(MIN_SPEED_SWEEP);
-        while (leftEnc.Counts() < rightCounts - leftCounts) {
-            Sleep(10);
-        }
-        leftBase.SetPercent(0);
-    }
-
-    autoTurnL(1.8);
-    Sleep(50);
-
-    leftDone = false, rightDone = false;
-    target = 8.45 * TICKS_PER_INCH;
-    leftEnc.ResetCounts();
-    rightEnc.ResetCounts();
-    Sleep(25);
-    leftBase.SetPercent(-20);
-    rightBase.SetPercent(20);
-    while (!(leftDone || rightDone)) {
-        if (leftEnc.Counts() > target) {
-            leftBase.SetPercent(0);
-            rightBase.SetPercent(0);
-            leftDone = true;
-            rightDone = true;
-        }
-        Sleep(10);
-    }
-    Sleep(250);
-
-    autoTurnL(2.98);
+    // Move to foosball
+    moveToFoosball(yPos - postRampY);
 
     // Figure out x offset and correct
-    float offsetX = xPos - postRampX;
-    Sleep(25);
-    if (offsetX > 0) {
-        LCD.WriteLine("FORWARD");
-        LCD.WriteLine(offsetX);
-        autoDriveF(offsetX);
-        Sleep(25);
-    }
-    else {
-        LCD.WriteLine("BACKWARD");
-        LCD.WriteLine(offsetX);
-        autoDriveB(-offsetX);
-        Sleep(25);
-    }
+    correctOffsetX(xPos - postRampX);
 
     // Score foosball
     scoreFoosball();
 
     // Move to lever
-    autoDriveF(2.5);
-    autoSweepR(6.5);
-    autoDriveF(1.9);
+    moveToLever();
 
     // Score lever
-    armServo.SetDegree(armDown);
-    Sleep(250);
-    armServo.SetDegree(armUp);
+    scoreLever();
 
-    autoDriveF(3);
-
-    // Move to ramp
-    autoSweepR(4);
-    autoDriveF(12);
-    setAngle180(180);
-    timeDrive(15, 1250);
-
-    // Move down ramp to final button
-    timeDrive(50, 500);
-    timeDrive(80, 2000);
-
-    // Repeatedly back up and ram something
-    while (1) {
-        timeDrive(-50, 500);
-        timeTurn(-20, 250);
-        timeDrive(50, 1000);
-    }
+    // Move to ramp with bump
+    moveToRamp();
 }
