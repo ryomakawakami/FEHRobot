@@ -1382,4 +1382,7 @@ int main(void) {
 
     // Move to ramp with bump
     moveToRamp();
+
+    // Move down ramp
+    downRamp();
 }
